@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Content</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="main-container">
+    <div class="sidebar">
+        <a href="/sliders">Slider management</a>
+        <a href="/coupons">Coupon code management</a>
+        <a href="/contents" class="active">Content management</a>
+    </div>
+
+    <div class="content">
+        <div class="d-flex justify-content-between mb-5">
+            <h5 class="text-secondary">Create Content</h5>
+            <span>Username</span>
+        </div>
+
+        <form style="max-width: 800px; margin: 0 auto;">
+            <div class="row mb-4 align-items-center">
+                <label class="col-sm-3 col-form-label text-center">Name of Content</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Name of Content">
+                </div>
+            </div>
+            
+            <div class="row mb-4 align-items-center">
+                <label class="col-sm-3 col-form-label text-center">Head Line</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Head Line">
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <label class="col-sm-3 col-form-label text-center">Main Content</label>
+                <div class="col-sm-9">
+                    <div class="text-end mb-1">
+                        <a href="#" class="text-primary text-decoration-none">Add Image</a>
+                    </div>
+                    <textarea class="form-control" rows="10" placeholder="Main Content"></textarea>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-5">
+                <a href="/contents" class="btn btn-light border shadow-sm px-4 fw-bold">Back</a>
+                <button type="button" class="btn btn-light border shadow-sm px-4 fw-bold">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

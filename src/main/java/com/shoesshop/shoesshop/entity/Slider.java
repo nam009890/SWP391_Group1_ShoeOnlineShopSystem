@@ -1,6 +1,8 @@
 package com.shoesshop.shoesshop.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
@@ -11,9 +13,14 @@ public class Slider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Không được để trống và tối đa 255 ký tự
+    @NotBlank(message = "Name of slider cannot be empty")
+    @Size(max = 255, message = "Name must be less than 255 characters")
     @Column(name = "slider_name", nullable = false)
     private String name;
 
+    // Mô tả có thể trống, nhưng nếu nhập thì không quá 500 ký tự
+    @Size(max = 500, message = "Description is too long")
     private String description;
 
     private LocalDate createDate;

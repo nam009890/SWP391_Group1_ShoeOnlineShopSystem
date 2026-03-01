@@ -6,7 +6,6 @@
         <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
     <body>
-
         <div class="main-container">
             <div class="sidebar">
                 <a href="/sliders">Slider management</a>
@@ -26,7 +25,7 @@
                         <button type="submit" class="btn btn-light border shadow-sm px-4">Search</button>
                     </div>
                     <div>
-                        <a href="/contents/create" class="btn btn-light border shadow-sm px-4">Create Content</a>
+                        <a th:href="@{/contents/create}" class="btn btn-light border shadow-sm px-4">Create Content</a>
                     </div>
                 </form>
 
@@ -34,47 +33,38 @@
                     <table class="table table-bordered mb-0 align-middle">
                         <thead class="table-header">
                             <tr>
-                                <th>No</th>
-                                <th>Name of Content</th>
-                                <th>create date</th>
-                                <th class="text-center">action</th>
+                                <th>No</th><th>Name of Content</th><th>create date</th><th class="text-center">action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="content, state : ${contents}">
                                 <td th:text="${(currentPage - 1) * 5 + state.count}">1</td>
-                                <td th:text="${content.name}">How to right clean shoe</td>
-                                <td th:text="${#temporals.format(content.createDate, 'dd/MM/yyyy')}">25/10/2024</td>
+                                <td th:text="${content.contentTitle}">Title</td>
+                                <td th:text="${#temporals.format(content.createdAt, 'dd/MM/yyyy')}">Date</td>
                                 <td class="text-center">
                                     <a href="#" class="btn btn-light border btn-sm shadow-sm px-3">Detail</a>
                                     <a th:href="@{/contents/update/{id}(id=${content.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2">Update</a>
-                                    <a th:href="@{/contents/delete/{id}(id=${content.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2" onclick="return confirm('Xóa bài viết này?');">Delete</a>
+                                    <a th:href="@{/contents/delete/{id}(id=${content.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2" onclick="return confirm('Delete this content?');">Delete</a>
                                 </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(contents)}">
-                                <td colspan="4" class="text-center text-muted">No contents found</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <nav class="mt-4" th:if="${totalPages > 1}">
-                    <ul class="pagination pagination-circle justify-content-center">
+                <nav class="mt-3" th:if="${totalPages > 1}">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                            <a class="page-link border-0 bg-transparent text-primary" th:href="@{/contents(page=${currentPage - 1}, keyword=${keyword})}">&lt;&lt;prev</a>
+                            <a class="page-link" th:href="@{/coupons(page=${currentPage - 1}, keyword=${keyword})}">Previous</a>
                         </li>
-
-                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'">
-                            <a class="page-link" th:href="@{/contents(page=${i}, keyword=${keyword})}" th:text="${i}">1</a>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" 
+                            th:classappend="${currentPage == i} ? 'active'">
+                            <a class="page-link" th:href="@{/coupons(page=${i}, keyword=${keyword})}" th:text="${i}">1</a>
                         </li>
-
                         <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                            <a class="page-link border-0 bg-transparent text-primary" th:href="@{/contents(page=${currentPage + 1}, keyword=${keyword})}">next&gt;&gt;</a>
+                            <a class="page-link" th:href="@{/coupons(page=${currentPage + 1}, keyword=${keyword})}">Next</a>
                         </li>
                     </ul>
                 </nav>
             </div>
         </div>
-
     </body>
 </html>

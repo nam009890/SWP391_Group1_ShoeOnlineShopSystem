@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ContentRepository extends JpaRepository<Content, Long> {
     // Hàm tìm kiếm theo tên bài viết
-    Page<Content> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+   Page<Content> findByContentTitleContainingIgnoreCase(String keyword, Pageable pageable);
 }

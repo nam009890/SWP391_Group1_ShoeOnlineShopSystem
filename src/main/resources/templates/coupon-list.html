@@ -3,83 +3,55 @@
     <head>
         <title>Coupon Management</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
         <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
     <body>
-
         <div class="main-container">
             <div class="sidebar">
                 <a href="/sliders">Slider management</a>
-                <a href="/coupons">Coupon code management</a>
-                <a href="/contents" class="active">Content management</a>
+                <a href="/coupons" class="active">Coupon code management</a>
+                <a href="/contents">Content management</a>
             </div>
 
             <div class="content">
-                <div class="d-flex justify-content-between mb-4">
-                    <h4>Coupon code management</h4>
+                <div class="d-flex justify-content-between mb-5">
+                    <h5 class="text-secondary">Coupon code management</h5>
                     <span>Username</span>
                 </div>
 
-                <form action="/coupons" method="get" class="row g-3 mb-4 align-items-center">
-                    <div class="col-auto">
-                        <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Enter name of coupon code" style="width: 250px;">
+                <form action="/coupons" method="get" class="d-flex justify-content-between mb-4">
+                    <div class="d-flex gap-2">
+                        <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Search coupon code" style="width: 250px;">
+                        <button type="submit" class="btn btn-light border shadow-sm px-4">Search</button>
                     </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-light border">Search</button>
-                    </div>
-
-                    <div class="col-auto ms-auto">
-                        <select class="form-select" style="width: 150px;">
-                            <option>Filter</option>
-                            <option>Active</option>
-                            <option>Expired</option>
-                        </select>
-                    </div>
-                    <div class="col-auto">
-                        <a th:href="@{/coupons/create}" class="btn btn-light border">Create Coupon</a>
+                    <div>
+                        <a th:href="@{/coupons/create}" class="btn btn-light border shadow-sm px-4">Create Coupon code</a>
                     </div>
                 </form>
 
-                <div class="table-responsive bg-white border">
+                <div class="table-responsive bg-white border border-secondary mb-4">
                     <table class="table table-bordered mb-0 align-middle">
                         <thead class="table-header">
                             <tr>
-                                <th>No</th>
-                                <th>Name of coupon code</th>
-                                <th>Code</th>
-                                <th>Discount</th>
-                                <th>Create date</th>
-                                <th>End Date</th>
-                                <th>Action</th>
+                                <th>No</th><th>Coupon code</th><th>discount</th><th>Start Date</th><th>End Date</th><th class="text-center">action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="coupon, state : ${coupons}">
                                 <td th:text="${(currentPage - 1) * 5 + state.count}">1</td>
-                                <td th:text="${coupon.name}">Tên</td>
-                                <td th:text="${coupon.code}">Mã</td>
-                                <td th:text="${coupon.discountPercent} + '%'">10%</td>
-                                <td th:text="${coupon.createDate}">2025-01-01</td>
-                                <td th:text="${coupon.endDate}">2025-02-01</td>
-                                <td>
-                                <td>
-                                    <a th:href="@{/coupons/edit/{id}(id=${coupon.id})}" 
-                                       class="btn btn-light border btn-sm btn-action">Update</a>
-
-                                    <a th:href="@{/coupons/delete/{id}(id=${coupon.id})}"
-                                       onclick="return confirm('Are you sure you want to delete this coupon?')"
-                                       class="btn btn-light border btn-sm btn-action text-danger">Delete</a>
+                                <td th:text="${coupon.couponCode}">CODE</td>
+                                <td th:text="${coupon.discountPercent + '%'}">10%</td>
+                                <td th:text="${#temporals.format(coupon.createDate, 'dd/MM/yyyy')}">Start</td>
+                                <td th:text="${#temporals.format(coupon.endDate, 'dd/MM/yyyy')}">End</td>
+                                <td class="text-center">
+                                    <a href="#" class="btn btn-light border btn-sm shadow-sm px-3">Detail</a>
+                                    <a th:href="@{/coupons/update/{id}(id=${coupon.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2">Update</a>
+                                    <a th:href="@{/coupons/delete/{id}(id=${coupon.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2" onclick="return confirm('Delete this coupon?');">Delete</a>
                                 </td>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(coupons)}">
-                                <td colspan="7" class="text-center">No coupons found</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
                 <nav class="mt-3" th:if="${totalPages > 1}">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
@@ -94,9 +66,7 @@
                         </li>
                     </ul>
                 </nav>
-
             </div>
         </div>
-
     </body>
 </html>

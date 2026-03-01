@@ -19,36 +19,49 @@
             <span>Username</span>
         </div>
 
-        <form style="max-width: 800px; margin: 0 auto;">
-            <div class="row mb-4 align-items-center">
-                <label class="col-sm-3 col-form-label text-center">Name of Content</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" th:value="${content.name}">
-                </div>
-            </div>
-            
-            <div class="row mb-4 align-items-center">
-                <label class="col-sm-3 col-form-label text-center">Head Line</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" th:value="${content.headline}">
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <label class="col-sm-3 col-form-label text-center">Main Content</label>
-                <div class="col-sm-9">
-                    <div class="text-end mb-1">
-                        <a href="#" class="text-primary text-decoration-none">Add Image</a>
+        <div class="bg-white border border-secondary p-4 mx-auto" style="max-width: 800px;">
+            <form th:action="@{/contents/save}" th:object="${content}" method="post">
+                <input type="hidden" th:field="*{id}">
+                
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Name of Content</label></div>
+                    <div class="col-md-9">
+                        <input type="text" th:field="*{contentTitle}" class="form-control" th:classappend="${#fields.hasErrors('contentTitle')} ? 'is-invalid' : ''">
                     </div>
-                    <textarea class="form-control" rows="10" th:text="${content.mainContent}"></textarea>
                 </div>
-            </div>
 
-            <div class="d-flex justify-content-between mt-5">
-                <a href="/contents" class="btn btn-light border shadow-sm px-4 fw-bold">Back</a>
-                <button type="button" class="btn btn-light border shadow-sm px-4 fw-bold">Update</button>
-            </div>
-        </form>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Type</label></div>
+                    <div class="col-md-9">
+                        <select th:field="*{contentType}" class="form-select" th:classappend="${#fields.hasErrors('contentType')} ? 'is-invalid' : ''">
+                            <option value="BANNER">Banner</option>
+                            <option value="PROMO">Promotion</option>
+                            <option value="ABOUT">About Us</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Image URL</label></div>
+                    <div class="col-md-9">
+                        <input type="text" th:field="*{imageUrl}" class="form-control" th:classappend="${#fields.hasErrors('imageUrl')} ? 'is-invalid' : ''">
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-start">
+                    <div class="col-md-3 text-end pt-2"><label class="col-form-label fw-bold">Main content</label></div>
+                    <div class="col-md-9">
+                        <textarea th:field="*{contentText}" class="form-control" rows="5" th:classappend="${#fields.hasErrors('contentText')} ? 'is-invalid' : ''"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" class="btn btn-light border shadow-sm px-4">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>

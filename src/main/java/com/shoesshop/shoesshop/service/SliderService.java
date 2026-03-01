@@ -1,15 +1,17 @@
 package com.shoesshop.shoesshop.service;
 
 import com.shoesshop.shoesshop.entity.Slider;
+import com.shoesshop.shoesshop.entity.Coupon;
 import com.shoesshop.shoesshop.repository.SliderRepository;
-import jakarta.annotation.PostConstruct;
+import com.shoesshop.shoesshop.repository.CouponRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.shoesshop.shoesshop.repository.ProductRepository;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class SliderService {
@@ -17,33 +19,49 @@ public class SliderService {
     @Autowired
     private SliderRepository sliderRepository;
 
-    @PostConstruct
-    public void initMockData() {
-        if (sliderRepository.count() == 0) {
-            sliderRepository.save(new Slider(null, "Super sale 1/1", "", LocalDate.of(2024, 10, 25)));
-            sliderRepository.save(new Slider(null, "Super sale 2/2", "", LocalDate.of(2024, 10, 25)));
-            sliderRepository.save(new Slider(null, "Super sale 3/3", "", LocalDate.of(2024, 10, 25)));
-            sliderRepository.save(new Slider(null, "Black Friday", "", LocalDate.of(2024, 10, 25)));
-            sliderRepository.save(new Slider(null, "End Year sale", "", LocalDate.of(2024, 10, 25)));
-            for (int i = 6; i <= 15; i++) {
-                sliderRepository.save(new Slider(null, "Slider Test " + i, "Mô tả " + i, LocalDate.now()));
-            }
-        }
-    }
+    @Autowired
+    private CouponRepository couponRepository;
 
     public Page<Slider> getSliders(String keyword, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
         if (keyword == null || keyword.isEmpty()) {
             return sliderRepository.findAll(paging);
         } else {
-            return sliderRepository.findByNameContainingIgnoreCase(keyword, paging);
+            return sliderRepository.findBySliderTitleContainingIgnoreCase(keyword, paging);
         }
     }
 
-    public void saveSlider(Slider slider) {
-        if (slider.getCreateDate() == null) {
-            slider.setCreateDate(LocalDate.now());
+    // Đã thêm tham số List<Long> couponIds
+    @Autowired
+    private com.shoesshop.shoesshop.repository.SliderRepository sliderRepository;
+
+    @Autowired
+    private com.shoesshop.shoesshop.repository.CouponRepository couponRepository;
+
+    @Autowired
+    private com.shoesshop.shoesshop.repository.ProductRepository productRepository; // Thêm dòng này
+
+    // Sửa lại hàm saveSlider để nhận thêm 2 mảng ID
+    public void saveSlider(Slider slider, java.util.List<Long> couponIds, java.util.List<Long> productIds) {
+        if (slider.getCreatedAt() == null) {
+            slider.setCreatedAt(java.time.LocalDateTime.now());
         }
+        slider.setUpdatedAt(java.time.LocalDateTime.now());
+
+        // Xử lý lưu danh sách Coupon
+        if (couponIds != null && !couponIds.isEmpty()) {
+            slider.setCoupons(couponRepository.findAllById(couponIds));
+        } else {
+            slider.setCoupons(new java.util.ArrayList<>());
+        }
+
+        // Xử lý lưu danh sách Product
+        if (productIds != null && !productIds.isEmpty()) {
+            slider.setProducts(productRepository.findAllById(productIds));
+        } else {
+            slider.setProducts(new java.util.ArrayList<>());
+        }
+
         sliderRepository.save(slider);
     }
 

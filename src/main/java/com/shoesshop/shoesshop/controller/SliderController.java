@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import com.shoesshop.shoesshop.repository.ProductRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,9 @@ public class SliderController {
     private SliderService sliderService;
 
     @Autowired
-    private CouponRepository couponRepository; 
+    private CouponRepository couponRepository;
+    @Autowired 
+    private ProductRepository productRepository;
 
     @GetMapping("/sliders")
     public String listSliders(
@@ -39,35 +41,43 @@ public class SliderController {
         return "slider-list";
     }
 
-    @GetMapping("/sliders/create")
-    public String showCreateSliderForm(Model model) {
-        model.addAttribute("slider", new Slider());
-        
-        // Đổ dữ liệu giả lập cho 2 Popup
-        model.addAttribute("coupons", couponRepository.findAll());
-        List<Map<String, Object>> mockProducts = new ArrayList<>();
-        mockProducts.add(Map.of("id", 1, "name", "Adidas predator", "price", 1000000));
-        mockProducts.add(Map.of("id", 2, "name", "Nike Mecury", "price", 950000));
-        model.addAttribute("products", mockProducts);
-
-        return "slider-create";
-    }
-
-    // DUY NHẤT 1 HÀM SAVE Ở ĐÂY (Đã bao gồm Validation chặn lỗi)
     @PostMapping("/sliders/save")
-    public String saveSlider(@Valid @ModelAttribute("slider") Slider slider, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            // Load lại dữ liệu cho Popup nếu nhập lỗi
-            model.addAttribute("coupons", couponRepository.findAll());
-            List<Map<String, Object>> mockProducts = new ArrayList<>();
-            mockProducts.add(Map.of("id", 1, "name", "Adidas predator", "price", 1000000));
-            mockProducts.add(Map.of("id", 2, "name", "Nike Mecury", "price", 950000));
-            model.addAttribute("products", mockProducts);
+    public String saveSlider(
+            @Valid @ModelAttribute("slider") Slider slider, 
+            BindingResult result, 
+            @RequestParam(value = "couponIds", required = false) java.util.List<Long> couponIds, 
+            @RequestParam(value = "productIds", required = false) java.util.List<Long> productIds, 
+            Model model) {
             
+        if (result.hasErrors()) {
+            // Gửi lại danh sách để hiện lên Modal nếu nhập lỗi
+            model.addAttribute("coupons", couponRepository.findAll());
+            model.addAttribute("products", productRepository.findAll());
             return slider.getId() == null ? "slider-create" : "slider-update"; 
         }
         
-        sliderService.saveSlider(slider);
+        // Bắn dữ liệu xuống Service để lưu
+        sliderService.saveSlider(slider, couponIds, productIds);
+        
+        return "redirect:/sliders";
+    }
+
+    @PostMapping("/sliders/save")
+    public String saveSlider(
+            @jakarta.validation.Valid @ModelAttribute("slider") com.shoesshop.shoesshop.entity.Slider slider, 
+            org.springframework.validation.BindingResult result, 
+            @RequestParam(value = "couponIds", required = false) java.util.List<Long> couponIds, 
+            @RequestParam(value = "productIds", required = false) java.util.List<Long> productIds, 
+            org.springframework.ui.Model model) {
+            
+        if (result.hasErrors()) {
+            model.addAttribute("coupons", couponRepository.findAll());
+            model.addAttribute("products", productRepository.findAll());
+            return slider.getId() == null ? "slider-create" : "slider-update"; 
+        }
+        
+        sliderService.saveSlider(slider, couponIds, productIds);
+        
         return "redirect:/sliders";
     }
 
@@ -81,8 +91,8 @@ public class SliderController {
         
         model.addAttribute("coupons", couponRepository.findAll());
         List<Map<String, Object>> mockProducts = new ArrayList<>();
-        mockProducts.add(Map.of("id", 1, "name", "Adidas predator", "price", 1000000));
-        mockProducts.add(Map.of("id", 2, "name", "Nike Mecury", "price", 950000));
+        mockProducts.add(Map.of("id", 1, "name", "Nike Air Force 1", "price", 2500000));
+        mockProducts.add(Map.of("id", 2, "name", "Adidas Ultraboost", "price", 3200000));
         model.addAttribute("products", mockProducts);
 
         return "slider-update";

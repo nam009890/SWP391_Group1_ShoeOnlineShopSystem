@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SliderRepository extends JpaRepository<Slider, Long> {
     // Hàm tìm kiếm theo tên (không phân biệt hoa/thường)
-    Page<Slider> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Slider> findBySliderTitleContainingIgnoreCase(String keyword, Pageable pageable);
 }

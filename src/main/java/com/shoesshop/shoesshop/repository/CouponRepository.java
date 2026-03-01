@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
     
     // Tìm kiếm có phân trang (trả về Page thay vì List)
-    Page<Coupon> findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(String name, String code, Pageable pageable);
+    Page<Coupon> findByCouponNameContainingIgnoreCaseOrCouponCodeContainingIgnoreCase(String name, String code, Pageable pageable);
 }

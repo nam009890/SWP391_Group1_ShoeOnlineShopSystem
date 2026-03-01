@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Non-code files ###
+*.sql
+*.md
+*.docx
+*.pdf
+*.log

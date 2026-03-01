@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Slider</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="main-container">
+    <div class="sidebar">
+        <a href="/sliders" class="active">Slider management</a>
+        <a href="/coupons">Coupon code management</a>
+        <a href="/contents">Content management</a>
+    </div>
+
+    <div class="content">
+        <div class="d-flex justify-content-between mb-5">
+            <h5 class="text-secondary">Update Slider</h5>
+            <span>Username</span>
+        </div>
+
+        <div class="bg-white border border-secondary p-4 mx-auto" style="max-width: 800px;">
+            <form th:action="@{/sliders/save}" th:object="${slider}" method="post">
+                <input type="hidden" th:field="*{id}">
+                
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Slider Title</label></div>
+                    <div class="col-md-9">
+                        <input type="text" th:field="*{sliderTitle}" class="form-control" th:classappend="${#fields.hasErrors('sliderTitle')} ? 'is-invalid' : ''">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Image URL</label></div>
+                    <div class="col-md-9">
+                        <input type="text" th:field="*{imageUrl}" class="form-control" th:classappend="${#fields.hasErrors('imageUrl')} ? 'is-invalid' : ''">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Link URL</label></div>
+                    <div class="col-md-9">
+                        <input type="text" th:field="*{linkUrl}" class="form-control" th:classappend="${#fields.hasErrors('linkUrl')} ? 'is-invalid' : ''">
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Position</label></div>
+                    <div class="col-md-9">
+                        <input type="number" th:field="*{position}" class="form-control" th:classappend="${#fields.hasErrors('position')} ? 'is-invalid' : ''">
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Coupons</label></div>
+                    <div class="col-md-9">
+                        <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#couponModal">
+                            + Add Coupon
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-9 offset-md-3">
+                        <button type="submit" class="btn btn-light border shadow-sm px-4">Save Changes</button>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="couponModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Select Coupons</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr><th>No</th><th>Name</th><th>Code</th><th>Discount</th><th>Select</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="c, status : ${coupons}">
+                                            <td th:text="${status.count}">1</td>
+                                            <td th:text="${c.couponName}">Name</td>
+                                            <td th:text="${c.couponCode}">Code</td>
+                                            <td th:text="${c.discountPercent + '%'}">10%</td>
+                                            <td class="text-center">
+                                                <input type="checkbox" name="couponIds" th:value="${c.id}" class="form-check-input border-secondary">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

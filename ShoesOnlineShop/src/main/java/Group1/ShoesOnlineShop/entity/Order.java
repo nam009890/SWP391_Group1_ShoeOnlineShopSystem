@@ -30,7 +30,7 @@ public class Order {
     private BigDecimal totalAmount;
 
     @Column(name = "order_status", length = 20)
-    private String orderStatus = "PENDING";
+    private String orderStatus;
 
     @Column(name = "shipping_address", columnDefinition = "NVARCHAR(MAX)")
     private String shippingAddress;
@@ -39,11 +39,15 @@ public class Order {
     private String phone;
 
     @Column(name = "payment_status", length = 20)
-    private String paymentStatus = "PENDING";
+    private String paymentStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
+    
+    
+
+    
 
     // Quan hệ với các bảng khác
 
@@ -78,4 +82,77 @@ public class Order {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    
+        // ========================
+    // GETTERS & SETTERS
+    // ========================
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Coupon getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+ public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+    
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    
+
+
 }

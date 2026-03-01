@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Feedback Details</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #bfbfbf;
+        }
+
+        .detail-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .detail-card {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            width: 400px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .detail-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .label {
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .value {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="detail-wrapper">
+
+    <div class="detail-card">
+
+        <h5 class="detail-title">View Feedback Details</h5>
+
+        <div class="label">Feedback ID</div>
+        <div class="value" th:text="${feedback.feedbackId}"></div>
+
+        <div class="label">Customer Name</div>
+        <div class="value" th:text="${feedback.user.fullName}"></div>
+
+        <div class="label">Product</div>
+        <div class="value" th:text="${feedback.product.productName}"></div>
+
+        <div class="label">Description</div>
+        <div class="value" th:text="${feedback.comment}"></div>
+
+        <div class="label">Date</div>
+        <div class="value"
+             th:text="${#temporals.format(feedback.createdAt,'dd/MM/yyyy')}">
+        </div>
+
+        <div class="label">Status</div>
+        <div class="value"
+             th:text="${feedback.isApproved ? 'Active' : 'Inactive'}">
+        </div>
+
+        <div class="text-center mt-3">
+            <a th:href="@{/feedbacks}"
+               class="btn btn-secondary">
+                Back to Home
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

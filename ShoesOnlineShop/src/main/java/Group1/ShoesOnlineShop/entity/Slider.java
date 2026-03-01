@@ -1,27 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import Group1.ShoesOnlineShop.entity.Coupon; // Sửa lại đường dẫn này
+import Group1.ShoesOnlineShop.entity.Product; // Sửa lại đường dẫn này
 
 @Entity
 @Table(name = "sliders")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Slider {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "slider_id")
-    private Long sliderId;
+    private Long id;
 
     @Column(name = "slider_title", length = 200)
     private String sliderTitle;
@@ -38,38 +31,56 @@ public class Slider {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    // Liên kết với bảng Coupons qua bảng trung gian slider_coupons
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    // ========================================================
+    // CHỈ GIỮ LẠI 1 BỘ DUY NHẤT Ở ĐÂY
+    // ========================================================
     @ManyToMany
     @JoinTable(
         name = "slider_coupons",
         joinColumns = @JoinColumn(name = "slider_id"),
         inverseJoinColumns = @JoinColumn(name = "coupon_id")
     )
-    private Set<Coupon> coupons;
+    private List<Coupon> coupons = new ArrayList<>();
 
-    // Liên kết với bảng Products qua bảng trung gian slider_products
     @ManyToMany
     @JoinTable(
         name = "slider_products",
         joinColumns = @JoinColumn(name = "slider_id"),
         inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    // Constructor
+    public Slider() {}
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    // GETTER & SETTER
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getSliderTitle() { return sliderTitle; }
+    public void setSliderTitle(String sliderTitle) { this.sliderTitle = sliderTitle; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getLinkUrl() { return linkUrl; }
+    public void setLinkUrl(String linkUrl) { this.linkUrl = linkUrl; }
+    public Integer getPosition() { return position; }
+    public void setPosition(Integer position) { this.position = position; }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    // Getter/Setter cho List
+    public List<Coupon> getCoupons() { return coupons; }
+    public void setCoupons(List<Coupon> coupons) { this.coupons = coupons; }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    public List<Product> getProducts() { return products; }
+    public void setProducts(List<Product> products) { this.products = products; }
 }

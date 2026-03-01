@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -24,7 +25,7 @@ public class Product {
     @Column(name = "product_description", columnDefinition = "NVARCHAR(MAX)")
     private String productDescription;
 
-    @Column(name = "product_price", nullable = false)
+    @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal productPrice;
 
     @Column(name = "stock_quantity")
@@ -38,6 +39,19 @@ public class Product {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    // Quan hệ với các bảng khác
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderDetail> orderDetails;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Cart> carts;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Feedback> feedbacks;
+
+    // Audit fields
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

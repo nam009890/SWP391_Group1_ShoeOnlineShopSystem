@@ -1,5 +1,4 @@
-cấu trúc của project:
-
+cấu trúc của project: (ae chuyển sang code để xem cái này) 
 ShoeShopOnline/
 ├── pom.xml                                 <-- File cấu hình Maven (chứa các thư viện Spring Web, Thymeleaf, JPA, SQL Server, Lombok...)
 ├── src/

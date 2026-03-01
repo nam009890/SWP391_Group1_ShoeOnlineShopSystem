@@ -53,4 +53,5 @@ public class Content {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }

@@ -9,7 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SliderService {
@@ -59,5 +62,36 @@ public class SliderService {
 
     public void deleteSlider(Long id) {
         sliderRepository.deleteById(id);
+    }
+
+    public boolean isSliderTitleExists(String title, Long id) {
+        if (id == null) {
+            return sliderRepository.existsBySliderTitle(title);
+        }
+        return sliderRepository.existsBySliderTitleAndIdNot(title, id);
+    }
+
+    // ==========================================
+    // NEW METHOD: Extract all Validation logic here
+    // ==========================================
+    public Map<String, String> validateSliderLogic(Slider slider, List<Long> couponIds, List<Long> productIds) {
+        Map<String, String> errors = new HashMap<>();
+
+        // 1. Validate: Slider title already exists
+        if (slider.getSliderTitle() != null && isSliderTitleExists(slider.getSliderTitle(), slider.getId())) {
+            errors.put("sliderTitle", "This Slider title already exists, please choose another!");
+        }
+
+        // 2. Validate: Must select at least 1 Product
+        if (productIds == null || productIds.isEmpty()) {
+            errors.put("products", "Please select at least one product!");
+        }
+
+        // 3. Validate: Must select at least 1 Coupon
+        if (couponIds == null || couponIds.isEmpty()) {
+            errors.put("coupons", "Please select at least one coupon!");
+        }
+
+        return errors;
     }
 }

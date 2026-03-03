@@ -33,15 +33,21 @@
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Code</label></div>
                     <div class="col-md-9">
-                        <input type="text" th:field="*{couponCode}" class="form-control" th:classappend="${#fields.hasErrors('couponCode')} ? 'is-invalid' : ''">
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('couponCode')}" th:errors="*{couponCode}"></div>
+                        <div class="input-group">
+                            <input type="text" id="couponCodeInput" th:field="*{couponCode}" class="form-control" th:classappend="${#fields.hasErrors('couponCode')} ? 'is-invalid' : ''">
+                            <button class="btn btn-outline-secondary fw-bold" type="button" onclick="generateRandomCode()">Random Code</button>
+                        </div>
+                        <div class="text-danger mt-1" style="font-size: 0.875em;" th:if="${#fields.hasErrors('couponCode')}" th:errors="*{couponCode}"></div>
                     </div>
                 </div>
 
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-3 text-end"><label class="col-form-label fw-bold">Discount (%)</label></div>
                     <div class="col-md-9">
-                        <input type="number" th:field="*{discountPercent}" class="form-control" th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
+                        <select th:field="*{discountPercent}" class="form-select" th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
+                            <option value="">-- Select Discount --</option>
+                            <option th:each="i : ${#numbers.sequence(5, 50, 5)}" th:value="${i}" th:text="${i + '%'}"></option>
+                        </select>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('discountPercent')}" th:errors="*{discountPercent}"></div>
                     </div>
                 </div>
@@ -64,12 +70,24 @@
 
                 <div class="row">
                     <div class="col-md-9 offset-md-3">
-                        <button type="submit" class="btn btn-light border shadow-sm px-4">Submit</button>
+                        <button type="submit" class="btn btn-dark shadow-sm px-4">Submit</button>
+                        <a href="/coupons" class="btn btn-light border ms-2 px-4">Back</a>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function generateRandomCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = 'CP'; // Tiền tố mặc định
+        for (let i = 0; i < 6; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('couponCodeInput').value = code;
+    }
+</script>
 </body>
 </html>

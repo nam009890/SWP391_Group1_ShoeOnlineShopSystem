@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,22 +42,43 @@ public class SliderController {
         return "slider-list";
     }
 
+    @GetMapping("/sliders/create")
+    public String showCreateSliderForm(Model model) {
+        model.addAttribute("slider", new Slider());
+        model.addAttribute("coupons", couponRepository.findAll());
+        model.addAttribute("products", productRepository.findAll());
+        return "slider-create";
+    }
+
     @PostMapping("/sliders/save")
     public String saveSlider(
-            @Valid @ModelAttribute("slider") Slider slider, 
-            BindingResult result, 
-            @RequestParam(value = "couponIds", required = false) List<Long> couponIds, 
-            @RequestParam(value = "productIds", required = false) List<Long> productIds, 
+            @Valid @ModelAttribute("slider") Slider slider,
+            BindingResult bindingResult,
+            @RequestParam(required = false) List<Long> couponIds,
+            @RequestParam(required = false) List<Long> productIds,
             Model model) {
-            
-        if (result.hasErrors()) {
+
+        // Bước 1: Kiểm tra lỗi Entity cơ bản (@NotBlank, @NotNull...)
+        boolean hasBasicErrors = bindingResult.hasErrors();
+
+        // Bước 2: Gọi Service kiểm tra logic nghiệp vụ (Trùng tên, rỗng list product/coupon)
+        Map<String, String> logicErrors = sliderService.validateSliderLogic(slider, couponIds, productIds);
+        
+        if (!logicErrors.isEmpty()) {
+            logicErrors.forEach((field, message) -> 
+                bindingResult.rejectValue(field, "error.slider", message)
+            );
+        }
+
+        // Bước 3: Nếu có BẤT KỲ lỗi nào (từ Entity hoặc từ Service) -> Trả về form
+        if (hasBasicErrors || !logicErrors.isEmpty()) {
             model.addAttribute("coupons", couponRepository.findAll());
             model.addAttribute("products", productRepository.findAll());
-            return slider.getId() == null ? "slider-create" : "slider-update"; 
+            return (slider.getId() == null) ? "slider-create" : "slider-update";
         }
-        
+
+        // Success -> Tiến hành lưu
         sliderService.saveSlider(slider, couponIds, productIds);
-        
         return "redirect:/sliders";
     }
 
@@ -69,13 +89,8 @@ public class SliderController {
             return "redirect:/sliders";
         }
         model.addAttribute("slider", slider);
-        
         model.addAttribute("coupons", couponRepository.findAll());
-        List<Map<String, Object>> mockProducts = new ArrayList<>();
-        mockProducts.add(Map.of("id", 1, "name", "Nike Air Force 1", "price", 2500000));
-        mockProducts.add(Map.of("id", 2, "name", "Adidas Ultraboost", "price", 3200000));
-        model.addAttribute("products", mockProducts);
-
+        model.addAttribute("products", productRepository.findAll());
         return "slider-update";
     }
 

@@ -44,7 +44,8 @@
                                 <td th:text="${#temporals.format(coupon.createDate, 'dd/MM/yyyy')}">Start</td>
                                 <td th:text="${#temporals.format(coupon.endDate, 'dd/MM/yyyy')}">End</td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-light border btn-sm shadow-sm px-3">Detail</a>
+                                    <a th:href="@{/coupons/detail/{id}(id=${coupon.id})}" class="btn btn-info text-white border btn-sm shadow-sm px-3">Detail</a>
+                                    
                                     <a th:href="@{/coupons/update/{id}(id=${coupon.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2">Update</a>
                                     <a th:href="@{/coupons/delete/{id}(id=${coupon.id})}" class="btn btn-light border btn-sm shadow-sm px-3 ms-2" onclick="return confirm('Delete this coupon?');">Delete</a>
                                 </td>

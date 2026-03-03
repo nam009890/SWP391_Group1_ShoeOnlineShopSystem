@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Group1.ShoesOnlineShop.controller;
 
 import Group1.ShoesOnlineShop.entity.Content;
@@ -32,7 +28,7 @@ public class ContentController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageContents.getTotalPages());
         model.addAttribute("keyword", keyword);
-        return "content-list";
+        return "content-list"; // Đảm bảo file HTML đã được kéo ra thư mục gốc templates
     }
 
     @GetMapping("/contents/create")
@@ -43,7 +39,6 @@ public class ContentController {
 
     @PostMapping("/contents/save")
     public String saveContent(@Valid @ModelAttribute("content") Content content, BindingResult result) {
-        // Nếu nhập thiếu Tên bài, Tiêu đề hoặc Nội dung
         if (result.hasErrors()) {
             return content.getId() == null ? "content-create" : "content-update";
         }
@@ -67,4 +62,18 @@ public class ContentController {
         contentService.deleteContent(id);
         return "redirect:/contents";
     }
+
+    // ==========================================
+    // ĐÂY CHÍNH LÀ HÀM BẠN ĐANG THIẾU ĐỂ XEM DETAIL
+    // ==========================================
+    @GetMapping("/contents/detail/{id}")
+    public String showContentDetail(@PathVariable Long id, Model model) {
+        Content content = contentService.getContentById(id);
+        if (content == null) {
+            return "redirect:/contents"; // Nếu không tìm thấy ID, đá về trang danh sách
+        }
+        model.addAttribute("content", content);
+        return "content-detail"; // Trả về giao diện xem chi tiết
+    }
+
 }

@@ -117,16 +117,16 @@ class SliderServiceTest {
 
     // 6. Test Error: Blank Image URL
     @Test
-    void testValidateEntity_BlankImageUrl() {
-        Slider slider = new Slider();
-        slider.setSliderTitle("Valid Title");
-        slider.setImageUrl("");
-        slider.setLinkUrl("http://link.com");
-        slider.setPosition(1);
+void testValidateEntity_BlankImageUrl() {
+    Slider slider = new Slider();
+    slider.setSliderTitle("Valid Title");
+    slider.setLinkUrl("http://example.com");
+    slider.setPosition(1);
+    slider.setImageUrl(""); // Cố tình để trống
 
-        Set<ConstraintViolation<Slider>> violations = validator.validate(slider);
-        
-        boolean hasImageError = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("imageUrl"));
-        assertTrue(hasImageError, "Must report an error when Image URL is blank");
-    }
+    Set<ConstraintViolation<Slider>> violations = validator.validate(slider);
+    
+    // SỬA LẠI DÒNG NÀY: Thay vì mong đợi có lỗi, bây giờ ta mong đợi KHÔNG có lỗi (vì đã dời lên Controller)
+    assertTrue(violations.isEmpty(), "Entity must NOT report an error because image validation is moved to Controller");
+}
 }

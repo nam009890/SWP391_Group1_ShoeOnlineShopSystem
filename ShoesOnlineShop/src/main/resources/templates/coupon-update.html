@@ -1,98 +1,172 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Update Coupon Code</title>
+    <title>Update Coupon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<div class="main-container">
-    <div class="sidebar">
-        <div style="height: 100px;"></div> <a href="/sliders">Slider management</a>
-        <a href="/coupons" class="active">Coupon code management</a>
-        <a href="/contents">Content management</a>
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <span class="brand-name">Shoes Online Shop Marketing</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+
+    <a href="/home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+    </a>
+    <a href="/sliders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+        Slider
+    </a>
+    <a href="/coupons" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+        Coupon Code
+    </a>
+    <a href="/contents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Content
+    </a>
+</div>
+
+<div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+        <div>
+            <h4>Update Coupon</h4>
+            <p>Edit coupon details and validity period</p>
+        </div>
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div>
+                <div class="user-name">Username</div>
+                <div class="user-role">Administrator</div>
+            </div>
+        </div>
     </div>
 
-    <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4 px-4">
-            <h5 class="m-0 text-dark">Update Coupon Code</h5>
-            <span class="text-dark">Username</span>
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <a href="/coupons">Coupon Management</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Update Coupon</span>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card" style="max-width: 720px;">
+        <div class="card-header-bar">
+            <h6>Edit Coupon Information</h6>
+            <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${coupon.id}" style="font-weight:600; color:var(--text-mid)">—</span></span>
         </div>
+        <div class="card-body-pad">
+            <form th:action="@{/coupons/save}" th:object="${coupon}" method="post">
+                <input type="hidden" th:field="*{id}">
 
-        <form th:action="@{/coupons/save}" th:object="${coupon}" method="post">
-            <input type="hidden" th:field="*{id}">
-            
-            <div class="form-box">
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-3 text-start"><label>Name of Coupon</label></div>
-                    <div class="col-md-6">
-                        <input type="text" th:field="*{couponName}" class="form-control rounded-0" placeholder="Enter Coupon Name" th:classappend="${#fields.hasErrors('couponName')} ? 'is-invalid' : ''">
-                        <div class="invalid-feedback bg-white px-2 mt-1" th:if="${#fields.hasErrors('couponName')}" th:errors="*{couponName}"></div>
+                <!-- Coupon Name -->
+                <div class="row mb-4 align-items-start">
+                    <div class="col-md-4">
+                        <label class="form-label" style="padding-top:8px">Name of Coupon</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" th:field="*{couponName}" class="form-control"
+                               th:classappend="${#fields.hasErrors('couponName')} ? 'is-invalid' : ''"
+                               placeholder="Enter coupon name">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('couponName')}" th:errors="*{couponName}"></div>
                     </div>
                 </div>
 
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-3 text-start"><label>Coupon Code</label></div>
-                    <div class="col-md-6">
-                        <input type="text" th:field="*{couponCode}" id="couponCodeInput" class="form-control rounded-0" placeholder="Enter Coupon code" th:classappend="${#fields.hasErrors('couponCode')} ? 'is-invalid' : ''">
-                        <div class="invalid-feedback bg-white px-2 mt-1" th:if="${#fields.hasErrors('couponCode')}" th:errors="*{couponCode}"></div>
+                <!-- Coupon Code -->
+                <div class="row mb-4 align-items-start">
+                    <div class="col-md-4">
+                        <label class="form-label" style="padding-top:8px">Coupon Code</label>
+                        <p style="font-size:12px; color:var(--text-light); margin-top:3px">Auto-generate or enter manually</p>
                     </div>
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-light rounded-1 border shadow-sm" onclick="generateRandomCode()">Random Code</button>
+                    <div class="col-md-8">
+                        <div class="input-code-group">
+                            <input type="text" id="couponCodeInput" th:field="*{couponCode}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('couponCode')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. SALE-ABC123"
+                                   style="font-family:'Courier New',monospace; font-weight:600; letter-spacing:.06em">
+                            <button type="button" class="btn-random" onclick="generateRandomCode()">
+                                <svg width="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                                Random
+                            </button>
+                        </div>
+                        <div class="text-danger mt-1" style="font-size:.875em" th:if="${#fields.hasErrors('couponCode')}" th:errors="*{couponCode}"></div>
                     </div>
                 </div>
 
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-3 text-start"><label>Discount</label></div>
-                    <div class="col-md-6">
-                        <select th:field="*{discountPercent}" class="form-select rounded-0" th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
-                            <option value="">Discount</option>
+                <!-- Discount -->
+                <div class="row mb-4 align-items-start">
+                    <div class="col-md-4">
+                        <label class="form-label" style="padding-top:8px">Discount (%)</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select th:field="*{discountPercent}" class="form-select"
+                                th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
+                            <option value="">— Select Discount —</option>
                             <option value="5">5%</option>
                             <option value="10">10%</option>
                             <option value="15">15%</option>
                             <option value="20">20%</option>
+                            <option value="30">30%</option>
                             <option value="50">50%</option>
                         </select>
-                        <div class="invalid-feedback bg-white px-2 mt-1" th:if="${#fields.hasErrors('discountPercent')}" th:errors="*{discountPercent}"></div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('discountPercent')}" th:errors="*{discountPercent}"></div>
                     </div>
                 </div>
 
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-3 text-start"><label>Start date</label></div>
-                    <div class="col-md-6">
-                        <input type="date" th:field="*{createDate}" class="form-control rounded-0" th:classappend="${#fields.hasErrors('createDate')} ? 'is-invalid' : ''">
-                        <div class="invalid-feedback bg-white px-2 mt-1" th:if="${#fields.hasErrors('createDate')}" th:errors="*{createDate}"></div>
+                <!-- Start Date -->
+                <div class="row mb-4 align-items-start">
+                    <div class="col-md-4">
+                        <label class="form-label" style="padding-top:8px">Start Date</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" th:field="*{createDate}" class="form-control"
+                               th:classappend="${#fields.hasErrors('createDate')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('createDate')}" th:errors="*{createDate}"></div>
                     </div>
                 </div>
 
-                <div class="row mb-2 align-items-center">
-                    <div class="col-md-3 text-start"><label>End date</label></div>
-                    <div class="col-md-6">
-                        <input type="date" th:field="*{endDate}" class="form-control rounded-0" th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid' : ''">
-                        <div class="invalid-feedback bg-white px-2 mt-1" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                <!-- End Date -->
+                <div class="row mb-2 align-items-start">
+                    <div class="col-md-4">
+                        <label class="form-label" style="padding-top:8px">End Date</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" th:field="*{endDate}" class="form-control"
+                               th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
                     </div>
                 </div>
-            </div>
 
-            <div class="bottom-buttons">
-                <a href="/coupons" class="btn btn-light rounded-1 border shadow-sm px-4">Back</a>
-                <button type="submit" class="btn btn-light rounded-1 border shadow-sm px-4">Update</button>
-            </div>
-        </form>
+                <!-- Footer -->
+                <div class="form-footer" style="margin-top:28px; border-radius:0; border-left:none; border-right:none; border-bottom:none; padding-left:0; padding-right:0; padding-bottom:0">
+                    <a href="/coupons" class="btn-outline">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
 
+            </form>
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function generateRandomCode() {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let result = 'SALE-';
-        for (let i = 0; i < 6; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-        document.getElementById('couponCodeInput').value = result;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = 'SALE-';
+        for (let i = 0; i < 6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+        document.getElementById('couponCodeInput').value = code;
     }
 </script>
 </body>

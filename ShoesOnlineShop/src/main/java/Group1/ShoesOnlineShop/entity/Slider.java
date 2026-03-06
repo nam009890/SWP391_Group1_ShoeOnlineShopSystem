@@ -3,13 +3,9 @@ package Group1.ShoesOnlineShop.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import Group1.ShoesOnlineShop.entity.Coupon; 
-import Group1.ShoesOnlineShop.entity.Product; 
 
 @Entity
 @Table(name = "sliders")
@@ -20,16 +16,12 @@ public class Slider {
     @Column(name = "slider_id")
     private Long id;
 
-    // 1. Validate: Blank Slider Title
     @NotBlank(message = "Slider Title cannot be blank!")
     @Column(name = "slider_title", length = 200)
     private String sliderTitle;
 
-    // 2. Validate: Blank image + Invalid image format
-    @NotBlank(message = "Image URL cannot be blank!")
-    @Pattern(regexp = "^(?i).*\\.(jpg|jpeg|png|gif|webp)(\\?.*)?$|^https?://.*", 
-             message = "Invalid image format (Must be an http/https web link or end with .jpg, .png, .jpeg, .webp)")
-    @Column(name = "image_url", nullable = false, length = 500)
+    // Đã bỏ @NotBlank và @Pattern để hỗ trợ upload file cục bộ mượt mà hơn
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @NotBlank(message = "Link URL cannot be blank!")
@@ -49,9 +41,6 @@ public class Slider {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // ========================================================
-    // KEEP ONLY ONE SET HERE
-    // ========================================================
     @ManyToMany
     @JoinTable(
         name = "slider_coupons",
@@ -68,7 +57,6 @@ public class Slider {
     )
     private List<Product> products = new ArrayList<>();
 
-    // Constructor
     public Slider() {}
 
     // GETTERS & SETTERS
@@ -88,11 +76,8 @@ public class Slider {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    // Getters/Setters for Lists
     public List<Coupon> getCoupons() { return coupons; }
     public void setCoupons(List<Coupon> coupons) { this.coupons = coupons; }
-
     public List<Product> getProducts() { return products; }
     public void setProducts(List<Product> products) { this.products = products; }
 }

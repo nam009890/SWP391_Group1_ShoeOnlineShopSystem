@@ -19,19 +19,25 @@ public class SliderService {
 
     @Autowired
     private SliderRepository sliderRepository;
-
     @Autowired
     private CouponRepository couponRepository;
-
     @Autowired
     private ProductRepository productRepository;
 
-    public Page<Slider> getSliders(String keyword, int page, int size) {
+    // Đã thêm tham số isActive vào đây
+    public Page<Slider> getSliders(String keyword, Boolean isActive, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
-        if (keyword == null || keyword.isEmpty()) {
-            return sliderRepository.findAll(paging);
+        
+        if (isActive != null) {
+            if (keyword != null && !keyword.isEmpty()) {
+                return sliderRepository.findBySliderTitleContainingIgnoreCaseAndIsActive(keyword, isActive, paging);
+            }
+            return sliderRepository.findByIsActive(isActive, paging);
         } else {
-            return sliderRepository.findBySliderTitleContainingIgnoreCase(keyword, paging);
+            if (keyword != null && !keyword.isEmpty()) {
+                return sliderRepository.findBySliderTitleContainingIgnoreCase(keyword, paging);
+            }
+            return sliderRepository.findAll(paging);
         }
     }
 
@@ -71,27 +77,18 @@ public class SliderService {
         return sliderRepository.existsBySliderTitleAndIdNot(title, id);
     }
 
-    // ==========================================
-    // NEW METHOD: Extract all Validation logic here
-    // ==========================================
     public Map<String, String> validateSliderLogic(Slider slider, List<Long> couponIds, List<Long> productIds) {
         Map<String, String> errors = new HashMap<>();
 
-        // 1. Validate: Slider title already exists
         if (slider.getSliderTitle() != null && isSliderTitleExists(slider.getSliderTitle(), slider.getId())) {
             errors.put("sliderTitle", "This Slider title already exists, please choose another!");
         }
-
-        // 2. Validate: Must select at least 1 Product
         if (productIds == null || productIds.isEmpty()) {
             errors.put("products", "Please select at least one product!");
         }
-
-        // 3. Validate: Must select at least 1 Coupon
         if (couponIds == null || couponIds.isEmpty()) {
             errors.put("coupons", "Please select at least one coupon!");
         }
-
         return errors;
     }
 }

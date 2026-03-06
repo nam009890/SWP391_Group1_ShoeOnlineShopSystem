@@ -9,10 +9,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SliderRepository extends JpaRepository<Slider, Long> {
     Page<Slider> findBySliderTitleContainingIgnoreCase(String keyword, Pageable pageable);
+    
+    // Thêm hàm lọc theo cả từ khóa và trạng thái
+    Page<Slider> findBySliderTitleContainingIgnoreCaseAndIsActive(String keyword, Boolean isActive, Pageable pageable);
+    
+    // Thêm hàm lọc chỉ theo trạng thái
+    Page<Slider> findByIsActive(Boolean isActive, Pageable pageable);
 
-    // Validate: Tên slider đã tồn tại (Lúc Create)
     boolean existsBySliderTitle(String sliderTitle);
-
-    // Validate: Tên slider đã tồn tại (Lúc Update, bỏ qua ID hiện tại)
     boolean existsBySliderTitleAndIdNot(String sliderTitle, Long id);
 }

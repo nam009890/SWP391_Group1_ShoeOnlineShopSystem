@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
 @Controller
@@ -21,20 +21,33 @@ public class CouponController {
     private CouponService couponService;
 
     // 1. Hiển thị trang danh sách
+   // 1. Hiển thị danh sách + Xử lý Filter
     @GetMapping("/coupons")
     public String listCoupons(
             Model model,
             @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(required = false) Integer discount,
+            @RequestParam(required = false) Boolean status,
+            @RequestParam(required = false) String validity,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size
     ) {
-        Page<Coupon> pageCoupons = couponService.getCoupons(keyword, page, size);
+        // GỌI SERVICE VỚI ĐỦ 6 THAM SỐ
+        Page<Coupon> pageCoupons = couponService.getCoupons(keyword, discount, status, validity, page, size);
 
         model.addAttribute("coupons", pageCoupons.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageCoupons.getTotalPages());
         model.addAttribute("totalItems", pageCoupons.getTotalElements());
+        
+        // Lưu lại bộ lọc để giữ trạng thái cho giao diện
         model.addAttribute("keyword", keyword);
+        model.addAttribute("discount", discount);
+        model.addAttribute("status", status);
+        model.addAttribute("validity", validity);
+        
+        // Truyền ngày hôm nay xuống để UI tự check Hết hạn hay Còn hạn
+        model.addAttribute("today", java.time.LocalDate.now()); 
 
         return "coupon-list"; 
     }
@@ -46,30 +59,40 @@ public class CouponController {
         return "coupon-create"; 
     }
 
-    // 3. Xử lý khi ấn nút Submit lưu dữ liệu
-    @PostMapping("/coupons/save")
+   @PostMapping("/coupons/save")
     public String saveCoupon(
             @Valid @ModelAttribute("coupon") Coupon coupon, 
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) { // THÊM Model model vào đây
 
-        // Bước 1: Entity có bị trống, sai định dạng (Lỗi cơ bản) không?
+        boolean isNew = (coupon.getId() == null);
+
+        // Lỗi nhập liệu cơ bản (trống, sai định dạng)
         if (bindingResult.hasErrors()) {
-            return (coupon.getId() == null) ? "coupon-create" : "coupon-update";
+            model.addAttribute("errorMessage", "Please check the highlighted fields and try again!");
+            return isNew ? "coupon-create" : "coupon-update";
         }
 
-        // Bước 2: Gọi Service để kiểm tra lỗi nghiệp vụ (Trùng lặp, so sánh ngày)
+        // Lỗi nghiệp vụ (Trùng tên, ngày sai)
         Map<String, String> logicErrors = couponService.validateCouponLogic(coupon);
-        
-        // Nếu Service phát hiện có lỗi -> Nhét lỗi vào BindingResult để view HTML in chữ màu đỏ ra
         if (!logicErrors.isEmpty()) {
-            logicErrors.forEach((field, message) -> 
-                bindingResult.rejectValue(field, "error.coupon", message)
-            );
-            return (coupon.getId() == null) ? "coupon-create" : "coupon-update";
+            logicErrors.forEach((field, message) -> bindingResult.rejectValue(field, "error.coupon", message));
+            model.addAttribute("errorMessage", "Validation failed, please fix the errors below!");
+            return isNew ? "coupon-create" : "coupon-update";
         }
 
-        // Bước 3: Vượt qua mọi rào cản -> Lưu thành công!
-        couponService.saveCoupon(coupon);
+        try {
+            // Ép kiểu Status an toàn
+            coupon.setIsActive(coupon.getIsActive() != null && coupon.getIsActive());
+            couponService.saveCoupon(coupon);
+            // Gắn thông báo thành công
+            redirectAttributes.addFlashAttribute("successMessage", isNew ? "Coupon created successfully!" : "Coupon updated successfully!");
+        } catch (Exception e) {
+            // Gắn thông báo thất bại nếu hệ thống sập hoặc lỗi DB
+            redirectAttributes.addFlashAttribute("errorMessage", "System error: Failed to save coupon!");
+        }
+        
         return "redirect:/coupons";
     }
 

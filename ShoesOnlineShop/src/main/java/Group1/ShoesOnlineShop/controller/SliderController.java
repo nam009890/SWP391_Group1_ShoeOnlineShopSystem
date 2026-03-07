@@ -65,7 +65,7 @@ public class SliderController {
 
     @PostMapping("/sliders/save")
     public String saveSlider(
-            @Valid @ModelAttribute("slider") Slider slider,
+            @Valid @ModelAttribute("slider") Slider sliderForm,
             BindingResult bindingResult,
             @RequestParam(required = false) List<Long> couponIds,
             @RequestParam(required = false) List<Long> productIds,
@@ -73,50 +73,46 @@ public class SliderController {
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        // Kiểm tra logic
-        Map<String, String> logicErrors = sliderService.validateSliderLogic(slider, couponIds, productIds);
-        if (!logicErrors.isEmpty()) {
-            logicErrors.forEach((field, message) -> bindingResult.rejectValue(field, "error.slider", message));
+        boolean isUpdate = (sliderForm.getId() != null);
+
+        // 1. Gọi Service để kiểm tra toàn bộ (Logic & Ảnh)
+        Map<String, String> errors = sliderService.validateSlider(sliderForm, couponIds, productIds, imageFile);
+        if (!errors.isEmpty()) {
+            errors.forEach((field, message) -> bindingResult.rejectValue(field, "error.slider", message));
         }
 
-        // Validate file ảnh khi tạo mới
-        if (slider.getId() == null && (imageFile == null || imageFile.isEmpty())) {
-            bindingResult.rejectValue("imageUrl", "error.slider", "Please upload an image!");
-        }
-
+        // 2. Nếu có lỗi -> Trả về giao diện ngay lập tức
         if (bindingResult.hasErrors()) {
             model.addAttribute("coupons", couponRepository.findAll());
             model.addAttribute("products", productRepository.findAll());
-            return (slider.getId() == null) ? "slider-create" : "slider-update";
-        }
-
-        // Xử lý upload file
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-                fileName = System.currentTimeMillis() + "_" + fileName; // Tránh trùng tên
-                String uploadDir = "src/main/resources/static/uploads/";
-                Path uploadPath = Paths.get(uploadDir);
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-                try (InputStream inputStream = imageFile.getInputStream()) {
-                    Path filePath = uploadPath.resolve(fileName);
-                    Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                    slider.setImageUrl("/uploads/" + fileName); // Đường dẫn lưu vào DB
-                }
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload image!");
-                return "redirect:/sliders";
+            
+            // --- THÊM 6 DÒNG NÀY ĐỂ PHỤC HỒI SẢN PHẨM/COUPON KHI BỊ LỖI ---
+            if (productIds != null && !productIds.isEmpty()) {
+                sliderForm.setProducts(productRepository.findAllById(productIds));
             }
+            if (couponIds != null && !couponIds.isEmpty()) {
+                sliderForm.setCoupons(couponRepository.findAllById(couponIds));
+            }
+            // -------------------------------------------------------------
+
+            // Nếu là form Update, lấy lại đường dẫn ảnh cũ để hiển thị preview
+            if (isUpdate) {
+                Slider existing = sliderService.getSliderById(sliderForm.getId());
+                if (existing != null) sliderForm.setImageUrl(existing.getImageUrl());
+            }
+            return isUpdate ? "slider-update" : "slider-create";
         }
 
-        boolean isNew = (slider.getId() == null);
-        sliderService.saveSlider(slider, couponIds, productIds);
-        
-        // Thêm thông báo
-        redirectAttributes.addFlashAttribute("successMessage", 
-                isNew ? "Slider created successfully!" : "Slider updated successfully!");
+        // 3. Gọi Service xử lý lưu File và DB
+        try {
+            sliderService.processAndSaveSlider(sliderForm, couponIds, productIds, imageFile);
+            redirectAttributes.addFlashAttribute("successMessage", 
+                isUpdate ? "Slider updated successfully!" : "Slider created successfully!");
+        } catch (Exception e) {
+            // Đề phòng lỗi I/O khi lưu file ảnh
+            redirectAttributes.addFlashAttribute("errorMessage", "Error saving slider: " + e.getMessage());
+        }
+
         return "redirect:/sliders";
     }
 

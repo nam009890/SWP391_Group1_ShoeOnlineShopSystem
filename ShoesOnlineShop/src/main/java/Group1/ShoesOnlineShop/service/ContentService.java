@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Group1.ShoesOnlineShop.service;
 
 import Group1.ShoesOnlineShop.entity.Content;
@@ -11,7 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StringUtils;
+
+import jakarta.persistence.criteria.Predicate;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ContentService {
@@ -19,21 +28,29 @@ public class ContentService {
     @Autowired
     private ContentRepository contentRepository;
 
-    public Page<Content> getContents(String keyword, int page, int size) {
+    // 1. Hàm get có áp dụng bộ lọc (Keyword & Type)
+    public Page<Content> getContents(String keyword, String type, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
-        if (keyword == null || keyword.isEmpty()) {
-            return contentRepository.findAll(paging);
-        } else {
-            return contentRepository.findByContentTitleContainingIgnoreCase(keyword, paging);
-        }
+
+        Specification<Content> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get("contentTitle")), "%" + keyword.toLowerCase() + "%"));
+            }
+            if (type != null && !type.trim().isEmpty()) {
+                predicates.add(cb.equal(root.get("contentType"), type));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return contentRepository.findAll(spec, paging);
     }
 
     public void saveContent(Content content) {
-        // Đã đổi thành getCreatedAt() và LocalDateTime
         if (content.getCreatedAt() == null) {
-            content.setCreatedAt(java.time.LocalDateTime.now());
+            content.setCreatedAt(LocalDateTime.now());
         }
-        content.setUpdatedAt(java.time.LocalDateTime.now());
+        content.setUpdatedAt(LocalDateTime.now());
         contentRepository.save(content);
     }
 
@@ -43,5 +60,18 @@ public class ContentService {
 
     public void deleteContent(Long id) {
         contentRepository.deleteById(id);
+    }
+
+    // 2. HÀM XỬ LÝ LƯU FILE ẢNH VÀO Ổ CỨNG MÁY TÍNH
+    public String saveImageFile(MultipartFile file) throws IOException {
+        String fileName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+        Path uploadPath = Paths.get("src/main/resources/static/uploads/contents/");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        try (InputStream inputStream = file.getInputStream()) {
+            Files.copy(inputStream, uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            return "/uploads/contents/" + fileName; // Trả về đường dẫn để lưu vào DB
+        }
     }
 }

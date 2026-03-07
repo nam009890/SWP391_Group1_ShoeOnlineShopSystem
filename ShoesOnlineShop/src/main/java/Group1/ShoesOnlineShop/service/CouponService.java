@@ -7,7 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.criteria.Predicate;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,13 +21,52 @@ public class CouponService {
     @Autowired
     private CouponRepository couponRepository;
 
-    public Page<Coupon> getCoupons(String keyword, int page, int size) {
+    public Page<Coupon> getCoupons(String keyword, Integer discount, Boolean status, String validity, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
-        if (keyword == null || keyword.isEmpty()) {
-            return couponRepository.findAll(paging);
-        } else {
-            return couponRepository.findByCouponNameContainingIgnoreCaseOrCouponCodeContainingIgnoreCase(keyword, keyword, paging);
-        }
+
+        // Tạo một Specification để "lắp ráp" các bộ lọc động
+        Specification<Coupon> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            // 1. LỌC THEO TỪ KHÓA (Tên hoặc Mã)
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String likeKeyword = "%" + keyword.toLowerCase() + "%";
+                Predicate nameMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("couponName")), likeKeyword);
+                Predicate codeMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("couponCode")), likeKeyword);
+                predicates.add(criteriaBuilder.or(nameMatch, codeMatch));
+            }
+
+            // 2. LỌC THEO DISCOUNT
+            if (discount != null) {
+                predicates.add(criteriaBuilder.equal(root.get("discountPercent"), discount));
+            }
+
+            // 3. LỌC THEO TRẠNG THÁI ACTIVE
+            if (status != null) {
+                predicates.add(criteriaBuilder.equal(root.get("isActive"), status));
+            }
+
+            // 4. LỌC THEO THỜI HẠN (Còn hạn / Hết hạn)
+            if (validity != null && !validity.isEmpty()) {
+                LocalDate today = LocalDate.now();
+                if ("VALID".equalsIgnoreCase(validity)) {
+                    // Còn hạn: Hôm nay >= Ngày bắt đầu VÀ Hôm nay <= Ngày kết thúc
+                    predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), today));
+                    predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), today));
+                } else if ("EXPIRED".equalsIgnoreCase(validity)) {
+                    // Hết hạn: Hôm nay > Ngày kết thúc HOẶC Hôm nay < Ngày bắt đầu (chưa tới hạn)
+                    Predicate expired = criteriaBuilder.lessThan(root.get("endDate"), today);
+                    Predicate upcoming = criteriaBuilder.greaterThan(root.get("createDate"), today);
+                    predicates.add(criteriaBuilder.or(expired, upcoming));
+                }
+            }
+
+            // Gộp tất cả các mảnh lego (predicates) lại bằng phép AND
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        // Truyền spec đã lắp ráp vào repository để tìm kiếm
+        return couponRepository.findAll(spec, paging);
     }
 
     // Save Coupon (Used for both Create and Update)

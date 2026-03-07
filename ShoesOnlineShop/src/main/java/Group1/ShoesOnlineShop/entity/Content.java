@@ -6,21 +6,16 @@
 package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "contents")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Content {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "content_id")
-    private Long contentId;
+    private Long id;
 
     @Column(name = "content_title", nullable = false, length = 200)
     private String contentTitle;
@@ -37,21 +32,52 @@ public class Content {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+  // 1. Constructor không tham số (Bắt buộc)
+    public Content() {
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    // 2. Constructor có tham số
+    public Content(Long id, String contentTitle, String contentText, String imageUrl, String contentType, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.contentTitle = contentTitle;
+        this.contentText = contentText;
+        this.imageUrl = imageUrl;
+        this.contentType = contentType;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
+
+
+    // 3. GETTER & SETTER
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getContentTitle() { return contentTitle; }
+    public void setContentTitle(String contentTitle) { this.contentTitle = contentTitle; }
+
+    public String getContentText() { return contentText; }
+    public void setContentText(String contentText) { this.contentText = contentText; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getContentType() { return contentType; }
+    public void setContentType(String contentType) { this.contentType = contentType; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
 }

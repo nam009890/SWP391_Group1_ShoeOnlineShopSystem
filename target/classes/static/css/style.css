@@ -1,0 +1,220 @@
+/* GLOBAL STYLE - Dùng chung cho cả hệ thống */
+
+body {
+    background-color: #f0f0f0; /* Nền xám toàn trang */
+    font-family: Arial, sans-serif;
+}
+
+/* Layout chia 2 cột: Sidebar trái & Nội dung phải */
+.main-container {
+    display: flex;
+    min-height: 100vh; /* Chiều cao tối thiểu bằng màn hình */
+}
+
+/* Cột Sidebar bên trái */
+.sidebar {
+    width: 250px;
+    background: white;
+    border-right: 2px solid #000080; /* Viền xanh đậm */
+    padding-top: 20px;
+    flex-shrink: 0; /* Không bị co lại khi màn hình nhỏ */
+}
+
+.sidebar a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    border-bottom: 1px solid #eee; /* Đường kẻ mờ giữa các mục */
+}
+
+.sidebar a:hover {
+    background-color: #f8f9fa; /* Màu hover nhẹ */
+}
+
+/* Mục đang được chọn (Active) */
+.sidebar a.active {
+    background-color: #ff6b6b; /* Màu đỏ giống ảnh */
+    color: white;
+    border: 1px solid black;
+}
+
+/* Khu vực nội dung bên phải */
+.content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá to */
+}
+
+/* Header của bảng dữ liệu */
+.table-header {
+    background-color: #d3d3d3; /* Xám đậm */
+    font-weight: bold;
+}
+
+/* Nút bấm thao tác (Update/Delete) */
+.btn-action {
+    margin-right: 5px;
+    width: 80px;
+}
+/* --- Style cho trang Create Coupon --- */
+
+/* Cái khung màu xanh dương */
+.form-blue-box {
+    background-color: #4a90e2; /* Màu xanh dương giống ảnh */
+    padding: 30px;
+    border-radius: 5px;
+    color: white; /* Chữ màu trắng */
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Label trong khung xanh */
+.form-blue-box label {
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* Input trong khung xanh */
+.form-blue-box .form-control, 
+.form-blue-box .form-select {
+    border-radius: 0; /* Input vuông vức */
+    border: none;
+    margin-bottom: 5px;
+}
+
+/* Nút Random Code */
+.btn-random {
+    background-color: #f8f9fa;
+    color: black;
+    border: none;
+    font-weight: 500;
+    width: 100%; /* Full chiều rộng cột */
+}
+
+/* Nút Add Coupon ở giữa */
+.btn-add-coupon {
+    background-color: #f8f9fa;
+    color: black;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    padding: 8px 30px;
+}
+
+/* Dòng thông báo lỗi (Validation) */
+.text-danger-custom {
+    color: #ffcccc; /* Màu đỏ nhạt cho dễ nhìn trên nền xanh */
+    font-size: 0.85em;
+    font-style: italic;
+}
+/* CSS cho thanh nút bấm ở dưới cùng */
+.bottom-actions {
+    display: flex;
+    justify-content: space-between; /* Đẩy 2 nút ra 2 đầu */
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Đường kẻ mờ ngăn cách */
+}
+
+/* Nút Update/Create ở góc phải */
+.btn-submit-action {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px 40px;
+    font-weight: bold;
+    color: #333;
+}
+/* Tạo thanh cuộn cho bảng danh sách chờ */
+.table-scroll-wrapper {
+    max-height: 300px; /* Chiều cao tối đa, quá 300px sẽ hiện thanh cuộn */
+    overflow-y: auto;  /* Hiện thanh cuộn dọc */
+    border: 1px solid #dee2e6;
+    background: white;
+}
+
+/* Giữ cố định tiêu đề bảng (Header) khi cuộn */
+.table-scroll-wrapper thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1; /* Màu nền header */
+    z-index: 1;
+}
+/* Layout chính: Chia màn hình làm 2 cột */
+body {
+    background-color: #f8f9fa; /* Màu nền xám nhạt */
+}
+
+.main-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar bên trái */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    border-right: 2px solid #003399; /* Viền xanh đậm */
+    padding-top: 50px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 15px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Nút Sidebar được chọn (Màu đỏ giống thiết kế) */
+.sidebar a.active {
+    background-color: #ff6666; 
+    color: white;
+    font-weight: bold;
+    border: 1px solid #000;
+}
+
+/* Khu vực nội dung bên phải */
+.content {
+    flex-grow: 1;
+    padding: 40px;
+    background-color: #cfd4d9; /* Màu nền xám giống hình */
+}
+
+/* Bảng */
+.table-header th {
+    background-color: #e9ecef !important;
+    font-weight: bold;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #adb5bd;
+}
+
+/* Làm các nút phân trang tròn xoe */
+.pagination-circle .page-link {
+    border-radius: 50% !important;
+    margin: 0 10px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    border: 1px solid #000;
+    background-color: #4a90e2; /* Màu xanh biển */
+    color: white;
+}
+
+.pagination-circle .page-item.active .page-link {
+    background-color: #1c5ba6; /* Màu xanh biển đậm hơn khi active */
+    border-color: #1c5ba6;
+}
+
+.pagination-circle .page-item.disabled .page-link {
+    background-color: transparent;
+    color: #000;
+    border: none;
+}

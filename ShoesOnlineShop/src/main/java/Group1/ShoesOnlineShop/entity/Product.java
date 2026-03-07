@@ -18,8 +18,7 @@ public class Product {
 
     @Column(name = "product_price")
     private BigDecimal price;
-
-<<<<<<< HEAD
+    
     @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal productPrice;
 
@@ -64,7 +63,7 @@ public class Product {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-=======
+
     // Getters và Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -72,5 +71,5 @@ public class Product {
     public void setName(String name) { this.name = name; }
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
->>>>>>> Hieu
+
 }

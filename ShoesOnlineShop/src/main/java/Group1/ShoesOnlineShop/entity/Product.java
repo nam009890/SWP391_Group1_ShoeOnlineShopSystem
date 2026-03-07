@@ -19,8 +19,6 @@ public class Product {
     @Column(name = "product_price")
     private BigDecimal price;
     
-    @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal productPrice;
 
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;

@@ -58,7 +58,14 @@
         <span>Update Slider</span>
     </div>
 
- <form th:action="@{/sliders/save}" th:object="${slider}" method="post" id="sliderForm" enctype="multipart/form-data">
+ <div th:if="${errorMessage}" class="alert alert-danger" style="padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px; margin-bottom: 20px;">
+    <strong th:text="${errorMessage}"></strong>
+</div>
+<div th:if="${#fields.hasErrors('slider.*')}" class="alert alert-danger" style="padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px; margin-bottom: 20px;">
+    <strong>Please fix the errors below before submitting.</strong>
+</div>
+
+<form th:action="@{/sliders/save}" th:object="${slider}" method="post" id="sliderForm" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}">
     <input type="hidden" th:field="*{imageUrl}"> 
     

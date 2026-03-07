@@ -106,8 +106,6 @@ class SliderServiceTest {
         Slider slider = new Slider();
         slider.setSliderTitle("");
         slider.setImageUrl("http://image.com/pic.jpg");
-        slider.setLinkUrl("http://link.com");
-        slider.setPosition(1);
 
         Set<ConstraintViolation<Slider>> violations = validator.validate(slider);
         
@@ -120,8 +118,6 @@ class SliderServiceTest {
 void testValidateEntity_BlankImageUrl() {
     Slider slider = new Slider();
     slider.setSliderTitle("Valid Title");
-    slider.setLinkUrl("http://example.com");
-    slider.setPosition(1);
     slider.setImageUrl(""); // Cố tình để trống
 
     Set<ConstraintViolation<Slider>> violations = validator.validate(slider);

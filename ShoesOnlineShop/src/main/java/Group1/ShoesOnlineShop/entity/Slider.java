@@ -24,13 +24,7 @@ public class Slider {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
-    @NotBlank(message = "Link URL cannot be blank!")
-    @Column(name = "link_url", length = 500)
-    private String linkUrl;
 
-    @NotNull(message = "Position is required!")
-    @Column(name = "position")
-    private Integer position = 0;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -66,10 +60,6 @@ public class Slider {
     public void setSliderTitle(String sliderTitle) { this.sliderTitle = sliderTitle; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-    public String getLinkUrl() { return linkUrl; }
-    public void setLinkUrl(String linkUrl) { this.linkUrl = linkUrl; }
-    public Integer getPosition() { return position; }
-    public void setPosition(Integer position) { this.position = position; }
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     public LocalDateTime getCreatedAt() { return createdAt; }

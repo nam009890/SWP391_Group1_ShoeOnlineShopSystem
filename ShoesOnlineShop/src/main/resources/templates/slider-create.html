@@ -78,17 +78,6 @@
                                 <div class="text-danger mt-1" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" style="font-size:12px;font-weight:600"></div>
                             </div>
                             
-                            <div class="col-md-6">
-                                <label class="form-label">Link URL</label>
-                                <input type="text" th:field="*{linkUrl}" class="form-control" placeholder="https://..." th:classappend="${#fields.hasErrors('linkUrl')} ? 'is-invalid' : ''">
-                                <div class="text-danger mt-1" th:if="${#fields.hasErrors('linkUrl')}" th:errors="*{linkUrl}" style="font-size:12px;font-weight:600"></div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Position</label>
-                                <input type="number" th:field="*{position}" class="form-control" placeholder="1" th:classappend="${#fields.hasErrors('position')} ? 'is-invalid' : ''">
-                                <div class="text-danger mt-1" th:if="${#fields.hasErrors('position')}" th:errors="*{position}" style="font-size:12px;font-weight:600"></div>
-                            </div>
                         </div>
                     </div>
                 </div> <div class="card mb-4">

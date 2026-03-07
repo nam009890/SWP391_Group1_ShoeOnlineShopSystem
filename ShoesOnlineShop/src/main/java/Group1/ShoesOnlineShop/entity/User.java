@@ -1,6 +1,8 @@
 package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.Date;
 
@@ -19,12 +21,17 @@ public class User {
     @Column(name = "user_name", unique = true, nullable = false, length = 50)
     private String userName;
 
+    // THÊM VALIDATE EMAIL
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
     @Column(name = "user_email", unique = true, nullable = false, length = 100)
     private String userEmail;
 
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
+    // THÊM VALIDATE TÊN
+    @NotBlank(message = "Full Name cannot be blank")
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 

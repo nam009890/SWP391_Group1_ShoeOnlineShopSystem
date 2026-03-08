@@ -1,32 +1,24 @@
 package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Long productId;
+    private Long id;
 
-    @Column(name = "product_name", nullable = false, length = 200)
-    private String productName;
+    @Column(name = "product_name")
+    private String name;
 
-    @Column(name = "product_description", columnDefinition = "NVARCHAR(MAX)")
-    private String productDescription;
-
-    @Column(name = "product_price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal productPrice;
+    @Column(name = "product_price")
+    private BigDecimal price;
+    
 
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;

@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUserEmail(String userEmail);
+    // Kiểm tra xem email nhập vào có bị trùng với tài khoản khác không
+    boolean existsByUserEmailAndUserIdNot(String userEmail, Long userId);
 }

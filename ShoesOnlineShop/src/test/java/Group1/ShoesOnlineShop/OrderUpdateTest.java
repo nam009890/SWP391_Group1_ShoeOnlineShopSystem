@@ -50,7 +50,7 @@ public class OrderUpdateTest {
 
     // ================= SUCCESS =================
     @Test
-    void testUpdateOrderSuccess() {
+    void testUpdateOrderSuccess_UD1() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -72,7 +72,7 @@ public class OrderUpdateTest {
 
     // ================= PHONE Empty =================
     @Test
-    void testPhoneEmpty() {
+    void testPhoneEmpty_UD2() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -93,7 +93,7 @@ public class OrderUpdateTest {
     
     // ================= PHONE Null =================
     @Test
-    void testPhoneNull() {
+    void testPhoneNull_UD3() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -114,7 +114,7 @@ public class OrderUpdateTest {
     
     // ================= PHONE Wrong Format =================
     @Test
-    void testPhoneWrongFormat() {
+    void testPhoneWrongFormat_UD4() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -136,7 +136,7 @@ public class OrderUpdateTest {
     
     // ================= ADRESS Empty =================
     @Test
-    void testAdressEmpty() {
+    void testAdressEmpty_UD5() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -157,7 +157,7 @@ public class OrderUpdateTest {
     
     // ================= ADRESS Null =================
     @Test
-    void testAdressNull() {
+    void testAdressNull_UD6() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -178,7 +178,7 @@ public class OrderUpdateTest {
     
     // ================= ADDRESS > 255 =================
     @Test
-    void testAddressMoreThan255() {
+    void testAddressMoreThan255_UD7() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -201,7 +201,7 @@ public class OrderUpdateTest {
     
     // ================= QUANTITY Less Than 0 =================
     @Test
-    void testQuantityLessThan0() {
+    void testQuantityLessThan0_UD8() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -222,7 +222,7 @@ public class OrderUpdateTest {
 
     // ================= QUANTITY NEGATIVE =================
     @Test
-    void testQuantityNegative() {
+    void testQuantityNegative_UD9() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -243,7 +243,7 @@ public class OrderUpdateTest {
     
     // ================= QUANTITY Null =================
     @Test
-    void testQuantityNull() {
+    void testQuantityNull_UD10() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.of(order));
@@ -266,7 +266,7 @@ public class OrderUpdateTest {
 
     // ================= ORDER NOT FOUND =================
     @Test
-    void testOrderNotFound() {
+    void testOrderNotFound_UD11() {
 
         when(orderRepository.findById(1L))
                 .thenReturn(Optional.empty());

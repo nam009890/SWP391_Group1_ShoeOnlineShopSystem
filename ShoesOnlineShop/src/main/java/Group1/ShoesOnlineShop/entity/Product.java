@@ -19,7 +19,8 @@ public class Product {
     @Column(name = "product_price")
     private BigDecimal price;
     
-
+@Column(name = "product_description", length = 500)
+private String productDescription;
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
@@ -62,17 +63,17 @@ public class Product {
         updatedAt = LocalDateTime.now();
     }
     
-     public Long getProductId() { return productId; }
-    public void setProductId(Long productId) { this.productId = productId; }
+     public Long getProductId() { return id; }
+    public void setProductId(Long id) { this.id = id; }
 
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    public String getProductName() { return name; }
+    public void setProductName(String name) { this.name = name; }
 
     public String getProductDescription() { return productDescription; }
     public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
 
-    public BigDecimal getProductPrice() { return productPrice; }
-    public void setProductPrice(BigDecimal productPrice) { this.productPrice = productPrice; }
+    public BigDecimal getProductPrice() { return price; }
+    public void setProductPrice(BigDecimal price) { this.price = price; }
 
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }

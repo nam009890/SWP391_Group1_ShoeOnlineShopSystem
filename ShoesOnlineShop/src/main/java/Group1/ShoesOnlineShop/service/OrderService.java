@@ -56,8 +56,14 @@ public OrderService(OrderRepository orderRepository) {
 }
 
     public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
-    }
+
+    Order order = orderRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    order.setIsActive(false);
+
+    orderRepository.save(order);
+}
 
 public Order findById(Long id) {
         return orderRepository.findById(id)

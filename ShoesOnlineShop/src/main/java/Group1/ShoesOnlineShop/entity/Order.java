@@ -45,7 +45,8 @@ public class Order {
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
     
-    
+    @Column(name = "is_active", columnDefinition = "BIT DEFAULT 1")
+private Boolean isActive = true;
 
     
 
@@ -153,6 +154,11 @@ public class Order {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
     
+public Boolean getIsActive() {
+    return isActive;
+}
 
-
+public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
+}
 }

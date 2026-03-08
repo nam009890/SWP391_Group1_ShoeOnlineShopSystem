@@ -88,4 +88,13 @@ public String updateOrder(@RequestParam Long id,
 
     return "redirect:/orders";
 }
+@GetMapping("/view/{id}")
+public String viewOrder(@PathVariable Long id, Model model) {
+
+    Order order = orderService.findById(id);
+
+    model.addAttribute("order", order);
+
+    return "order-detail";
+}
 }

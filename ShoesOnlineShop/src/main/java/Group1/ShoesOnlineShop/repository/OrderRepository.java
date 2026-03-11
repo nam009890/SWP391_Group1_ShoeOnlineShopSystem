@@ -6,6 +6,7 @@
 package Group1.ShoesOnlineShop.repository;
 import Group1.ShoesOnlineShop.entity.Order;
 import Group1.ShoesOnlineShop.entity.OrderStatus;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,5 +27,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> searchOrders(@Param("status") String status,
                              @Param("keyword") String keyword,
                              Pageable pageable);
-    
+        List<Order> findByOrderStatus(String status);
+
 }

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Invoice</title>
+
+    <style>
+
+        body{
+            background:#f3f4f6;
+            font-family:Arial;
+        }
+
+        .container{
+            width:900px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:8px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            margin-bottom:25px;
+        }
+
+        label{
+            font-weight:bold;
+            display:block;
+            margin-top:15px;
+        }
+
+        input,select{
+            width:100%;
+            padding:8px;
+            margin-top:5px;
+            border:1px solid #ccc;
+            border-radius:4px;
+        }
+
+        table{
+            width:100%;
+            margin-top:20px;
+            border-collapse:collapse;
+        }
+
+        th,td{
+            padding:10px;
+            border-bottom:1px solid #ddd;
+            text-align:left;
+        }
+
+        th{
+            background:#f8f9fa;
+        }
+
+        .btn{
+            padding:8px 16px;
+            border:none;
+            border-radius:4px;
+            cursor:pointer;
+            text-decoration:none;
+            font-size:14px;
+        }
+
+        .btn-add{
+            background:#007bff;
+            color:white;
+        }
+
+        .btn-back{
+            background:#6c757d;
+            color:white;
+        }
+
+        .btn-group{
+            margin-top:20px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Create Invoice</h2>
+
+<!-- Select Order -->
+
+<form th:action="@{/invoices/create}" method="post">
+
+<label>Select Order</label>
+
+<select onchange="window.location.href='/invoices/create/' + this.value">
+
+<option value="">Select Order</option>
+
+<option th:each="o : ${orders}"
+        th:value="${o.orderId}"
+        th:text="'Order #' + ${o.orderId}">
+</option>
+
+</select>
+
+
+<!-- Order Info -->
+
+<div th:if="${order != null}">
+
+<label>Customer Name</label>
+<input type="text"
+       th:value="${order.user.fullName}"
+       readonly>
+<input type="hidden" name="orderId" th:value="${order.orderId}">
+<label>Phone</label>
+<input type="text"
+       name="phone"
+       th:value="${order.phone}">
+
+<label>Address</label>
+<input type="text"
+       name="address"
+       th:value="${order.shippingAddress}">
+
+<!-- Product List -->
+
+<table>
+
+<thead>
+<tr>
+<th>Product</th>
+<th>Quantity</th>
+<th>Price</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr th:each="d : ${order.orderDetails}">
+
+<td th:text="${d.product.productName}"></td>
+
+<td th:text="${d.quantity}"></td>
+
+<td th:text="${d.unitPrice}"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<label>Total Price</label>
+
+<input type="text"
+       th:value="${order.totalAmount}"
+       readonly>
+
+<div class="btn-group">
+
+<button type="submit"
+        class="btn btn-add"
+        th:if="${order != null}">
+Add Invoice
+</button>
+
+<a href="/invoices" class="btn btn-back">
+Back to List
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</body>
+</html>

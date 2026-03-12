@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserEmail(String userEmail);
+    // SELECT COUNT(*) > 0 FROM users WHERE username = ?
+    boolean existsByUserName(String username);
 }
+

@@ -6,4 +6,57 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Created on : Mar 1, 2026, 11:38:19 PM
     Author     : hp
 */
+/* Căn giữa toàn bộ form ra giữa màn hình */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+    background-color: #f4f4f4;
+}
 
+/* Khung hình chữ nhật bao quanh form */
+.login-box {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 300px;
+    border-radius: 5px;
+}
+
+h2 {
+    text-align: center;
+}
+
+/* Khoảng cách giữa các ô nhập liệu */
+.field {
+    margin-bottom: 15px;
+}
+
+/* Kéo dài ô input bằng chiều ngang của form */
+input[type="text"], 
+input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box; /* Giúp padding không làm tràn khung */
+}
+
+.actions {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Định dạng nút bấm */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

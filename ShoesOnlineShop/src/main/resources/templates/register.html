@@ -1,0 +1,72 @@
+
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Register Page</title>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+
+        <div class="login-box">
+            <h2>Register</h2>
+
+            <div id="error-message" style="color: red; margin-bottom: 10px; display: none;"></div>
+
+            <form action="/register" method="post">
+
+                <div class="field">
+                    <div id="error-message" style="color: red; margin-bottom: 10px; display: none; font-weight: bold;"></div>
+                    <label>Username:</label><br>
+                    <input type="text" name="username" required>
+                </div>
+
+                <div class="field">
+                    <label>Password:</label><br>
+                    <input type="password" name="password" required>
+                </div>
+
+                <div class="field">
+                    <div id="error-message" style="color: red; margin-bottom: 10px; display: none; font-weight: bold;"></div>
+                    <label>Confirm Password:</label><br>
+                    <input type="password" name="confirmPassword" required>
+                </div>
+
+                <div class="field">
+                    <label>Phone Number:</label><br>
+                    <input type="text" name="phoneNumber" required>
+                </div>
+
+                <div class="field">
+                    <label>Address:</label><br>
+                    <textarea name="address" rows="3" style="width: 100%; box-sizing: border-box;" required></textarea>
+                </div>
+
+                <br>
+                <button type="submit">Register</button>
+
+                <p>Already have an account? <a href="/login">Login</a></p>
+
+            </form>
+        </div>
+        <script>
+            // Lấy các tham số từ thanh URL
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Nếu trên URL có ?error=exists
+            if (urlParams.get('error') === 'exists') {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.innerText = 'Username has already exited!';
+                errorDiv.style.display = 'block'; // Hiển thị khung lỗi
+            }
+            if (urlParams.get('error') === 'unmatched') {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.innerText = 'Passwords do not match';
+                errorDiv.style.display = 'block'; // Hiển thị khung lỗi
+            }
+        </script>
+    </body>
+</html>

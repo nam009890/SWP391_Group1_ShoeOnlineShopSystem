@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .role-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11.5px; font-weight:600; }
+        .role-ADMIN    { background:#ede9fe; color:#5b21b6; }
+        .role-CUSTOMER { background:#dbeafe; color:#1e40af; }
+        .role-STAFF    { background:#d1fae5; color:#065f46; }
+        .role-MARKETING{ background:#fef3c7; color:#92400e; }
+        .role-default  { background:var(--bg); color:var(--text-mid); }
+        .user-avatar-sm { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#4f6ef7,#818cf8); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+    <a href="/admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a href="/admin/products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
+    <a href="/admin/users" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Users</a>
+    <a href="/admin/orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
+    <a href="/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div>
+            <h4>User Management</h4>
+            <p>Manage registered accounts</p>
+        </div>
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div th:if="${successMessage}" style="margin:15px 22px 0; padding:12px; background:#d1fae5; color:#065f46; border-radius:8px; font-size:14px;">
+            <strong th:text="${successMessage}"></strong>
+        </div>
+        <div th:if="${errorMessage}" style="margin:15px 22px 0; padding:12px; background:#fee2e2; color:#991b1b; border-radius:8px; font-size:14px;">
+            <strong th:text="${errorMessage}"></strong>
+        </div>
+
+        <div class="toolbar" style="flex-wrap:wrap; gap:15px;">
+            <form action="/admin/users" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
+                <div class="search-input">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search name or email…">
+                </div>
+                <button type="submit" class="btn-search">Search</button>
+
+                <select name="role" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                    <option value="">All Roles</option>
+                    <option value="ADMIN" th:selected="${role == 'ADMIN'}">Admin</option>
+                    <option value="CUSTOMER" th:selected="${role == 'CUSTOMER'}">Customer</option>
+                    <option value="STAFF" th:selected="${role == 'STAFF'}">Staff</option>
+                    <option value="MARKETING" th:selected="${role == 'MARKETING'}">Marketing</option>
+                </select>
+
+                <select name="isActive" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                    <option value="">All Status</option>
+                    <option value="true" th:selected="${isActive == true}">Active</option>
+                    <option value="false" th:selected="${isActive == false}">Blocked</option>
+                </select>
+            </form>
+            <div style="margin-left:auto; font-size:13px; color:var(--text-mid);">
+                Total: <strong th:text="${totalItems}">0</strong> users
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:50px">No</th>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th style="width:200px; text-align:center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user, state : ${users}" th:if="${!users.isEmpty()}">
+                    <td style="color:var(--text-mid); font-weight:600;" th:text="${(currentPage - 1) * 8 + state.count}">1</td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div class="user-avatar-sm" th:text="${#strings.substring(user.fullName, 0, 2).toUpperCase()}">AB</div>
+                            <div>
+                                <div style="font-weight:600; font-size:13.5px;" th:text="${user.fullName}">Full Name</div>
+                                <div style="font-size:11.5px; color:var(--text-mid);" th:text="'@' + ${user.userName}">@username</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="${user.userEmail}">email@example.com</td>
+                    <td th:text="${user.phone != null ? user.phone : '—'}">—</td>
+                    <td>
+                        <span class="role-badge"
+                              th:classappend="'role-' + ${user.userRole}"
+                              th:text="${user.userRole}">CUSTOMER</span>
+                    </td>
+                    <td>
+                        <span th:if="${user.isActive}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active</span>
+                        <span th:if="${!user.isActive}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Blocked</span>
+                    </td>
+                    <td class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : '—'}">—</td>
+                    <td>
+                        <div class="action-btns" style="justify-content:center;">
+                            <a th:href="@{/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
+                            <a th:href="@{/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
+                            <a th:if="${user.isActive}" th:href="@{/admin/users/block/{id}(id=${user.userId})}"
+                               class="btn-del" onclick="return confirm('Block this user?')">Block</a>
+                            <a th:if="${!user.isActive}" th:href="@{/admin/users/block/{id}(id=${user.userId})}"
+                               class="btn-upd" onclick="return confirm('Unblock this user?')">Unblock</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${users.isEmpty()}" class="empty-row">
+                    <td colspan="8">No users found.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination-bar" th:if="${totalPages > 1}">
+            <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
+            <div class="page-btns">
+                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/users(page=${currentPage - 1}, keyword=${keyword}, role=${role}, isActive=${isActive})}">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </a>
+                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/users(page=${i}, keyword=${keyword}, role=${role}, isActive=${isActive})}" th:text="${i}">1</a>
+                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/users(page=${currentPage + 1}, keyword=${keyword}, role=${role}, isActive=${isActive})}">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

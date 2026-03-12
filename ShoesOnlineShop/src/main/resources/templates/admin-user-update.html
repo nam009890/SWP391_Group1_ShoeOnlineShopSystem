@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Edit User</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+    <a href="/admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a href="/admin/products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
+    <a href="/admin/users" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+    <a href="/admin/orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
+    <a href="/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div>
+            <h4>Edit User</h4>
+            <p>Update user information, role and status</p>
+        </div>
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
+        </div>
+    </div>
+
+    <div class="breadcrumb-bar">
+        <a href="/admin">Dashboard</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="/admin/users">Users</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Edit</span>
+    </div>
+
+    <div class="card">
+        <div class="card-header-bar">
+            <h6>Editing: <span style="color:var(--accent);" th:text="${user.fullName}">User Name</span></h6>
+            <span style="font-size:12px; color:var(--text-mid);">User ID: <strong th:text="${user.userId}">1</strong></span>
+        </div>
+
+        <form th:action="@{/admin/users/update/{id}(id=${user.userId})}" method="post" class="card-body-pad" th:object="${user}">
+
+            <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:12px 16px; margin-bottom:20px; font-size:13px; color:#92400e;">
+                <strong>⚠ Note:</strong> You are editing a user account. Password will not be changed here.
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name <span style="color:var(--danger)">*</span></label>
+                        <input type="text" name="fullName" th:value="${user.fullName}" class="form-control" placeholder="Full Name" maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <div class="field-readonly" th:text="${user.userEmail}">email</div>
+                        <input type="hidden" name="userEmail" th:value="${user.userEmail}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" th:value="${user.phone}" class="form-control" placeholder="0xxxxxxxxx" maxlength="20">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">User Role <span style="color:var(--danger)">*</span></label>
+                        <select name="userRole" class="form-select">
+                            <option value="CUSTOMER" th:selected="${user.userRole == 'CUSTOMER'}">Customer</option>
+                            <option value="STAFF" th:selected="${user.userRole == 'STAFF'}">Staff</option>
+                            <option value="MARKETING" th:selected="${user.userRole == 'MARKETING'}">Marketing</option>
+                            <option value="ADMIN" th:selected="${user.userRole == 'ADMIN'}">Admin</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Account Status</label>
+                        <select name="isActive" class="form-select">
+                            <option value="true" th:selected="${user.isActive}">Active</option>
+                            <option value="false" th:selected="${!user.isActive}">Blocked</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="3" placeholder="Delivery address" th:text="${user.address}"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer mt-4">
+                <a href="/admin/users" class="btn-outline">Cancel</a>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

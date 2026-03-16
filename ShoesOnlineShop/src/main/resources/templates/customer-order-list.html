@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Orders - Shoes Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { background: #fdfdfd; }
+        .customer-topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 15px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .header-brand { font-size: 20px; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 8px;}
+        .header-brand svg { width: 24px; height: 24px; fill: var(--accent); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-dark); text-decoration: none; font-weight: 600; font-size: 15px; }
+        .customer-main { padding: 40px; max-width: 900px; margin: 0 auto; }
+        
+        .order-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border);}
+        .order-id { font-size: 16px; font-weight: 800; color: var(--text-dark); }
+        .order-date { font-size: 13px; font-weight: 600; color: var(--text-mid); }
+        .order-status { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em;}
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-completed { background: #d1fae5; color: #065f46; }
+        
+        .order-body { display: flex; justify-content: space-between; align-items: flex-end; }
+        .order-total-label { font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 4px; }
+        .order-total { font-size: 20px; font-weight: 800; color: var(--text-dark); }
+        
+    </style>
+</head>
+<body>
+
+    <header class="customer-topbar">
+        <a href="/" class="header-brand">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            Shoes Store
+        </a>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Shop</a>
+            <a href="/orders" style="color: var(--accent)">My Orders</a>
+            <a href="/cart">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            </a>
+        </nav>
+    </header>
+
+    <div class="customer-main">
+        <div th:if="${message}" class="alert alert-success" style="padding: 12px; background: #d1fae5; color: #065f46; border-radius: 8px; font-size: 14px; font-weight: 600; margin-bottom: 24px;">
+            <strong th:text="${message}"></strong>
+        </div>
+        
+        <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 30px;">Order History</h1>
+        
+        <div th:if="${#lists.isEmpty(orders)}" style="text-align: center; padding: 60px; background: white; border-radius: 14px; border: 1px dashed var(--border);">
+            You have no orders yet.
+        </div>
+
+        <div class="order-card" th:each="order : ${orders}">
+            <div class="order-header">
+                <div>
+                    <div class="order-id">Order #<span th:text="${order.orderId}">123</span></div>
+                    <div class="order-date" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy - HH:mm')}">Date</div>
+                </div>
+                <div class="order-status" th:classappend="${order.orderStatus == 'PENDING'} ? 'status-pending' : 'status-completed'" th:text="${order.orderStatus}">PENDING</div>
+            </div>
+            <div class="order-body">
+                <div>
+                    <div class="order-total-label">Total Amount</div>
+                    <div class="order-total" th:text="${'$' + order.totalAmount}">$0.00</div>
+                </div>
+                <a th:href="@{/orders/detail/{id}(id=${order.orderId})}" class="btn-outline">View Details</a>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-bar" style="background: white; border-radius: 14px; border: 1px solid var(--border);" th:if="${totalPages > 1}">
+            <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
+            <div class="page-btns">
+                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/orders(page=${currentPage - 1})}">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </a>
+                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/orders(page=${i})}" th:text="${i}">1</a>
+                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/orders(page=${currentPage + 1})}">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

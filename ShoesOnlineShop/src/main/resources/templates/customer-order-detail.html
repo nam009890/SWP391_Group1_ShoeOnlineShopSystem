@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Detail - Shoes Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { background: #fdfdfd; }
+        .customer-topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 15px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .header-brand { font-size: 20px; font-weight: 800; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 8px;}
+        .header-brand svg { width: 24px; height: 24px; fill: var(--accent); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: var(--text-dark); text-decoration: none; font-weight: 600; font-size: 15px; }
+        .customer-main { padding: 40px; max-width: 900px; margin: 0 auto; }
+        
+        .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+        .detail-info { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 24px;}
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .info-label { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 4px; }
+        .info-value { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        
+        .order-items { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+        .item-list { padding: 20px; }
+        .item-row { display: flex; gap: 16px; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
+        .item-row:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+        .item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; background: #f5f6f8; }
+        .item-info { flex: 1; }
+        .item-name { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;}
+        .item-qty { font-size: 13px; color: var(--text-mid); font-weight: 600;}
+        .item-price { font-size: 15px; font-weight: 800; color: var(--accent); }
+        
+        .feedback-btn { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 6px; background: var(--accent-light); color: var(--accent); text-decoration: none; border: 1px solid #c7d0fb; transition: background .2s;}
+        .feedback-btn:hover { background: var(--accent); color: white; }
+    </style>
+</head>
+<body>
+
+    <header class="customer-topbar">
+        <a href="/" class="header-brand">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            Shoes Store
+        </a>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Shop</a>
+            <a href="/orders" style="color: var(--accent)">My Orders</a>
+            <a href="/cart">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            </a>
+        </nav>
+    </header>
+
+    <div class="customer-main">
+        <div class="breadcrumb-bar" style="margin-bottom: 24px;">
+            <a href="/orders">My Orders</a>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            <span>Order Detail</span>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success mt-3" style="font-weight: 600;">
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger mt-3" style="font-weight: 600;">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <div class="detail-header">
+            <div>
+                <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 6px;">Order #<span th:text="${order.orderId}">123</span></h1>
+                <div style="font-size: 14px; font-weight: 600; color: var(--text-mid);" th:text="${#temporals.format(order.orderDate, 'MMM dd, yyyy - HH:mm')}">Date</div>
+            </div>
+            <div style="font-size: 13px; font-weight: 800; padding: 6px 14px; border-radius: 8px; background: #fef3c7; color: #92400e; text-transform: uppercase;" th:text="${order.orderStatus}">PENDING</div>
+        </div>
+
+        <div class="detail-info">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">Order Information</h3>
+            <div class="info-grid">
+                <div>
+                    <div class="info-label">Customer</div>
+                    <div class="info-value" th:text="${order.user.fullName}">Name</div>
+                </div>
+                <div>
+                    <div class="info-label">Phone</div>
+                    <div class="info-value" th:text="${order.phone}">Phone</div>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <div class="info-label">Shipping Address</div>
+                    <div class="info-value" th:text="${order.shippingAddress}">Address</div>
+                </div>
+                <div>
+                    <div class="info-label">Payment Status</div>
+                    <div class="info-value" th:text="${order.paymentStatus}">Status</div>
+                </div>
+                <div>
+                    <div class="info-label">Total Amount</div>
+                    <div class="info-value" style="font-size: 18px; color: var(--accent);" th:text="${'$' + order.totalAmount}">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-items">
+            <div style="padding: 20px 24px; border-bottom: 1px solid var(--border); background: #fafafa;">
+                <h3 style="font-size: 15px; font-weight: 800; margin: 0;">Ordered Items</h3>
+            </div>
+            <div class="item-list">
+                <div class="item-row" th:each="detail : ${order.orderDetails}">
+                    <img th:src="${detail.product.imageUrl != null ? detail.product.imageUrl : 'https://via.placeholder.com/60?text=Shoe'}" class="item-img" alt="Product">
+                    <div class="item-info">
+                        <div class="item-name" th:text="${detail.product.name}">Product Name</div>
+                        <div class="item-qty">Qty: <span th:text="${detail.quantity}">1</span></div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="item-price" th:text="${'$' + detail.subtotal}">$0.00</div>
+                        <a th:href="@{/feedback/{oid}/{pid}(oid=${order.orderId}, pid=${detail.product.id})}" class="feedback-btn mt-2 d-inline-block">Write Review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

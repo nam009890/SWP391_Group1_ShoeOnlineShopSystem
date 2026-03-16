@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Update Category</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .image-preview-box {
+            width: 180px; height: 160px;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: var(--bg);
+            transition: border-color .2s; overflow: hidden; position: relative;
+        }
+        .image-preview-box:hover { border-color: var(--accent); }
+        .image-preview-box img { width:100%; height:100%; object-fit:cover; }
+        .image-preview-box .upload-hint { display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--text-light); font-size:13px; }
+        .image-preview-box .upload-hint svg { width:32px; }
+        #imageFile { display:none; }
+        .error-text { color: var(--danger); font-size: 12px; margin-top: 4px; }
+        .current-img-label { font-size:11px; color:var(--text-mid); text-align:center; margin-top:6px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+    <a href="/admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+    </a>
+    <a href="/admin/products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Products
+    </a>
+    <a href="/admin/categories" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+        Categories
+    </a>
+    <a href="/admin/users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Users
+    </a>
+    <a href="/admin/orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>
+        Orders
+    </a>
+    <a href="/admin/financials">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Financials
+    </a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div>
+            <h4>Update Category</h4>
+            <p>Edit category information</p>
+        </div>
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div>
+                <div class="user-name">Administrator</div>
+                <div class="user-role">Admin</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <a href="/admin/categories">Categories</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a th:href="@{/admin/categories/detail/{id}(id=${category.id})}" th:text="${category.name}">Detail</a>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Update</span>
+    </div>
+
+    <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" method="post" enctype="multipart/form-data">
+
+        <div class="row g-4">
+            <!-- Left: Image Upload -->
+            <div class="col-md-4">
+                <div class="card" style="padding:22px;">
+                    <div style="font-size:14px; font-weight:700; color:var(--text-dark); margin-bottom:14px;">Category Image</div>
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+                        <label for="imageFile" class="image-preview-box" id="imagePreviewBox">
+                            <!-- Show existing image if available -->
+                            <img th:if="${category.imageUrl != null}" th:src="${category.imageUrl}"
+                                 id="currentImg" style="width:100%;height:100%;object-fit:cover;" alt="Current">
+                            <div class="upload-hint" id="uploadHint" th:style="${category.imageUrl != null} ? 'display:none' : 'display:flex'">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <span>Click to upload</span>
+                                <span style="font-size:11px;">PNG, JPG, WEBP</span>
+                            </div>
+                        </label>
+                        <input type="file" id="imageFile" name="imageFile" accept="image/*" onchange="previewImage(this)">
+                        <p class="current-img-label" th:if="${category.imageUrl != null}">Current image — click to replace</p>
+                        <button type="button" onclick="clearImage()" style="font-size:12px; color:var(--danger); background:none; border:none; cursor:pointer;"
+                                id="clearBtn" th:style="${category.imageUrl != null} ? 'display:block' : 'display:none'">✕ Remove image</button>
+                        <div th:if="${errors?.containsKey('imageFile')}" class="error-text" th:text="${errors['imageFile']}"></div>
+                    </div>
+
+                    <!-- Category quick info -->
+                    <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
+                        <div style="font-size:12px; color:var(--text-light); margin-bottom:6px;">Created At</div>
+                        <div style="font-size:13px; color:var(--text-mid);"
+                             th:text="${category.createdAt != null ? #temporals.format(category.createdAt, 'dd/MM/yyyy HH:mm') : '—'}">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Form Fields -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header-bar">
+                        <h6>Category Information</h6>
+                        <span style="font-size:12px; color:var(--text-mid);">ID: <strong th:text="'#' + ${category.id}">#1</strong></span>
+                    </div>
+                    <div class="card-body-pad">
+                        <div class="row g-3">
+
+                            <!-- Name -->
+                            <div class="col-12">
+                                <label class="form-label">Category Name <span style="color:var(--danger)">*</span></label>
+                                <input type="text" name="name" th:value="${category.name}"
+                                       th:class="${errors?.containsKey('name')} ? 'form-control is-invalid' : 'form-control'"
+                                       placeholder="Ex: Running Shoes, T-Shirts…" maxlength="100">
+                                <div th:if="${errors?.containsKey('name')}" class="error-text" th:text="${errors['name']}"></div>
+                            </div>
+
+                            <!-- Parent Category -->
+                            <div class="col-12">
+                                <label class="form-label">Parent Category</label>
+                                <select name="parentId" class="form-select" th:classappend="${errors?.containsKey('parent')} ? 'is-invalid'">
+                                    <option value="">-- No Parent (Root Category) --</option>
+                                    <option th:each="c : ${allCategories}" 
+                                            th:value="${c.id}" 
+                                            th:text="${c.formattedName}"
+                                            th:selected="${category.parent != null && category.parent.id == c.id}">
+                                    </option>
+                                </select>
+                                <div th:if="${errors?.containsKey('parent')}" class="error-text" th:text="${errors['parent']}"></div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-12">
+                                <label class="form-label">Description</label>
+                                <textarea name="description" class="form-control" rows="4"
+                                          placeholder="Description about the category…" maxlength="500"
+                                          th:text="${category.description}"></textarea>
+                            </div>
+
+                            <!-- Display Order -->
+                            <div class="col-md-6">
+                                <label class="form-label">Display Order</label>
+                                <input type="number" name="displayOrder" min="0" max="9999"
+                                       th:value="${category.displayOrder}"
+                                       th:class="${errors?.containsKey('displayOrder')} ? 'form-control is-invalid' : 'form-control'">
+                                <div th:if="${errors?.containsKey('displayOrder')}" class="error-text" th:text="${errors['displayOrder']}"></div>
+                                <small style="color:var(--text-light); font-size:11px; margin-top:4px; display:block;">Smaller number displays first</small>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <select name="isActive" class="form-select">
+                                    <option value="true" th:selected="${category.isActive}">Active</option>
+                                    <option value="false" th:selected="${!category.isActive}">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-top:1px solid var(--border);">
+                        <a th:href="@{/admin/categories/detail/{id}(id=${category.id})}" class="btn-outline">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;"><polyline points="15 18 9 12 15 6"/></svg>
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn-save">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px; display:inline; margin-right:6px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function previewImage(input) {
+        const box = document.getElementById('imagePreviewBox');
+        const hint = document.getElementById('uploadHint');
+        const clearBtn = document.getElementById('clearBtn');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const existing = box.querySelector('img');
+                if (existing) { existing.src = e.target.result; }
+                else {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                    box.appendChild(img);
+                }
+                hint.style.display = 'none';
+                clearBtn.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearImage() {
+        const box = document.getElementById('imagePreviewBox');
+        const hint = document.getElementById('uploadHint');
+        const clearBtn = document.getElementById('clearBtn');
+        const input = document.getElementById('imageFile');
+        input.value = '';
+        const existing = box.querySelector('img');
+        if (existing) existing.remove();
+        hint.style.display = 'flex';
+        clearBtn.style.display = 'none';
+    }
+</script>
+</body>
+</html>

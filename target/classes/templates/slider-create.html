@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Slider</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="main-container">
+    <div class="sidebar">
+        <a href="/sliders" class="active">Slider management</a>
+        <a href="/coupons">Coupon code management</a>
+        <a href="/contents">Content management</a>
+    </div>
+
+    <div class="content">
+        <div class="d-flex justify-content-between mb-4">
+            <h5 class="text-dark m-0">Create Slider</h5>
+            <span class="text-dark">Username</span>
+        </div>
+
+        <form th:action="@{/sliders/save}" th:object="${slider}" method="post" id="sliderForm">
+            
+            <div class="row mb-4 align-items-center justify-content-center">
+                <div class="col-md-8 text-center">
+                    <div class="d-flex justify-content-center align-items-center mb-3 gap-3">
+                        <label class="fw-bold">Name of Slider</label>
+                        <input type="text" th:field="*{sliderTitle}" class="form-control" style="width: 300px;">
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center gap-3">
+                        <input type="text" th:field="*{imageUrl}" class="form-control" placeholder="Link Image" style="width: 300px;">
+                        <button type="button" class="btn btn-light border shadow-sm px-3">Add Image</button> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-end mb-2">
+                <label class="fw-bold">List coupon code</label>
+                <button type="button" class="btn btn-light border shadow-sm px-3" data-bs-toggle="modal" data-bs-target="#modalCoupon">Add Coupon code</button>
+            </div>
+            <div class="bg-white border mb-4">
+                <table class="table table-bordered text-center align-middle mb-0" id="couponTable">
+                    <thead class="table-header">
+                        <tr>
+                            <th>No</th>
+                            <th>Coupon code</th>
+                            <th>discount</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-end mb-2 mt-5">
+                <label class="fw-bold">List product</label>
+                <button type="button" class="btn btn-light border shadow-sm px-3" data-bs-toggle="modal" data-bs-target="#modalProduct">Add Product</button>
+            </div>
+            <div class="bg-white border mb-5">
+                <table class="table table-bordered text-center align-middle mb-0" id="productTable">
+                    <thead class="table-header">
+                        <tr>
+                            <th>No</th>
+                            <th>Product</th>
+                            <th>Discount</th>
+                            <th>price after discount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between mt-5">
+                <a href="/sliders" class="btn btn-light border shadow-sm px-4 fw-bold">Back</a>
+                <button type="submit" class="btn btn-light border shadow-sm px-4 fw-bold">Create</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCoupon" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-light">
+            <div class="modal-header">
+                <h4 class="modal-title fw-bold">Add Coupon Code</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <input type="text" class="form-control w-50" placeholder="Search coupon code">
+                    <button class="btn btn-light border shadow-sm px-4">Search</button>
+                </div>
+                <div class="bg-white border text-start">
+                    <table class="table table-bordered text-center align-middle mb-0">
+                        <thead class="table-header">
+                            <tr><th>No</th><th>Coupon name</th><th>Code</th><th>Discount</th><th>Add</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c, stt : ${coupons}">
+                                <td th:text="${stt.count}">1</td>
+                                <td th:text="${c.couponName}" class="c-name">Name</td>
+                                <td th:text="${c.couponCode}" class="c-code">Code</td>
+                                <td class="c-discount" th:text="${c.discountPercent + ' %'}">10%</td>
+                                <input type="hidden" class="c-start" th:value="${#temporals.format(c.createDate, 'dd/MM/yyyy')}">
+                                <input type="hidden" class="c-end" th:value="${#temporals.format(c.endDate, 'dd/MM/yyyy')}">
+                                <td>
+                                    <input type="checkbox" class="form-check-input coupon-checkbox" th:value="${c.id}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-light border shadow-sm px-5 mt-4 fw-bold" onclick="addSelectedCoupons()" data-bs-dismiss="modal">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalProduct" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-light">
+            <div class="modal-header">
+                <h4 class="modal-title fw-bold">Add Product</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <input type="text" class="form-control w-50" placeholder="Search product">
+                    <button class="btn btn-light border shadow-sm px-4">Search</button>
+                    <select class="form-select w-auto"><option>Brand</option></select>
+                    <select class="form-select w-auto"><option>Type of shoe</option></select>
+                </div>
+                <div class="bg-white border text-start">
+                    <table class="table table-bordered text-center align-middle mb-0">
+                        <thead class="table-header">
+                            <tr><th>No</th><th>Coupon name (Product)</th><th>Price</th><th>Add</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="p, stt : ${products}">
+                                <td th:text="${stt.count}">1</td>
+                                <td th:text="${p.name}" class="p-name">Product Name</td>
+                                <td th:text="${p.price}" class="p-price">1000000</td>
+                                <td>
+                                    <input type="checkbox" class="form-check-input product-checkbox" th:value="${p.id}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-light border shadow-sm px-5 mt-4 fw-bold" onclick="addSelectedProducts()" data-bs-dismiss="modal">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- JAVASCRIPT XỬ LÝ NÚT ADD/DELETE TRÊN GIAO DIỆN ---
+
+    // 1. Thêm Coupon
+    function addSelectedCoupons() {
+        const checkboxes = document.querySelectorAll('.coupon-checkbox:checked');
+        const tbody = document.querySelector('#couponTable tbody');
+        
+        checkboxes.forEach(cb => {
+            // Tránh thêm trùng lặp
+            if(document.querySelector(`input[name='couponIds'][value='${cb.value}']`)) return;
+
+            let row = cb.closest('tr');
+            let code = row.querySelector('.c-code').innerText;
+            let discount = row.querySelector('.c-discount').innerText;
+            let start = row.querySelector('.c-start').value;
+            let end = row.querySelector('.c-end').value;
+            let count = tbody.rows.length + 1;
+
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${count}</td>
+                <td>${code}</td>
+                <td>${discount}</td>
+                <td>${start}</td>
+                <td>${end}</td>
+                <td>
+                    <a href="javascript:void(0)" class="text-primary text-decoration-none" onclick="this.closest('tr').remove(); updateRowNumbers('couponTable');">Delete</a>
+                    <input type="hidden" name="couponIds" value="${cb.value}">
+                </td>
+            `;
+            tbody.appendChild(tr);
+            cb.checked = false; // Bỏ tick sau khi add
+        });
+    }
+
+    // 2. Thêm Product
+    function addSelectedProducts() {
+        const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+        const tbody = document.querySelector('#productTable tbody');
+        
+        checkboxes.forEach(cb => {
+            if(document.querySelector(`input[name='productIds'][value='${cb.value}']`)) return;
+
+            let row = cb.closest('tr');
+            let name = row.querySelector('.p-name').innerText;
+            let price = row.querySelector('.p-price').innerText;
+            let count = tbody.rows.length + 1;
+
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${count}</td>
+                <td>${name}</td>
+                <td>
+                    <select class="form-select form-select-sm d-inline-block w-auto">
+                        <option>Discount</option>
+                        <option>50%</option>
+                    </select>
+                </td>
+                <td>${price}</td>
+                <td>
+                    <a href="javascript:void(0)" class="text-primary text-decoration-none" onclick="this.closest('tr').remove(); updateRowNumbers('productTable');">Delete</a>
+                    <input type="hidden" name="productIds" value="${cb.value}">
+                </td>
+            `;
+            tbody.appendChild(tr);
+            cb.checked = false;
+        });
+    }
+
+    // Cập nhật lại cột "No" khi bấm nút Delete
+    function updateRowNumbers(tableId) {
+        let rows = document.querySelectorAll(`#${tableId} tbody tr`);
+        rows.forEach((row, index) => {
+            row.cells[0].innerText = index + 1;
+        });
+    }
+</script>
+</body>
+</html>

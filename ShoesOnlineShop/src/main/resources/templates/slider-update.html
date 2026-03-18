@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Update Slider</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <span class="brand-name">Shoes Online Shop Marketing</span>
+            </div>
+            <span class="nav-label">Navigation</span>
+
+            <a href="/home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a href="/sliders" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+                Slider
+            </a>
+            <a href="/coupons">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+                Coupon Code
+            </a>
+            <a href="/contents">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Content
+            </a>
+            <div class="sidebar-logout">
+                <a href="/logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="main">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <h4>Update Slider</h4>
+                    <p>Edit slider details, products, and coupon codes</p>
+                </div>
+                <div class="user-pill" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar">MKT</div>
+                    <div>
+                        <div class="user-name">Username</div>
+                        <div class="user-role">Marketing</div>
+                    </div>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="/profile">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Edit Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            Change Password
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-bar">
+                <a href="/sliders">Slider Management</a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span>Update Slider</span>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-danger" style="padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px; margin-bottom: 20px;">
+                <strong th:text="${errorMessage}"></strong>
+            </div>
+            <div th:if="${#fields.hasErrors('slider.*')}" class="alert alert-danger" style="padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px; margin-bottom: 20px;">
+                <strong>Please fix the errors below before submitting.</strong>
+            </div>
+
+            <form th:action="@{/sliders/save}" th:object="${slider}" method="post" enctype="multipart/form-data">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{imageUrl}"> 
+
+                <div class="card">
+                    <div class="card-header-bar"><h6>Slider Information</h6></div>
+                    <div class="card-body-pad">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Slider Title</label>
+                                <input type="text" th:field="*{sliderTitle}" class="form-control" th:classappend="${#fields.hasErrors('sliderTitle')} ? 'is-invalid' : ''">
+                                <div class="form-check form-switch mt-3">
+                                    <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="statusSwitch">
+                                    <label class="form-check-label fw-bold" for="statusSwitch">Active Status</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Change Image (Leave blank to keep current)</label>
+                                <div class="mb-2">
+                                    <img th:src="@{${slider.imageUrl}}" alt="Current Image" style="height: 60px; border-radius: 6px; border: 1px solid var(--border);">
+                                </div>
+                                <input type="file" name="imageFile" class="form-control" accept="image/png, image/jpeg, image/webp">
+                            </div>
+
+                            <!-- Products Card -->
+                            <div class="card">
+                                <div class="card-header-bar">
+                                    <h6>Products <span style="background:var(--bg);color:var(--text-mid);padding:2px 9px;border-radius:12px;font-size:12px;font-weight:500;margin-left:6px" id="product-count">0</span></h6>
+                                    <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#productModal">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        Add Product
+                                    </button>
+                                </div>
+                                <div style="padding: 0 24px 24px">
+                                    <div class="table-wrap">
+                                        <table id="productTable">
+                                            <thead>
+                                                <tr><th style="width:50px">No</th><th>Product Name</th><th>Original Price</th><th>Discount</th><th>Price After Discount</th><th style="width:80px">Action</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="sp, stat : ${slider.sliderProducts}">
+                                                    <td style="color:var(--text-mid);font-weight:600" th:text="${stat.count}">1</td>
+                                                    <td class="p-name" th:text="${sp.product.name}">Product Name</td>
+                                                    <td class="p-price" th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">Price</td>
+                                                    <td>
+                                                        <select name="productDiscounts" class="form-select form-select-sm discount-select" style="width:auto;font-family:'DM Sans',sans-serif" th:onchange="'calcPrice(this, ' + ${sp.product.price} + ')'">
+                                                            <option value="0" th:selected="${sp.discount == 0}">No discount</option>
+                                                            <option value="10" th:selected="${sp.discount == 10}">10%</option>
+                                                            <option value="20" th:selected="${sp.discount == 20}">20%</option>
+                                                            <option value="30" th:selected="${sp.discount == 30}">30%</option>
+                                                            <option value="40" th:selected="${sp.discount == 40}">40%</option>
+                                                            <option value="50" th:selected="${sp.discount == 50}">50%</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="font-weight:700; color:var(--accent)" class="final-price" th:text="${#numbers.formatDecimal(sp.product.price - (sp.product.price * sp.discount / 100), 0, 'COMMA', 0, 'POINT')} + ' VND'">Price</td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" class="btn-del-link" onclick="this.closest('tr').remove(); updateRowNumbers('productTable'); updateCount()">Delete</a>
+                                                        <input type="hidden" name="productIds" th:value="${sp.product.id}">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coupons Card -->
+                            <div class="card">
+                                <div class="card-header-bar">
+                                    <h6>Coupon Codes <span style="background:var(--bg);color:var(--text-mid);padding:2px 9px;border-radius:12px;font-size:12px;font-weight:500;margin-left:6px" id="coupon-count">0</span></h6>
+                                    <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#couponModal">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        Add Coupon
+                                    </button>
+                                </div>
+                                <div style="padding: 0 24px 24px">
+                                    <div class="table-wrap">
+                                        <table id="couponTable">
+                                            <thead>
+                                                <tr><th style="width:50px">No</th><th>Coupon Name</th><th>Code</th><th>Discount</th><th style="width:80px">Action</th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="c, stat : ${slider.coupons}">
+                                                    <td style="color:var(--text-mid);font-weight:600" th:text="${stat.count}">1</td>
+                                                    <td class="c-name" th:text="${c.couponName}">Name</td>
+                                                    <td class="c-code" th:text="${c.couponCode}">Code</td>
+                                                    <td><span class="badge-coupon" th:text="${c.discountPercent + '%'}">10%</span></td>
+                                                    <td>
+                                                        <a href="javascript:void(0)" class="btn-del-link" onclick="this.closest('tr').remove(); updateRowNumbers('couponTable'); updateCount()">Delete</a>
+                                                        <input type="hidden" name="couponIds" th:value="${c.id}">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="form-footer" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius)">
+                                <button type="reset" class="btn-outline" style="margin-right:auto">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                                    Reset Form
+                                </button>
+                                <a href="/sliders" class="btn-outline" style="margin-right:12px">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn-save">Save Changes</button>
+                            </div>
+
+                            <!-- Modal Products -->
+                            <div class="modal fade" id="productModal" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Select Products</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="d-flex gap-2 mb-4">
+                                                <input type="text" id="searchProduct" class="form-control" placeholder="Search product…" onkeyup="filterModal('productModalTable', 'searchProduct')">
+                                            </div>
+                                            <div class="table-wrap">
+                                                <table id="productModalTable">
+                                                    <thead><tr><th>No</th><th>Product Name</th><th>Original Price</th><th style="width:60px;text-align:center">Select</th></tr></thead>
+                                                    <tbody>
+                                                        <tr th:each="p, status : ${products}">
+                                                            <td th:text="${status.count}">1</td>
+                                                            <td class="modal-p-name" th:text="${p.name}">Product Name</td>
+                                                            <td class="modal-p-price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}">Price</td>
+                                                            <td class="text-center">
+                                                                <input type="checkbox" th:value="${p.id}" class="form-check-input product-cb border-secondary"
+                                                                       th:checked="${slider.sliderProducts != null and #lists.contains(slider.sliderProducts.![product], p)}">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn-outline" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn-accent" onclick="addSelectedProducts()" data-bs-dismiss="modal">Add Selected</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal Coupons -->
+                            <div class="modal fade" id="couponModal" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Select Coupons</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="input-with-btn mb-4">
+                                                <input type="text" id="searchCoupon" class="form-control" placeholder="Search coupon code…" onkeyup="filterModal('couponModalTable', 'searchCoupon')">
+                                            </div>
+                                            <div class="table-wrap">
+                                                <table id="couponModalTable">
+                                                    <thead><tr><th>No</th><th>Name</th><th>Code</th><th>Discount</th><th style="width:60px;text-align:center">Select</th></tr></thead>
+                                                    <tbody>
+                                                        <tr th:each="c, status : ${coupons}">
+                                                            <td th:text="${status.count}">1</td>
+                                                            <td class="modal-c-name" th:text="${c.couponName}">Name</td>
+                                                            <td class="modal-c-code" th:text="${c.couponCode}">Code</td>
+                                                            <td class="modal-c-discount" th:text="${c.discountPercent + '%'}">10%</td>
+                                                            <td class="text-center">
+                                                                <input type="checkbox" th:value="${c.id}" class="form-check-input coupon-cb border-secondary"
+                                                                       th:checked="${slider.coupons != null and #lists.contains(slider.coupons, c)}">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn-outline" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn-accent" onclick="addSelectedCoupons()" data-bs-dismiss="modal">Add Selected</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </form>
+                        </div>
+
+                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                        <script>
+                                                function updateCount() {
+                                                    document.getElementById('product-count').innerText = document.querySelectorAll('#productTable tbody tr').length;
+                                                    document.getElementById('coupon-count').innerText = document.querySelectorAll('#couponTable tbody tr').length;
+                                                }
+
+                                                function addSelectedProducts() {
+                                                    let checkboxes = document.querySelectorAll('#productModal .product-cb:checked');
+                                                    let tbody = document.querySelector('#productTable tbody');
+                                                    checkboxes.forEach(cb => {
+                                                        if (document.querySelector(`input[name='productIds'][value='${cb.value}']`))
+                                                            return;
+                                                        let row = cb.closest('tr');
+                                                        let name = row.querySelector('.modal-p-name').innerText;
+                                                        let priceText = row.querySelector('.modal-p-price').innerText;
+                                                        let priceValue = parseFloat(priceText.replace(/,/g, ''));
+                                                        let count = tbody.rows.length + 1;
+                                                        let tr = document.createElement('tr');
+                                                        tr.innerHTML = `
+                                        <td style="color:var(--text-mid);font-weight:600">${count}</td>
+                                        <td class="p-name">${name}</td>
+                                        <td class="p-price">${priceText} VND</td>
+                                        <td>
+                                            <select name="productDiscounts" class="form-select form-select-sm discount-select" style="width:auto;font-family:'DM Sans',sans-serif" onchange="calcPrice(this, ${priceValue})">
+                                                <option value="0">No discount</option>
+                                                <option value="10">10%</option>
+                                                <option value="20">20%</option>
+                                                <option value="30">30%</option>
+                                                <option value="40">40%</option>
+                                                <option value="50">50%</option>
+                                            </select>
+                                        </td>
+                                        <td style="font-weight:700; color:var(--accent)" class="final-price">${priceText} VND</td>
+                                        <td><a href="javascript:void(0)" class="btn-del-link" onclick="this.closest('tr').remove(); updateRowNumbers('productTable'); updateCount()">Delete</a>
+                                            <input type="hidden" name="productIds" value="${cb.value}"></td>`;
+                                                        tbody.appendChild(tr);
+                                                    });
+                                                    updateCount();
+                                                }
+
+                                                function calcPrice(selectElement, originalPrice) {
+                                                    let discount = parseInt(selectElement.value) || 0;
+                                                    let finalPrice = originalPrice - (originalPrice * discount / 100);
+                                                    selectElement.closest('tr').querySelector('.final-price').innerText = finalPrice.toLocaleString('en-US') + ' VND';
+                                                }
+
+                                                function filterModal(tableId, inputId) {
+                                                    let filter = document.getElementById(inputId).value.toLowerCase();
+                                                    let rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+                                                    rows.forEach(row => {
+                                                        let text = row.innerText.toLowerCase();
+                                                        row.style.display = text.includes(filter) ? '' : 'none';
+                                                    });
+                                                }
+
+                                                function addSelectedCoupons() {
+                                                    let checkboxes = document.querySelectorAll('#couponModal .coupon-cb:checked');
+                                                    let tbody = document.querySelector('#couponTable tbody');
+                                                    checkboxes.forEach(cb => {
+                                                        if (document.querySelector(`input[name='couponIds'][value='${cb.value}']`))
+                                                            return;
+                                                        let row = cb.closest('tr');
+                                                        let name = row.querySelector('.modal-c-name').innerText;
+                                                        let code = row.querySelector('.modal-c-code').innerText;
+                                                        let discount = row.querySelector('.modal-c-discount').innerText;
+                                                        let count = tbody.rows.length + 1;
+                                                        let tr = document.createElement('tr');
+                                                        tr.innerHTML = `
+                                        <td style="color:var(--text-mid);font-weight:600">${count}</td>
+                                        <td class="c-name">${name}</td>
+                                        <td class="c-code">${code}</td>
+                                        <td><span class="badge-coupon">${discount}</span></td>
+                                        <td><a href="javascript:void(0)" class="btn-del-link" onclick="this.closest('tr').remove(); updateRowNumbers('couponTable'); updateCount()">Delete</a>
+                                            <input type="hidden" name="couponIds" value="${cb.value}"></td>`;
+                                                        tbody.appendChild(tr);
+                                                    });
+                                                    updateCount();
+                                                }
+
+                                                function updateRowNumbers(tableId) {
+                                                    document.querySelectorAll(`#${tableId} tbody tr`).forEach((row, i) => {
+                                                        row.cells[0].innerText = i + 1;
+                                                    });
+                                                }
+
+                                                window.onload = updateCount;
+                        </script>
+                        </body>
+                        </html>

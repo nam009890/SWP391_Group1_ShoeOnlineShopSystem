@@ -43,13 +43,8 @@ public class Slider {
     )
     private List<Coupon> coupons = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-        name = "slider_products",
-        joinColumns = @JoinColumn(name = "slider_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "slider", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SliderProduct> sliderProducts = new ArrayList<>();
 
     public Slider() {}
 
@@ -68,6 +63,17 @@ public class Slider {
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     public List<Coupon> getCoupons() { return coupons; }
     public void setCoupons(List<Coupon> coupons) { this.coupons = coupons; }
-    public List<Product> getProducts() { return products; }
-    public void setProducts(List<Product> products) { this.products = products; }
+    public List<SliderProduct> getSliderProducts() { return sliderProducts; }
+    public void setSliderProducts(List<SliderProduct> sliderProducts) { this.sliderProducts = sliderProducts; }
+    
+    // Convenience method to add a product with discount
+    public void addProduct(Product product, Integer discount) {
+        SliderProduct sliderProduct = new SliderProduct(this, product, discount);
+        this.sliderProducts.add(sliderProduct);
+    }
+    
+    // Convenience method to remove a product
+    public void removeProduct(Product product) {
+        this.sliderProducts.removeIf(sp -> sp.getProduct().equals(product));
+    }
 }

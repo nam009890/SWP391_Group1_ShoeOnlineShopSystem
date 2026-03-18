@@ -254,7 +254,7 @@ body {
     font-size: 13.5px;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 9px 14px;
+    padding: 9px 36px 9px 14px;
     color: var(--text-dark);
     transition: border-color .15s, box-shadow .15s;
 }

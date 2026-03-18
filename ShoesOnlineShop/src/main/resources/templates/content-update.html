@@ -150,7 +150,10 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
                                 Cancel
                             </a>
-                            <button type="submit" class="btn-save">Save Changes</button>
+                            <div style="display:flex; gap:10px">
+                                <button type="reset" class="btn-outline" onclick="$('#summernote').summernote('reset');">Reset Form</button>
+                                <button type="submit" class="btn-save">Save Changes</button>
+                            </div>
                         </div>
 
                     </form>

@@ -58,4 +58,32 @@ public class ProfileController {
 
         return "redirect:/profile";
     }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+        
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New passwords do not match!");
+            return "redirect:/profile";
+        }
+
+        boolean success = userService.changePassword(CURRENT_USER_ID, currentPassword, newPassword);
+        if (success) {
+            redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Incorrect current password!");
+        }
+
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/logout")
+    public String logout(jakarta.servlet.http.HttpSession session) {
+        session.invalidate();
+        return "redirect:/home";
+    }
 }

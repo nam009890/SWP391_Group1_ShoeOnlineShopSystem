@@ -30,4 +30,14 @@ public class UserService {
             userRepository.save(existingUser);
         }
     }
+
+    public boolean changePassword(Long userId, String currentPassword, String newPassword) {
+        User user = getUserById(userId);
+        if (user != null && user.getPasswordHash().equals(currentPassword)) {
+            user.setPasswordHash(newPassword);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 }

@@ -48,10 +48,12 @@ public class ContentController {
             @Valid @ModelAttribute("content") Content content, 
             BindingResult result,
             @RequestParam(value = "imageFile", required = false) org.springframework.web.multipart.MultipartFile imageFile,
+            RedirectAttributes redirectAttributes,
             Model model) {
 
+        boolean isNew = (content.getId() == null);
         if (result.hasErrors()) {
-            return content.getId() == null ? "content-create" : "content-update";
+            return isNew ? "content-create" : "content-update";
         }
 
         try {
@@ -78,9 +80,10 @@ public class ContentController {
             }
             
             contentService.saveContent(content);
+            redirectAttributes.addFlashAttribute("successMessage", isNew ? "Content created successfully!" : "Content updated successfully!");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Failed to upload image: " + e.getMessage());
-            return content.getId() == null ? "content-create" : "content-update";
+            return isNew ? "content-create" : "content-update";
         }
 
         return "redirect:/contents";

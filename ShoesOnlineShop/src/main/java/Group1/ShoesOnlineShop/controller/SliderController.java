@@ -69,6 +69,7 @@ public class SliderController {
             BindingResult bindingResult,
             @RequestParam(required = false) List<Long> couponIds,
             @RequestParam(required = false) List<Long> productIds,
+            @RequestParam(required = false) List<Integer> productDiscounts,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -88,7 +89,15 @@ public class SliderController {
             
             // --- THÊM 6 DÒNG NÀY ĐỂ PHỤC HỒI SẢN PHẨM/COUPON KHI BỊ LỖI ---
             if (productIds != null && !productIds.isEmpty()) {
-                sliderForm.setProducts(productRepository.findAllById(productIds));
+                List<Group1.ShoesOnlineShop.entity.Product> pdList = productRepository.findAllById(productIds);
+                for (int i = 0; i < productIds.size(); i++) {
+                    Long pId = productIds.get(i);
+                    Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
+                    Group1.ShoesOnlineShop.entity.Product p = pdList.stream().filter(prod -> prod.getId().equals(pId)).findFirst().orElse(null);
+                    if (p != null) {
+                        sliderForm.addProduct(p, discount);
+                    }
+                }
             }
             if (couponIds != null && !couponIds.isEmpty()) {
                 sliderForm.setCoupons(couponRepository.findAllById(couponIds));
@@ -105,7 +114,7 @@ public class SliderController {
 
         // 3. Gọi Service xử lý lưu File và DB
         try {
-            sliderService.processAndSaveSlider(sliderForm, couponIds, productIds, imageFile);
+            sliderService.processAndSaveSlider(sliderForm, couponIds, productIds, productDiscounts, imageFile);
             redirectAttributes.addFlashAttribute("successMessage", 
                 isUpdate ? "Slider updated successfully!" : "Slider created successfully!");
         } catch (Exception e) {

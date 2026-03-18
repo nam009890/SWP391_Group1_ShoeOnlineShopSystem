@@ -136,7 +136,8 @@
                             <td><span style="background:#fef2f2; color:var(--danger); padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700" th:text="${coupon.discountPercent + '%'}">10%</span></td>
                             <td>
                                 <span th:if="${!coupon.isActive}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Inactive</span>
-                                <span th:if="${coupon.isActive and (coupon.endDate < today or coupon.createDate > today)}" class="status-badge status-upcoming" style="font-size:11px; padding:3px 8px;">Expired</span>
+                                <span th:if="${coupon.isActive and coupon.endDate < today}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Expired</span>
+                                <span th:if="${coupon.isActive and coupon.createDate > today}" class="status-badge status-upcoming" style="font-size:11px; background: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; padding:3px 8px;">Upcoming</span>
                                 <span th:if="${coupon.isActive and coupon.createDate <= today and coupon.endDate >= today}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active & Valid</span>
                             </td>
                             <td><span class="date-chip" th:text="${#temporals.format(coupon.endDate, 'dd/MM/yyyy')}">31/12/2024</span></td>

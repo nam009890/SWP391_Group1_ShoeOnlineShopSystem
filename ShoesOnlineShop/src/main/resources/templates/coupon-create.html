@@ -194,8 +194,8 @@
         <script>
             function generateRandomCode() {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let code = 'SALE-';
-                for (let i = 0; i < 6; i++)
+                let code = '';
+                for (let i = 0; i < 8; i++)
                     code += chars.charAt(Math.floor(Math.random() * chars.length));
                 document.getElementById('couponCodeInput').value = code;
             }

@@ -18,4 +18,8 @@ public interface SliderRepository extends JpaRepository<Slider, Long> {
 
     boolean existsBySliderTitle(String sliderTitle);
     boolean existsBySliderTitleAndIdNot(String sliderTitle, Long id);
+    
+    long countByIsActive(Boolean isActive);
+    java.util.List<Slider> findTop5ByOrderByCreatedAtDesc();
+    java.util.List<Slider> findTop50ByOrderByCreatedAtDesc();
 }

@@ -38,10 +38,10 @@ public class SliderController {
     @GetMapping("/sliders")
     public String listSliders(
             Model model,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(required = false) Boolean status, // Filter Active/Deactive
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "status", required = false) Boolean status, // Filter Active/Deactive
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
     ) {
         Page<Slider> pageSliders = sliderService.getSliders(keyword, status, page, size);
         model.addAttribute("sliders", pageSliders.getContent());
@@ -68,9 +68,9 @@ public class SliderController {
     public String saveSlider(
             @Valid @ModelAttribute("slider") Slider sliderForm,
             BindingResult bindingResult,
-            @RequestParam(required = false) List<Long> couponIds,
-            @RequestParam(required = false) List<Long> productIds,
-            @RequestParam(required = false) List<Integer> productDiscounts,
+            @RequestParam(name = "couponIds", required = false) List<Long> couponIds,
+            @RequestParam(name = "productIds", required = false) List<Long> productIds,
+            @RequestParam(name = "productDiscounts", required = false) List<Integer> productDiscounts,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -127,7 +127,7 @@ public class SliderController {
     }
 
     @GetMapping("/sliders/update/{id}")
-    public String showUpdateSliderForm(@PathVariable Long id, Model model) {
+    public String showUpdateSliderForm(@PathVariable(name = "id") Long id, Model model) {
         Slider slider = sliderService.getSliderById(id);
         if (slider == null) return "redirect:/sliders";
         model.addAttribute("slider", slider);
@@ -138,7 +138,7 @@ public class SliderController {
 
     // [Tạo mới] Màn hình xem chi tiết
     @GetMapping("/sliders/detail/{id}")
-    public String showSliderDetail(@PathVariable Long id, Model model) {
+    public String showSliderDetail(@PathVariable(name = "id") Long id, Model model) {
         Slider slider = sliderService.getSliderById(id);
         if (slider == null) return "redirect:/sliders";
         model.addAttribute("slider", slider);
@@ -146,7 +146,7 @@ public class SliderController {
     }
 
     @GetMapping("/sliders/delete/{id}")
-    public String deleteSlider(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteSlider(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         sliderService.deleteSlider(id);
         redirectAttributes.addFlashAttribute("successMessage", "Slider deleted successfully!");
         return "redirect:/sliders";

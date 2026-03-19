@@ -84,15 +84,13 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                             <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by title…">
                         </div>
-
+                       <button type="submit" class="btn-search">Search</button>
                         <select name="type" class="form-select" style="width:auto; height: 38px;" onchange="this.form.submit()">
                             <option value="">All Types</option>
                             <option value="BANNER" th:selected="${type == 'BANNER'}">Banner</option>
                             <option value="PROMO" th:selected="${type == 'PROMO'}">Promotion</option>
                             <option value="ABOUT" th:selected="${type == 'ABOUT'}">About Us</option>
                         </select>
-
-                        <button type="submit" class="btn-search">Filter</button>
                     </form>
                     <a th:href="@{/contents/create}" class="btn-create" style="margin-left: auto;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>

@@ -23,7 +23,7 @@ public class ProfileController {
     public String showProfile(Model model) {
         User user = userService.getUserById(CURRENT_USER_ID);
         if (user == null) {
-            return "redirect:/home";
+            return "redirect:/MarketingHome";
         }
         model.addAttribute("user", user);
         return "marketing-profile";

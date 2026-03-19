@@ -19,4 +19,8 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>,JpaSpecifi
     // Kiểm tra lúc Update (Bỏ qua ID hiện tại)
     boolean existsByCouponNameAndIdNot(String couponName, Long id);
     boolean existsByCouponCodeAndIdNot(String couponCode, Long id);
+    
+    long countByIsActive(Boolean isActive);
+    java.util.List<Coupon> findTop5ByOrderByCreatedAtDesc();
+    java.util.List<Coupon> findTop50ByOrderByCreatedAtDesc();
 }

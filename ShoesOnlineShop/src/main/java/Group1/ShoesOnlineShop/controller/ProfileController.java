@@ -59,6 +59,16 @@ public class ProfileController {
         return "redirect:/profile";
     }
 
+    @GetMapping("/profile/change-password")
+    public String showChangePasswordForm(Model model) {
+        User user = userService.getUserById(CURRENT_USER_ID);
+        if (user == null) {
+            return "redirect:/MarketingHome";
+        }
+        model.addAttribute("user", user);
+        return "marketing-change-password";
+    }
+
     @PostMapping("/profile/change-password")
     public String changePassword(
             @RequestParam("currentPassword") String currentPassword,
@@ -68,7 +78,7 @@ public class ProfileController {
         
         if (!newPassword.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("errorMessage", "New passwords do not match!");
-            return "redirect:/profile";
+            return "redirect:/profile/change-password";
         }
 
         boolean success = userService.changePassword(CURRENT_USER_ID, currentPassword, newPassword);
@@ -78,7 +88,7 @@ public class ProfileController {
             redirectAttributes.addFlashAttribute("errorMessage", "Incorrect current password!");
         }
 
-        return "redirect:/profile";
+        return "redirect:/profile/change-password";
     }
 
     @GetMapping("/logout")

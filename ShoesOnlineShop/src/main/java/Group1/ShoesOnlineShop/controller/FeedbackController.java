@@ -19,13 +19,15 @@ public class FeedbackController {
             @RequestParam(defaultValue = "") String status,
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "feedbackId") String sort,
             Model model) {
 
-        Page<?> feedbacks = feedbackService.getAll(status, keyword, page);
+        Page<?> feedbacks = feedbackService.getAll(status, keyword, page, sort);
 
         model.addAttribute("feedbacks", feedbacks);
         model.addAttribute("currentStatus", status);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("sort", sort);
 
         return "feedback-list";
     }

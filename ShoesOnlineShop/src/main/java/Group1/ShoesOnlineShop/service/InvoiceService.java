@@ -27,14 +27,14 @@ public class InvoiceService {
     // LIST + SEARCH + FILTER + SORT
     public Page<Invoice> getInvoices(
             String keyword,
-            Boolean status,
+            String status,
             int page,
             int size,
             String sort
     ) {
 
         Pageable pageable =
-                PageRequest.of(page, size, Sort.by(sort).descending());
+                PageRequest.of(page, size, Sort.by(sort).ascending());
 
         if (keyword != null && keyword.isEmpty()) {
             keyword = null;
@@ -104,6 +104,7 @@ public class InvoiceService {
         invoice.setTaxAmount(BigDecimal.ZERO);
         invoice.setDiscountAmount(BigDecimal.ZERO);
         invoice.setIsActive(true);
+        invoice.setStatus("Active");
 
         return invoiceRepository.save(invoice);
     }
@@ -111,6 +112,18 @@ public class InvoiceService {
     // sinh mã invoice
     private String generateInvoiceNumber() {
         return "INV-" + UUID.randomUUID().toString().substring(0,8).toUpperCase();
+    }
+
+    // toggle status
+    public void toggleStatus(Long id, String status) {
+        Invoice invoice = findById(id);
+        invoice.setStatus(status);
+        invoiceRepository.save(invoice);
+    }
+
+    // save invoice
+    public void save(Invoice invoice) {
+        invoiceRepository.save(invoice);
     }
 
     // danh sách invoice

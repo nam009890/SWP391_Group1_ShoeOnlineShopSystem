@@ -29,7 +29,7 @@ public class SliderProduct {
         this.product = product;
         this.discount = discount;
         if (slider != null && product != null) {
-            this.id = new SliderProductId(slider.getId(), product.getId());
+            this.id = new SliderProductId(slider.getId(), product.getProductId());
         }
     }
 

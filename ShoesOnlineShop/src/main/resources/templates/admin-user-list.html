@@ -11,6 +11,7 @@
         .role-CUSTOMER { background:#dbeafe; color:#1e40af; }
         .role-STAFF    { background:#d1fae5; color:#065f46; }
         .role-MARKETING{ background:#fef3c7; color:#92400e; }
+        .role-SALE_STAFF{ background:#ccfbf1; color:#0f766e; }
         .role-default  { background:var(--bg); color:var(--text-mid); }
         .user-avatar-sm { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#4f6ef7,#818cf8); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0; }
     </style>
@@ -59,7 +60,7 @@
                 </div>
                 <button type="submit" class="btn-search">Search</button>
 
-                <select name="role" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                <select name="role" class="form-select" style="min-width:140px; width:auto; height:38px;" onchange="this.form.submit()">
                     <option value="">All Roles</option>
                     <option value="ADMIN" th:selected="${role == 'ADMIN'}">Admin</option>
                     <option value="CUSTOMER" th:selected="${role == 'CUSTOMER'}">Customer</option>
@@ -67,7 +68,7 @@
                     <option value="MARKETING" th:selected="${role == 'MARKETING'}">Marketing</option>
                 </select>
 
-                <select name="isActive" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                <select name="isActive" class="form-select" style="min-width:140px; width:auto; height:38px;" onchange="this.form.submit()">
                     <option value="">All Status</option>
                     <option value="true" th:selected="${isActive == true}">Active</option>
                     <option value="false" th:selected="${isActive == false}">Blocked</option>
@@ -108,21 +109,21 @@
                     <td>
                         <span class="role-badge"
                               th:classappend="'role-' + ${user.userRole}"
-                              th:text="${user.userRole}">CUSTOMER</span>
+                              th:text="${#strings.replace(user.userRole, '_', ' ')}">CUSTOMER</span>
                     </td>
                     <td>
                         <span th:if="${user.isActive}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active</span>
                         <span th:if="${!user.isActive}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Blocked</span>
                     </td>
-                    <td class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : '—'}">—</td>
+                    <td><span class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : '—'}">—</span></td>
                     <td>
                         <div class="action-btns" style="justify-content:center;">
                             <a th:href="@{/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
                             <a th:href="@{/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
-                            <a th:if="${user.isActive}" th:href="@{/admin/users/block/{id}(id=${user.userId})}"
-                               class="btn-del" onclick="return confirm('Block this user?')">Block</a>
-                            <a th:if="${!user.isActive}" th:href="@{/admin/users/block/{id}(id=${user.userId})}"
-                               class="btn-upd" onclick="return confirm('Unblock this user?')">Unblock</a>
+                            <a th:if="${user.isActive}" href="javascript:void(0)"
+                               class="btn-del" th:onclick="'showConfirmModal(\'/admin/users/block/' + ${user.userId} + '\', \'block\')'">Block</a>
+                            <a th:if="${!user.isActive}" href="javascript:void(0)"
+                               class="btn-upd" th:onclick="'showConfirmModal(\'/admin/users/block/' + ${user.userId} + '\', \'unblock\')'">Unblock</a>
                         </div>
                     </td>
                 </tr>
@@ -147,6 +148,45 @@
     </div>
 </div>
 
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalTitle">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="confirmModalBody" style="font-size:14.5px;">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmModalBtn" class="btn btn-danger">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function showConfirmModal(url, actionType) {
+    const title = actionType === 'block' ? 'Confirm Block' : 'Confirm Unblock';
+    const msg = actionType === 'block' 
+        ? 'Do you really want to block this user? The user will not be able to log in.'
+        : 'Do you want to unblock this user?';
+    document.getElementById('confirmModalTitle').innerText = title;
+    document.getElementById('confirmModalBody').innerText = msg;
+    document.getElementById('confirmModalBtn').href = url;
+    
+    // Change button color based on action
+    const btn = document.getElementById('confirmModalBtn');
+    if(actionType === 'unblock') {
+        btn.className = 'btn btn-success';
+    } else {
+        btn.className = 'btn btn-danger';
+    }
+    
+    new bootstrap.Modal(document.getElementById('confirmModal')).show();
+}
+</script>
 </body>
 </html>

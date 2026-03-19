@@ -19,24 +19,26 @@ public class AdminOrderController {
     @GetMapping
     public String listOrders(
             Model model,
-            @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
     ) {
-        Page<Order> pageOrders = adminOrderService.getOrders(status, page, size);
+        Page<Order> pageOrders = adminOrderService.getOrders(keyword, status, page, size);
 
         model.addAttribute("orders", pageOrders.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageOrders.getTotalPages());
         model.addAttribute("totalItems", pageOrders.getTotalElements());
         model.addAttribute("status", status);
+        model.addAttribute("keyword", keyword);
 
         return "admin-order-list";
     }
 
     // 2. Chi tiết đơn hàng (view-only)
     @GetMapping("/detail/{id}")
-    public String showDetail(@PathVariable Long id, Model model) {
+    public String showDetail(@PathVariable(name = "id") Long id, Model model) {
         Order order = adminOrderService.getOrderById(id);
         if (order == null) return "redirect:/admin/orders";
 

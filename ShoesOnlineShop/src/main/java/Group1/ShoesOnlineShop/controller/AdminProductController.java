@@ -1,6 +1,8 @@
 package Group1.ShoesOnlineShop.controller;
 
+import Group1.ShoesOnlineShop.entity.Category;
 import Group1.ShoesOnlineShop.entity.Product;
+import Group1.ShoesOnlineShop.service.AdminCategoryService;
 import Group1.ShoesOnlineShop.service.AdminProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +25,28 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @Autowired
+    private AdminCategoryService adminCategoryService;
+
     // 1. Danh sách sản phẩm
     @GetMapping
     public String listProducts(
             Model model,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) Boolean isActive,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "8") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "categoryId", required = false) Long categoryId,
+            @RequestParam(name = "isActive", required = false) Boolean isActive,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "8") int size
     ) {
-        Page<Product> pageProducts = adminProductService.getProducts(keyword, category, isActive, page, size);
-        List<String> categories = adminProductService.getAllCategories();
+        Page<Product> pageProducts = adminProductService.getProducts(keyword, categoryId, isActive, page, size);
+        List<Category> categories = adminCategoryService.getRootCategories(null);
 
         model.addAttribute("products", pageProducts.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageProducts.getTotalPages());
         model.addAttribute("totalItems", pageProducts.getTotalElements());
         model.addAttribute("keyword", keyword);
-        model.addAttribute("category", category);
+        model.addAttribute("categoryId", categoryId);
         model.addAttribute("isActive", isActive);
         model.addAttribute("categories", categories);
 
@@ -52,7 +57,7 @@ public class AdminProductController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("product", new Product());
-        model.addAttribute("categories", adminProductService.getAllCategories());
+        model.addAttribute("categories", adminCategoryService.getRootCategories(null));
         return "admin-product-create";
     }
 
@@ -61,6 +66,7 @@ public class AdminProductController {
     public String saveProduct(
             @Valid @ModelAttribute("product") Product product,
             BindingResult bindingResult,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model
@@ -72,7 +78,7 @@ public class AdminProductController {
 
         if (bindingResult.hasErrors() || !errors.isEmpty()) {
             errors.forEach((field, msg) -> bindingResult.rejectValue(field, "error.product", msg));
-            model.addAttribute("categories", adminProductService.getAllCategories());
+            model.addAttribute("categories", adminCategoryService.getRootCategories(null));
             return isNew ? "admin-product-create" : "admin-product-update";
         }
 
@@ -83,12 +89,17 @@ public class AdminProductController {
                 product.setImageUrl(imageUrl);
             } catch (IllegalArgumentException e) {
                 bindingResult.rejectValue("imageUrl", "error.product", e.getMessage());
-                model.addAttribute("categories", adminProductService.getAllCategories());
+                model.addAttribute("categories", adminCategoryService.getRootCategories(null));
                 return isNew ? "admin-product-create" : "admin-product-update";
             }
         }
 
         try {
+            if (categoryId != null) {
+                product.setCategory(adminCategoryService.getCategoryById(categoryId));
+            } else {
+                product.setCategory(null);
+            }
             product.setIsActive(product.getIsActive() != null && product.getIsActive());
             adminProductService.saveProduct(product);
             redirectAttributes.addFlashAttribute("successMessage",
@@ -102,18 +113,18 @@ public class AdminProductController {
 
     // 4. Form cập nhật
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(@PathVariable(name = "id") Long id, Model model) {
         Product product = adminProductService.getProductById(id);
         if (product == null) return "redirect:/admin/products";
 
         model.addAttribute("product", product);
-        model.addAttribute("categories", adminProductService.getAllCategories());
+        model.addAttribute("categories", adminCategoryService.getRootCategories(null));
         return "admin-product-update";
     }
 
     // 5. Chi tiết
     @GetMapping("/detail/{id}")
-    public String showDetail(@PathVariable Long id, Model model) {
+    public String showDetail(@PathVariable(name = "id") Long id, Model model) {
         Product product = adminProductService.getProductById(id);
         if (product == null) return "redirect:/admin/products";
 
@@ -123,7 +134,7 @@ public class AdminProductController {
 
     // 6. Xóa
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteProduct(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         try {
             adminProductService.deleteProduct(id);
             redirectAttributes.addFlashAttribute("successMessage", "Product deleted successfully!");

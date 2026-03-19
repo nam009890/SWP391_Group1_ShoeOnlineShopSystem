@@ -23,8 +23,8 @@ public class AdminFinancialController {
     @GetMapping
     public String showFinancials(
             Model model,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
         // Mặc định: từ đầu tháng tới hôm nay
         if (startDate == null) startDate = LocalDate.now().withDayOfMonth(1);

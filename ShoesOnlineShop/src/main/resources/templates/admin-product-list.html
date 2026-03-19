@@ -59,12 +59,14 @@
                 </div>
                 <button type="submit" class="btn-search">Search</button>
 
-                <select name="category" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                <select name="categoryId" class="form-select" style="min-width:160px; height:38px; width:auto;" onchange="this.form.submit()">
                     <option value="">All Categories</option>
-                    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}" th:selected="${cat == category}">Category</option>
+                    <optgroup th:each="root : ${categories}" th:label="${'⭐ ' + root.name}">
+                        <option th:each="child : ${root.children}" th:value="${child.id}" th:text="${child.name}" th:selected="${child.id == categoryId}"></option>
+                    </optgroup>
                 </select>
 
-                <select name="isActive" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                <select name="isActive" class="form-select" style="min-width:140px; height:38px; width:auto;" onchange="this.form.submit()">
                     <option value="">All Status</option>
                     <option value="true" th:selected="${isActive == true}">Active</option>
                     <option value="false" th:selected="${isActive == false}">Inactive</option>
@@ -100,7 +102,7 @@
                         </div>
                     </td>
                     <td style="font-weight:600; color:var(--text-dark);" th:text="${product.name}">Product Name</td>
-                    <td><span class="date-chip" th:text="${product.categoryName != null ? product.categoryName : '—'}">Category</span></td>
+                    <td><span class="date-chip" th:text="${product.category != null ? product.category.name : '—'}">Category</span></td>
                     <td style="font-weight:600;" th:text="${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') : '—'}">0</td>
                     <td th:text="${product.stockQuantity != null ? product.stockQuantity : 0}">0</td>
                     <td>
@@ -124,11 +126,11 @@
         <div class="pagination-bar" th:if="${totalPages > 1}">
             <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
             <div class="page-btns">
-                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/products(page=${currentPage - 1}, keyword=${keyword}, category=${category}, isActive=${isActive})}">
+                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/products(page=${currentPage - 1}, keyword=${keyword}, categoryId=${categoryId}, isActive=${isActive})}">
                     <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                 </a>
-                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/products(page=${i}, keyword=${keyword}, category=${category}, isActive=${isActive})}" th:text="${i}">1</a>
-                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/products(page=${currentPage + 1}, keyword=${keyword}, category=${category}, isActive=${isActive})}">
+                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/products(page=${i}, keyword=${keyword}, categoryId=${categoryId}, isActive=${isActive})}" th:text="${i}">1</a>
+                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/products(page=${currentPage + 1}, keyword=${keyword}, categoryId=${categoryId}, isActive=${isActive})}">
                     <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
             </div>

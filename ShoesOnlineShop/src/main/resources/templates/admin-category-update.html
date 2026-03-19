@@ -6,21 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        .image-preview-box {
-            width: 180px; height: 160px;
-            border: 2px dashed var(--border);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; background: var(--bg);
-            transition: border-color .2s; overflow: hidden; position: relative;
-        }
-        .image-preview-box:hover { border-color: var(--accent); }
-        .image-preview-box img { width:100%; height:100%; object-fit:cover; }
-        .image-preview-box .upload-hint { display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--text-light); font-size:13px; }
-        .image-preview-box .upload-hint svg { width:32px; }
-        #imageFile { display:none; }
         .error-text { color: var(--danger); font-size: 12px; margin-top: 4px; }
-        .current-img-label { font-size:11px; color:var(--text-mid); text-align:center; margin-top:6px; }
     </style>
 </head>
 <body>
@@ -83,42 +69,14 @@
         <span>Update</span>
     </div>
 
-    <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/admin/categories/update/{id}(id=${category.id})}" method="post">
 
         <div class="row g-4">
-            <!-- Left: Image Upload -->
-            <div class="col-md-4">
-                <div class="card" style="padding:22px;">
-                    <div style="font-size:14px; font-weight:700; color:var(--text-dark); margin-bottom:14px;">Category Image</div>
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-                        <label for="imageFile" class="image-preview-box" id="imagePreviewBox">
-                            <!-- Show existing image if available -->
-                            <img th:if="${category.imageUrl != null}" th:src="${category.imageUrl}"
-                                 id="currentImg" style="width:100%;height:100%;object-fit:cover;" alt="Current">
-                            <div class="upload-hint" id="uploadHint" th:style="${category.imageUrl != null} ? 'display:none' : 'display:flex'">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                <span>Click to upload</span>
-                                <span style="font-size:11px;">PNG, JPG, WEBP</span>
-                            </div>
-                        </label>
-                        <input type="file" id="imageFile" name="imageFile" accept="image/*" onchange="previewImage(this)">
-                        <p class="current-img-label" th:if="${category.imageUrl != null}">Current image — click to replace</p>
-                        <button type="button" onclick="clearImage()" style="font-size:12px; color:var(--danger); background:none; border:none; cursor:pointer;"
-                                id="clearBtn" th:style="${category.imageUrl != null} ? 'display:block' : 'display:none'">✕ Remove image</button>
-                        <div th:if="${errors?.containsKey('imageFile')}" class="error-text" th:text="${errors['imageFile']}"></div>
-                    </div>
+            <div class="col-md-3"></div>
 
-                    <!-- Category quick info -->
-                    <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
-                        <div style="font-size:12px; color:var(--text-light); margin-bottom:6px;">Created At</div>
-                        <div style="font-size:13px; color:var(--text-mid);"
-                             th:text="${category.createdAt != null ? #temporals.format(category.createdAt, 'dd/MM/yyyy HH:mm') : '—'}">—</div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Right: Form Fields -->
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-header-bar">
                         <h6>Category Information</h6>
@@ -138,35 +96,19 @@
 
                             <!-- Parent Category -->
                             <div class="col-12">
-                                <label class="form-label">Parent Category</label>
-                                <select name="parentId" class="form-select" th:classappend="${errors?.containsKey('parent')} ? 'is-invalid'">
-                                    <option value="">-- No Parent (Root Category) --</option>
-                                    <option th:each="c : ${allCategories}" 
+                                <label class="form-label">Category Type</label>
+                                <select name="parentId" class="form-select" th:classappend="${errors?.containsKey('parent')} ? 'is-invalid'" th:disabled="${category.parent == null}">
+                                    <option th:if="${category.parent == null}" value="" selected>[ Fixed Root Category ]</option>
+                                    <option th:if="${category.parent != null}" th:each="c : ${rootCategories}" 
                                             th:value="${c.id}" 
-                                            th:text="${c.formattedName}"
+                                            th:text="${'[ Level 2 ] Child category of: ' + c.name}"
                                             th:selected="${category.parent != null && category.parent.id == c.id}">
                                     </option>
                                 </select>
                                 <div th:if="${errors?.containsKey('parent')}" class="error-text" th:text="${errors['parent']}"></div>
                             </div>
 
-                            <!-- Description -->
-                            <div class="col-12">
-                                <label class="form-label">Description</label>
-                                <textarea name="description" class="form-control" rows="4"
-                                          placeholder="Description about the category…" maxlength="500"
-                                          th:text="${category.description}"></textarea>
-                            </div>
 
-                            <!-- Display Order -->
-                            <div class="col-md-6">
-                                <label class="form-label">Display Order</label>
-                                <input type="number" name="displayOrder" min="0" max="9999"
-                                       th:value="${category.displayOrder}"
-                                       th:class="${errors?.containsKey('displayOrder')} ? 'form-control is-invalid' : 'form-control'">
-                                <div th:if="${errors?.containsKey('displayOrder')}" class="error-text" th:text="${errors['displayOrder']}"></div>
-                                <small style="color:var(--text-light); font-size:11px; margin-top:4px; display:block;">Smaller number displays first</small>
-                            </div>
 
                             <!-- Status -->
                             <div class="col-md-6">
@@ -197,40 +139,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    function previewImage(input) {
-        const box = document.getElementById('imagePreviewBox');
-        const hint = document.getElementById('uploadHint');
-        const clearBtn = document.getElementById('clearBtn');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const existing = box.querySelector('img');
-                if (existing) { existing.src = e.target.result; }
-                else {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
-                    box.appendChild(img);
-                }
-                hint.style.display = 'none';
-                clearBtn.style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 
-    function clearImage() {
-        const box = document.getElementById('imagePreviewBox');
-        const hint = document.getElementById('uploadHint');
-        const clearBtn = document.getElementById('clearBtn');
-        const input = document.getElementById('imageFile');
-        input.value = '';
-        const existing = box.querySelector('img');
-        if (existing) existing.remove();
-        hint.style.display = 'flex';
-        clearBtn.style.display = 'none';
-    }
-</script>
 </body>
 </html>

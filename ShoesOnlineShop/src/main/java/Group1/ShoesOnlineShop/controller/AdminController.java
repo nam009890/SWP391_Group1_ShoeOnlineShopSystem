@@ -31,12 +31,16 @@ public class AdminController {
     @Autowired
     private AdminFinancialService adminFinancialService;
 
+    @Autowired
+    private Group1.ShoesOnlineShop.service.AdminCategoryService adminCategoryService;
+
     @GetMapping({"", "/", "/home"})
     public String dashboard(Model model) {
         // Stats hiện tại
         long totalProducts = adminProductService.countAllProducts();
         long totalUsers = adminUserService.countAllUsers();
         long totalOrders = adminOrderService.countAllOrders();
+        long totalCategories = adminCategoryService.countAllCategories();
 
         // Revenue tháng này
         LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
@@ -49,6 +53,7 @@ public class AdminController {
         model.addAttribute("totalProducts", totalProducts);
         model.addAttribute("totalUsers", totalUsers);
         model.addAttribute("totalOrders", totalOrders);
+        model.addAttribute("totalCategories", totalCategories);
         model.addAttribute("monthRevenue", monthRevenue);
         model.addAttribute("recentOrders", recentOrders);
 

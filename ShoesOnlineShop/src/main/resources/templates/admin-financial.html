@@ -154,7 +154,7 @@
                 <tr th:each="tx : ${transactions}" th:if="${!transactions.isEmpty()}">
                     <td style="font-weight:700; color:var(--accent);" th:text="'#' + ${tx.orderId}">#1</td>
                     <td th:text="${tx.user != null ? tx.user.fullName : 'N/A'}">Customer</td>
-                    <td class="date-chip" th:text="${tx.orderDate != null ? #temporals.format(tx.orderDate, 'dd/MM/yyyy') : '—'}">—</td>
+                    <td><span class="date-chip" th:text="${tx.orderDate != null ? #temporals.format(tx.orderDate, 'dd/MM/yyyy') : '—'}">—</span></td>
                     <td style="font-weight:600;" th:text="${#numbers.formatDecimal(tx.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
                     <td>
                         <span style="display:inline-block; padding:3px 10px; border-radius:20px; font-size:11.5px; font-weight:600;"

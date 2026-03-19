@@ -123,7 +123,7 @@ class AdminOrderServiceTest {
         when(adminOrderRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of()));
 
-        var page = adminOrderService.getOrders("PENDING", 1, 10);
+        var page = adminOrderService.getOrders(null, "PENDING", 1, 10);
         assertNotNull(page);
         verify(adminOrderRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
     }

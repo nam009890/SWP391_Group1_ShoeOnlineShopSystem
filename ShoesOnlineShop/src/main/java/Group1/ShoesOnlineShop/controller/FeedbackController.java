@@ -15,6 +15,31 @@ public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
 
+    @Autowired
+    private Group1.ShoesOnlineShop.repository.UserRepository userRepository;
+
+    @GetMapping
+    public String index(HttpSession session) {
+        // Try getting user from session (both patterns)
+        Group1.ShoesOnlineShop.entity.User user = (Group1.ShoesOnlineShop.entity.User) session.getAttribute("loggedInUser");
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (user == null && userId != null) {
+            user = userRepository.findById(userId).orElse(null);
+        }
+
+        if (user != null) {
+            String role = user.getUserRole();
+            if (role != null && (role.equalsIgnoreCase("SALES_STAFF") || 
+                                role.equalsIgnoreCase("MARKETING") || 
+                                role.equalsIgnoreCase("ADMIN") ||
+                                role.equalsIgnoreCase("Staff"))) {
+                return "redirect:/staff/feedbacks";
+            }
+        }
+        return "redirect:/products";
+    }
+
     @GetMapping("/{orderId}/{productId}")
     public String showFeedbackForm(@PathVariable Long orderId, @PathVariable Long productId, Model model) {
         model.addAttribute("orderId", orderId);

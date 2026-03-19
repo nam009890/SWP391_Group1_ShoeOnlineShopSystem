@@ -904,3 +904,158 @@ tbody td {
 }
 .sidebar-logout a:hover { background: var(--danger); color: white; }
 .sidebar-logout a:hover svg { stroke: white; }
+
+/* =========================================
+   CUSTOMER CHAT FAB (Floating Action Button)
+   ========================================= */
+.chat-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #011E2D; /* Dark navy */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chat-fab:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.chat-fab svg {
+    fill: #ffffff;
+    width: 30px;
+    height: 30px;
+}
+
+.chat-fab-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background-color: #39FF14; /* Bright green dot */
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+/* =========================================
+   FOOTER SECTION
+   ========================================= */
+.footer-section {
+    background: #ffffff;
+    border-top: 1px solid var(--border);
+    padding: 60px 0 40px;
+    margin-top: 60px;
+    color: var(--text-dark);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+}
+
+.footer-col {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-col.company-info {
+    flex: 1.5;
+}
+
+.footer-title {
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    color: #001e2d;
+    letter-spacing: 0.05em;
+}
+
+.footer-col p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.footer-col p strong {
+    font-weight: 700;
+    color: #001e2d;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 13.5px;
+    transition: color 0.2s;
+}
+
+.footer-col ul li a:hover {
+    color: var(--accent);
+}
+
+.payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+    align-items: center;
+}
+
+.payment-icon-svg {
+    height: 24px;
+    width: auto;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.payment-icon-svg:hover {
+    opacity: 1;
+}
+
+.cert-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cert-icon-placeholder {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: white;
+}
+
+.bg-blue { background: #0056b3; }
+.bg-green { background: #28a745; }

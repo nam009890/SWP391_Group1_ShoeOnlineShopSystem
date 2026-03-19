@@ -78,4 +78,16 @@ public class CustomerOrderService {
         cartService.clearCart(userId, sessionId);
         return savedOrder;
     }
+
+    @Transactional
+    public void updateOrderStatus(Long orderId, String paymentStatus) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.setPaymentStatus(paymentStatus);
+            if ("PAID_ONLINE".equals(paymentStatus)) {
+                // Có thể cập nhật orderStatus tại đây nếu cần thiết
+            }
+            orderRepository.save(order);
+        }
+    }
 }

@@ -29,11 +29,26 @@ public class FeedbackService {
     private OrderRepository orderRepository;
 
     public List<Feedback> getFeedbacksByProduct(Long productId) {
-        return feedbackRepository.findByProduct_IdOrderByCreatedAtDesc(productId);
+        return feedbackRepository.findByProductIdAndIsApprovedTrueOrderByCreatedAtDesc(productId);
+    }
+
+    public List<Feedback> getAllFeedbacks() {
+        return feedbackRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    public void approveFeedback(Long feedbackId) {
+        feedbackRepository.findById(feedbackId).ifPresent(fb -> {
+            fb.setIsApproved(true);
+            feedbackRepository.save(fb);
+        });
+    }
+
+    public void deleteFeedback(Long feedbackId) {
+        feedbackRepository.deleteById(feedbackId);
     }
 
     public boolean hasUserSubmittedFeedbackForOrder(Long orderId, Long productId) {
-        return feedbackRepository.existsByOrderOrderIdAndProduct_Id(orderId, productId);
+        return feedbackRepository.existsByOrderOrderIdAndProductId(orderId, productId);
     }
 
     public void submitFeedback(Long userId, Long productId, Long orderId, Integer rating, String comments) {

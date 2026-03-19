@@ -9,12 +9,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import Group1.ShoesOnlineShop.service.FeedbackService;
 
 @Controller
 public class CustomerProductController {
 
     @Autowired
     private CustomerProductService customerProductService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     @GetMapping("/products")
     public String listProducts(
@@ -47,7 +51,8 @@ public class CustomerProductController {
         
         model.addAttribute("product", product);
         
-        // TODO: Get feedbacks for this product and add to model
+        // Get feedbacks for this product and add to model
+        model.addAttribute("feedbacks", feedbackService.getFeedbacksByProduct(id));
         
         return "customer-product-detail";
     }

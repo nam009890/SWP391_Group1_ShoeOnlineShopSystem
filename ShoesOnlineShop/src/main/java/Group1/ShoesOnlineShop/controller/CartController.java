@@ -78,7 +78,8 @@ public class CartController {
         // Yêu cầu đăng nhập, tạm thời mock userId = 1 nếu null để test. Thực tế nên redirect to login
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
-            userId = 1L; // Mock user
+            redirectAttributes.addFlashAttribute("errorMessage", "vui lòng đăng nhập để thanh toán");
+            return "redirect:/cart";
         }
         
         customerOrderService.placeOrder(userId, sessionId, shippingAddress, phone);

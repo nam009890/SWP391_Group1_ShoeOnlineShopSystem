@@ -32,7 +32,7 @@ public class AdminProductService {
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/products/";
 
     // === GET LIST WITH FILTER & PAGINATION ===
-    public Page<Product> getProducts(String keyword, String category, Boolean isActive, int page, int size) {
+    public Page<Product> getProducts(String keyword, Long categoryId, Boolean isActive, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
         Specification<Product> spec = (root, query, cb) -> {
@@ -43,8 +43,8 @@ public class AdminProductService {
                 predicates.add(cb.like(cb.lower(root.get("name")), like));
             }
 
-            if (category != null && !category.trim().isEmpty()) {
-                predicates.add(cb.equal(root.get("categoryName"), category));
+            if (categoryId != null) {
+                predicates.add(cb.equal(root.join("category").get("id"), categoryId));
             }
 
             if (isActive != null) {
@@ -78,7 +78,20 @@ public class AdminProductService {
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("Only image files are allowed!");
+            throw new IllegalArgumentException("Chỉ cho phép upload file ảnh!");
+        }
+
+        // Validate image dimensions
+        try (java.io.InputStream is = file.getInputStream()) {
+            java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(is);
+            if (image == null) {
+                throw new IllegalArgumentException("File không hợp lệ hoặc bị lỗi định dạng ảnh!");
+            }
+            int width = image.getWidth();
+            int height = image.getHeight();
+            if (width > 2560 || height > 2560) {
+                throw new IllegalArgumentException("Kích thước ảnh không được vượt quá độ phân giải 2K (2560 pixels).");
+            }
         }
 
         Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -93,15 +106,6 @@ public class AdminProductService {
         return "/uploads/products/" + fileName;
     }
 
-    // === DISTINCT CATEGORIES ===
-    public List<String> getAllCategories() {
-        return adminProductRepository.findAll().stream()
-                .map(Product::getCategoryName)
-                .filter(c -> c != null && !c.isEmpty())
-                .distinct()
-                .sorted()
-                .toList();
-    }
 
     // === COUNTS ===
     public long countAllProducts() {

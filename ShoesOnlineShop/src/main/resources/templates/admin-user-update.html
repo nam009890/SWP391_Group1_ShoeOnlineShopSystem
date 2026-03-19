@@ -65,7 +65,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Phone</label>
-                        <input type="text" name="phone" th:value="${user.phone}" class="form-control" placeholder="0xxxxxxxxx" maxlength="20">
+                        <input type="text" name="phone" th:value="${user.phone}" class="form-control" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -75,7 +75,7 @@
                             <option value="CUSTOMER" th:selected="${user.userRole == 'CUSTOMER'}">Customer</option>
                             <option value="STAFF" th:selected="${user.userRole == 'STAFF'}">Staff</option>
                             <option value="MARKETING" th:selected="${user.userRole == 'MARKETING'}">Marketing</option>
-                            <option value="ADMIN" th:selected="${user.userRole == 'ADMIN'}">Admin</option>
+                            <option value="ADMIN" th:if="${user.userRole == 'ADMIN'}" th:selected="${user.userRole == 'ADMIN'}">Admin</option>
                         </select>
                     </div>
                     <div class="mb-3">

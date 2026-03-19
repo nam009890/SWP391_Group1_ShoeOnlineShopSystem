@@ -12,6 +12,7 @@
         .status-SHIPPED   { background:#dbeafe; color:#1e40af; }
         .status-DELIVERED { background:#d1fae5; color:#059669; }
         .status-CANCELLED { background:#fee2e2; color:#991b1b; }
+        .status-CONFIRMED { background:#f3e8ff; color:#7e22ce; }
     </style>
 </head>
 <body>
@@ -44,8 +45,14 @@
 
     <div class="card">
         <div class="toolbar" style="flex-wrap:wrap; gap:15px;">
-            <form action="/admin/orders" method="get" class="search-wrap">
-                <select name="status" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+            <form action="/admin/orders" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
+                <div class="search-input">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search ID, Name, Phone…">
+                </div>
+                <button type="submit" class="btn-search">Search</button>
+
+                <select name="status" class="form-select" style="min-width:160px; width:auto; height:38px;" onchange="this.form.submit()">
                     <option value="">All Statuses</option>
                     <option value="PENDING"   th:selected="${status == 'PENDING'}">Pending</option>
                     <option value="APPROVED"  th:selected="${status == 'APPROVED'}">Approved</option>
@@ -53,7 +60,6 @@
                     <option value="DELIVERED" th:selected="${status == 'DELIVERED'}">Delivered</option>
                     <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Cancelled</option>
                 </select>
-                <button type="submit" class="btn-search">Filter</button>
             </form>
             <div style="margin-left:auto; font-size:13px; color:var(--text-mid);">
                 Total: <strong th:text="${totalItems}">0</strong> orders
@@ -77,14 +83,25 @@
             <tbody>
                 <tr th:each="order : ${orders}" th:if="${!orders.isEmpty()}">
                     <td style="font-weight:700; color:var(--accent);" th:text="'#' + ${order.orderId}">#1</td>
-                    <td style="font-weight:600;" th:text="${order.user != null ? order.user.fullName : 'N/A'}">Customer</td>
-                    <td th:text="${order.phone != null ? order.phone : '—'}">—</td>
-                    <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
-                        th:text="${order.shippingAddress != null ? order.shippingAddress : '—'}">—</td>
+                    <td style="font-weight:600;">
+                        <span th:if="${order.user != null}" th:text="${order.user.fullName}">Customer</span>
+                        <span th:if="${order.user == null}" style="color:var(--text-light); font-size:12px; font-weight:normal; font-style:italic;">[Not updated]</span>
+                    </td>
+                    <td>
+                        <span th:if="${order.phone != null and !order.phone.isEmpty()}" th:text="${order.phone}">Phone</span>
+                        <span th:if="${order.phone == null or order.phone.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                    </td>
+                    <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        <span th:if="${order.shippingAddress != null and !order.shippingAddress.isEmpty()}" th:text="${order.shippingAddress}">Address</span>
+                        <span th:if="${order.shippingAddress == null or order.shippingAddress.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                    </td>
                     <td style="font-weight:600;" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
                     <td><span class="status-pill" th:classappend="'status-' + ${order.orderStatus}" th:text="${order.orderStatus}">PENDING</span></td>
                     <td><span class="date-chip" th:text="${order.paymentStatus}">PENDING</span></td>
-                    <td class="date-chip" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : '—'}">—</td>
+                    <td>
+                        <span class="date-chip" th:if="${order.orderDate != null}" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">Date</span>
+                        <span th:if="${order.orderDate == null}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Empty]</span>
+                    </td>
                     <td style="text-align:center;">
                         <a th:href="@{/admin/orders/detail/{id}(id=${order.orderId})}" style="padding:5px 12px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">View</a>
                     </td>
@@ -98,11 +115,11 @@
         <div class="pagination-bar" th:if="${totalPages > 1}">
             <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
             <div class="page-btns">
-                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/orders(page=${currentPage - 1}, status=${status})}">
+                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/orders(page=${currentPage - 1}, status=${status}, keyword=${keyword})}">
                     <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                 </a>
-                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/orders(page=${i}, status=${status})}" th:text="${i}">1</a>
-                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/orders(page=${currentPage + 1}, status=${status})}">
+                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/orders(page=${i}, status=${status}, keyword=${keyword})}" th:text="${i}">1</a>
+                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/orders(page=${currentPage + 1}, status=${status}, keyword=${keyword})}">
                     <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
             </div>

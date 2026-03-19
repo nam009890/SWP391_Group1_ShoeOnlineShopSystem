@@ -24,7 +24,7 @@ public class AdminOrderService {
     private AdminOrderRepository adminOrderRepository;
 
     // === GET LIST WITH FILTER & PAGINATION ===
-    public Page<Order> getOrders(String status, int page, int size) {
+    public Page<Order> getOrders(String keyword, String status, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("orderDate").descending());
 
         Specification<Order> spec = (root, query, cb) -> {
@@ -32,6 +32,25 @@ public class AdminOrderService {
 
             if (status != null && !status.trim().isEmpty()) {
                 predicates.add(cb.equal(root.get("orderStatus"), status));
+            }
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String likePattern = "%" + keyword.trim().toLowerCase() + "%";
+                Predicate searchPredicate;
+                try {
+                    Long orderId = Long.parseLong(keyword.trim());
+                    searchPredicate = cb.or(
+                            cb.equal(root.get("orderId"), orderId),
+                            cb.like(cb.lower(root.get("phone")), likePattern),
+                            cb.like(cb.lower(root.join("user").get("fullName")), likePattern)
+                    );
+                } catch (NumberFormatException e) {
+                    searchPredicate = cb.or(
+                            cb.like(cb.lower(root.get("phone")), likePattern),
+                            cb.like(cb.lower(root.join("user").get("fullName")), likePattern)
+                    );
+                }
+                predicates.add(searchPredicate);
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

@@ -22,6 +22,7 @@
         .status-SHIPPED   { background:#dbeafe; color:#1e40af; }
         .status-DELIVERED { background:#d1fae5; color:#065f46; }
         .status-CANCELLED { background:#fee2e2; color:#991b1b; }
+        .status-CONFIRMED { background:#f3e8ff; color:#7e22ce; }
     </style>
 </head>
 <body>
@@ -78,9 +79,9 @@
     </div>
 
     <!-- Stat Cards -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card stat-coupon">
+    <div class="row g-4 mb-4 row-cols-1 row-cols-md-5">
+        <div class="col">
+            <div class="stat-card stat-coupon" onclick="window.location.href='/admin/financials'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div class="stat-icon icon-coupon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
                 </div>
@@ -91,8 +92,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stat-card stat-slider">
+        <div class="col">
+            <div class="stat-card stat-slider" onclick="window.location.href='/admin/products'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div class="stat-icon icon-slider">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                 </div>
@@ -103,8 +104,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stat-card stat-content">
+        <div class="col">
+            <div class="stat-card stat-content" onclick="window.location.href='/admin/users'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div class="stat-icon icon-content">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>
                 </div>
@@ -115,8 +116,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="stat-card stat-products">
+        <div class="col">
+            <div class="stat-card stat-products" onclick="window.location.href='/admin/orders'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div class="stat-icon icon-products">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>
                 </div>
@@ -124,6 +125,18 @@
                     <div class="stat-label">Total Orders</div>
                     <div class="stat-value" th:text="${totalOrders}">0</div>
                     <div class="stat-sub">All time orders</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="stat-card" onclick="window.location.href='/admin/categories'" style="cursor:pointer; transition: transform 0.2s; border-left: 4px solid #10b981;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="stat-icon" style="background: #d1fae5; color: #059669;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+                </div>
+                <div>
+                    <div class="stat-label">Total Categories</div>
+                    <div class="stat-value" th:text="${totalCategories != null ? totalCategories : 0}">0</div>
+                    <div class="stat-sub">Product groupings</div>
                 </div>
             </div>
         </div>
@@ -180,13 +193,19 @@
                     <tbody>
                         <tr th:each="order : ${recentOrders}" th:if="${!recentOrders.isEmpty()}">
                             <td style="font-weight:700; color:var(--accent);" th:text="'#' + ${order.orderId}">#1</td>
-                            <td th:text="${order.user != null ? order.user.fullName : 'N/A'}">Customer Name</td>
-                            <td th:text="${order.phone != null ? order.phone : 'N/A'}">Phone</td>
+                            <td>
+                                <span th:if="${order.user != null}" th:text="${order.user.fullName}">Customer Name</span>
+                                <span th:if="${order.user == null}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                            </td>
+                            <td>
+                                <span th:if="${order.phone != null and !order.phone.isEmpty()}" th:text="${order.phone}">Phone</span>
+                                <span th:if="${order.phone == null or order.phone.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                            </td>
                             <td style="font-weight:600;" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
                             <td>
                                 <span class="order-status" th:classappend="'status-' + ${order.orderStatus}" th:text="${order.orderStatus}">PENDING</span>
                             </td>
-                            <td class="date-chip" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy')}">01/01/2025</td>
+                            <td><span class="date-chip" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/01/2025 00:00</span></td>
                         </tr>
                         <tr th:if="${recentOrders.isEmpty()}" class="empty-row">
                             <td colspan="6">No orders found.</td>

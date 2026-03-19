@@ -25,12 +25,12 @@ public class CouponController {
     @GetMapping("/coupons")
     public String listCoupons(
             Model model,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(required = false) Integer discount,
-            @RequestParam(required = false) Boolean status,
-            @RequestParam(required = false) String validity,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "discount", required = false) Integer discount,
+            @RequestParam(name = "status", required = false) Boolean status,
+            @RequestParam(name = "validity", required = false) String validity,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
     ) {
         // GỌI SERVICE VỚI ĐỦ 6 THAM SỐ
         Page<Coupon> pageCoupons = couponService.getCoupons(keyword, discount, status, validity, page, size);
@@ -98,7 +98,7 @@ public class CouponController {
 
     // 4. Hiển thị form cập nhật
     @GetMapping("/coupons/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(@PathVariable(name = "id") Long id, Model model) {
         Coupon coupon = couponService.getCouponById(id);
         if (coupon == null) {
             return "redirect:/coupons";
@@ -109,7 +109,7 @@ public class CouponController {
 
     // 5. Xử lý xóa
     @GetMapping("/coupons/delete/{id}")
-    public String deleteCoupon(@PathVariable Long id, HttpSession session) {
+    public String deleteCoupon(@PathVariable(name = "id") Long id, HttpSession session) {
         couponService.deleteCoupon(id);
         session.setAttribute("message", "Delete successfully!");
         return "redirect:/coupons";
@@ -117,7 +117,7 @@ public class CouponController {
 
     // 6. Hiển thị trang Detail
     @GetMapping("/coupons/detail/{id}")
-    public String showCouponDetail(@PathVariable Long id, Model model) {
+    public String showCouponDetail(@PathVariable(name = "id") Long id, Model model) {
         Coupon coupon = couponService.getCouponById(id);
         if (coupon == null) {
             return "redirect:/coupons";

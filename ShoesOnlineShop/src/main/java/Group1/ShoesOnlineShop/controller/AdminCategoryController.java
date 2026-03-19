@@ -7,10 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.IOException;
 import java.util.Map;
 
 @Controller
@@ -23,20 +20,45 @@ public class AdminCategoryController {
     // ========================== LIST ==========================
     @GetMapping({"", "/"})
     public String listCategories(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Boolean isActive,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "isActive", required = false) Boolean isActive,
+            @RequestParam(name = "page", defaultValue = "1") int page,
             Model model) {
 
         int size = 8;
-        Page<Category> categoryPage = adminCategoryService.getCategories(keyword, isActive, page, size);
 
-        model.addAttribute("categories", categoryPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", categoryPage.getTotalPages());
-        model.addAttribute("totalItems", categoryPage.getTotalElements());
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("isActive", isActive);
+        if ((keyword == null || keyword.trim().isEmpty()) && isActive == null) {
+            // No filter -> return hierarchical list, paginate manually
+            java.util.List<Category> allCategories = adminCategoryService.getHierarchicalCategoriesForList();
+            
+            int totalItems = allCategories.size();
+            int totalPages = (int) Math.ceil((double) totalItems / size);
+            if (totalPages == 0) totalPages = 1;
+            
+            // Adjust page if it exceeds totalPages
+            int currentPage = Math.min(page, totalPages);
+            if (currentPage < 1) currentPage = 1;
+            
+            int start = (currentPage - 1) * size;
+            int end = Math.min(start + size, totalItems);
+            java.util.List<Category> paginatedList = allCategories.subList(start, end);
+
+            model.addAttribute("categories", paginatedList);
+            model.addAttribute("currentPage", currentPage);
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("totalItems", (long) totalItems);
+            model.addAttribute("keyword", "");
+            model.addAttribute("isActive", null);
+        } else {
+            Page<Category> categoryPage = adminCategoryService.getCategories(keyword, isActive, page, size);
+
+            model.addAttribute("categories", categoryPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", categoryPage.getTotalPages());
+            model.addAttribute("totalItems", categoryPage.getTotalElements());
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("isActive", isActive);
+        }
 
         return "admin-category-list";
     }
@@ -45,7 +67,7 @@ public class AdminCategoryController {
     @GetMapping("/create")
     public String createForm(Model model) {
         model.addAttribute("category", new Category());
-        model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(null));
+        model.addAttribute("rootCategories", adminCategoryService.getRootCategories(null));
         return "admin-category-create";
     }
 
@@ -54,13 +76,11 @@ public class AdminCategoryController {
     public String createSubmit(
             @ModelAttribute Category category,
             @RequestParam(value = "parentId", required = false) Long parentId,
-            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model) {
 
         // Trim fields
         if (category.getName() != null) category.setName(category.getName().trim());
-        if (category.getDescription() != null) category.setDescription(category.getDescription().trim());
 
         // Assign parent
         if (parentId != null) {
@@ -74,27 +94,10 @@ public class AdminCategoryController {
         if (!errors.isEmpty()) {
             model.addAttribute("errors", errors);
             model.addAttribute("category", category);
-            model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(null));
+            model.addAttribute("rootCategories", adminCategoryService.getRootCategories(null));
             return "admin-category-create";
         }
 
-        // Upload image
-        try {
-            if (imageFile != null && !imageFile.isEmpty()) {
-                String imageUrl = adminCategoryService.uploadImage(imageFile);
-                category.setImageUrl(imageUrl);
-            }
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errors", Map.of("imageFile", e.getMessage()));
-            model.addAttribute("category", category);
-            model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(null));
-            return "admin-category-create";
-        } catch (IOException e) {
-            model.addAttribute("errors", Map.of("imageFile", "Lỗi khi upload ảnh! Thử lại."));
-            model.addAttribute("category", category);
-            model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(null));
-            return "admin-category-create";
-        }
 
         // Save
         adminCategoryService.saveCategory(category);
@@ -104,7 +107,7 @@ public class AdminCategoryController {
 
     // ========================== DETAIL ==========================
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(@PathVariable(name = "id") Long id, Model model) {
         Category category = adminCategoryService.getCategoryById(id);
         if (category == null) {
             return "redirect:/admin/categories";
@@ -115,24 +118,22 @@ public class AdminCategoryController {
 
     // ========================== UPDATE FORM ==========================
     @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable Long id, Model model) {
+    public String updateForm(@PathVariable(name = "id") Long id, Model model) {
         Category category = adminCategoryService.getCategoryById(id);
         if (category == null) {
             return "redirect:/admin/categories";
         }
         model.addAttribute("category", category);
-        model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(category));
+        model.addAttribute("rootCategories", adminCategoryService.getRootCategories(category));
         return "admin-category-update";
     }
 
     // ========================== UPDATE SUBMIT ==========================
     @PostMapping("/update/{id}")
     public String updateSubmit(
-            @PathVariable Long id,
+            @PathVariable(name = "id") Long id,
             @ModelAttribute Category category,
             @RequestParam(value = "parentId", required = false) Long parentId,
-            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-            @RequestParam(value = "keepOldImage", required = false) String keepOldImage,
             RedirectAttributes redirectAttributes,
             Model model) {
 
@@ -148,7 +149,6 @@ public class AdminCategoryController {
 
         // Trim
         if (category.getName() != null) category.setName(category.getName().trim());
-        if (category.getDescription() != null) category.setDescription(category.getDescription().trim());
 
         // Assign parent
         if (parentId != null) {
@@ -162,29 +162,10 @@ public class AdminCategoryController {
         if (!errors.isEmpty()) {
             model.addAttribute("errors", errors);
             model.addAttribute("category", category);
-            model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(category));
+            model.addAttribute("rootCategories", adminCategoryService.getRootCategories(category));
             return "admin-category-update";
         }
 
-        // Image logic: upload new OR keep old
-        try {
-            if (imageFile != null && !imageFile.isEmpty()) {
-                String imageUrl = adminCategoryService.uploadImage(imageFile);
-                category.setImageUrl(imageUrl);
-            } else {
-                category.setImageUrl(existing.getImageUrl()); // giữ ảnh cũ
-            }
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errors", Map.of("imageFile", e.getMessage()));
-            model.addAttribute("category", category);
-            model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(category));
-            return "admin-category-update";
-        } catch (IOException e) {
-            model.addAttribute("errors", Map.of("imageFile", "Lỗi khi upload ảnh! Thử lại."));
-            model.addAttribute("category", category);
-            model.addAttribute("allCategories", adminCategoryService.getFlattenedCategories(category));
-            return "admin-category-update";
-        }
 
         adminCategoryService.saveCategory(category);
         redirectAttributes.addFlashAttribute("successMessage", "Cập nhật danh mục \"" + category.getName() + "\" thành công!");
@@ -193,7 +174,7 @@ public class AdminCategoryController {
 
     // ========================== DELETE ==========================
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         Category category = adminCategoryService.getCategoryById(id);
         if (category != null) {
             adminCategoryService.deleteCategory(id);

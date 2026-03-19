@@ -45,7 +45,7 @@
             <div>
                 <div class="detail-meta">
                     <span class="status-badge" th:classappend="${product.isActive} ? 'status-active' : 'status-expired'" th:text="${product.isActive ? 'Active' : 'Inactive'}">Active</span>
-                    <span class="date-chip" th:text="${product.categoryName != null ? product.categoryName : 'No Category'}">Category</span>
+                    <span class="date-chip" th:text="${product.category != null ? product.category.name : 'No Category'}">Category</span>
                 </div>
                 <h5 style="font-weight:800; font-size:20px; margin-top:8px;" th:text="${product.name}">Product Name</h5>
                 <div style="font-size:13px; color:var(--text-mid);">ID: <strong th:text="${product.id}">1</strong></div>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Category</div>
-                        <div class="detail-value" th:text="${product.categoryName != null ? product.categoryName : '—'}">Category</div>
+                        <div class="detail-value" th:text="${product.category != null ? product.category.name : '—'}">Category</div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Status</div>

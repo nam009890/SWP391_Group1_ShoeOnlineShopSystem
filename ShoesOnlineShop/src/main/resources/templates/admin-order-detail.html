@@ -12,6 +12,7 @@
         .status-SHIPPED   { background:#dbeafe; color:#1e40af; }
         .status-DELIVERED { background:#d1fae5; color:#059669; }
         .status-CANCELLED { background:#fee2e2; color:#991b1b; }
+        .status-CONFIRMED { background:#f3e8ff; color:#7e22ce; }
     </style>
 </head>
 <body>
@@ -63,19 +64,31 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Customer</div>
-                        <div class="detail-value" th:text="${order.user != null ? order.user.fullName : 'N/A'}">Name</div>
+                        <div class="detail-value">
+                            <span th:if="${order.user != null}" th:text="${order.user.fullName}">Name</span>
+                            <span th:if="${order.user == null}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                        </div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Email</div>
-                        <div class="detail-value" style="font-size:12px;" th:text="${order.user != null ? order.user.userEmail : '—'}">email</div>
+                        <div class="detail-value" style="font-size:12px;">
+                            <span th:if="${order.user != null}" th:text="${order.user.userEmail}">email</span>
+                            <span th:if="${order.user == null}" style="color:var(--text-light); font-style:italic;">[Empty]</span>
+                        </div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Phone</div>
-                        <div class="detail-value" th:text="${order.phone != null ? order.phone : '—'}">—</div>
+                        <div class="detail-value">
+                            <span th:if="${order.phone != null and !order.phone.isEmpty()}" th:text="${order.phone}">Phone</span>
+                            <span th:if="${order.phone == null or order.phone.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                        </div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Address</div>
-                        <div class="detail-value" style="font-size:12.5px; line-height:1.5;" th:text="${order.shippingAddress != null ? order.shippingAddress : '—'}">—</div>
+                        <div class="detail-value" style="font-size:12.5px; line-height:1.5;">
+                            <span th:if="${order.shippingAddress != null and !order.shippingAddress.isEmpty()}" th:text="${order.shippingAddress}">Address</span>
+                            <span th:if="${order.shippingAddress == null or order.shippingAddress.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                        </div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Payment</div>
@@ -113,7 +126,10 @@
                     <tbody>
                         <tr th:each="item : ${order.orderDetails}" th:if="${order.orderDetails != null and !order.orderDetails.isEmpty()}">
                             <td>
-                                <div style="font-weight:600; font-size:13.5px;" th:text="${item.product != null ? item.product.name : 'N/A'}">Product</div>
+                                <div style="font-weight:600; font-size:13.5px;">
+                                    <span th:if="${item.product != null}" th:text="${item.product.name}">Product</span>
+                                    <span th:if="${item.product == null}" style="color:var(--text-light); font-style:italic;">[Product deleted]</span>
+                                </div>
                             </td>
                             <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
                             <td th:text="${item.quantity}">1</td>

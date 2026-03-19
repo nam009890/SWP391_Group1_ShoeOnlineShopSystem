@@ -35,8 +35,9 @@ public class Product {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
-    @Column(name = "category_name", length = 100)
-    private String categoryName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "is_active")
     private Boolean isActive = true;

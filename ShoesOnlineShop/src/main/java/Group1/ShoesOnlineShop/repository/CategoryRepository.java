@@ -21,7 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
     @Query("SELECT COUNT(c) FROM Category c")
     long countAllCategories();
 
-    List<Category> findByIsActiveTrueOrderByDisplayOrderAscNameAsc();
+    List<Category> findByIsActiveTrueOrderByNameAsc();
 
-    List<Category> findByParentIsNullOrderByDisplayOrderAscNameAsc();
+    List<Category> findByParentIsNullOrderByNameAsc();
 }

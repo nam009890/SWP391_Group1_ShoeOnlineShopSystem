@@ -17,7 +17,7 @@
             </div>
             <span class="nav-label">Navigation</span>
 
-            <a href="/home" class="active">
+            <a href="/MarketingHome" class="active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Dashboard
             </a>
@@ -145,7 +145,7 @@
                     <div class="recent-card">
                         <div class="recent-header">
                             <h6>Recent Activity</h6>
-                            <span style="font-size:12px; color:var(--accent); cursor:pointer; font-weight:600">See all</span>
+                            <a href="/MarketingHome/activities" style="font-size:12px; color:var(--accent); cursor:pointer; font-weight:600; text-decoration:none;">See all</a>
                         </div>
                         <!-- Thymeleaf sẽ render list ở đây -->
                         <div th:each="activity : ${recentActivities}">

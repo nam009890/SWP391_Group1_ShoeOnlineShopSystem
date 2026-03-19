@@ -38,6 +38,7 @@ public class OrderController {
         List.of("PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"));
         model.addAttribute("currentStatus", status);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("sort", sort);
 
        return "order-list";
     }
@@ -73,12 +74,11 @@ public String delete(@PathVariable Long id) {
 public String updateOrder(@RequestParam Long id,
                           @RequestParam String phone,
                           @RequestParam String address,
-                          @RequestParam Integer quantity,
                           @RequestParam String status,
                           RedirectAttributes redirectAttributes) {
 
     try {
-        String message = orderService.updateOrder(id, phone, address, quantity, status);
+        String message = orderService.updateOrder(id, phone, address, status);
         redirectAttributes.addFlashAttribute("successMessage", message);
 
     } catch (IllegalArgumentException e) {

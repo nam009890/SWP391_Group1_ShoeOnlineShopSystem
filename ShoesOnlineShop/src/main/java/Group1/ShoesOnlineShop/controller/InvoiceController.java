@@ -25,7 +25,7 @@ public class InvoiceController {
     public String listInvoices(
 
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Boolean status,
+            @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "invoiceId") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -105,6 +105,14 @@ public class InvoiceController {
         return "redirect:/invoices";
     }
     
+    // TOGGLE STATUS (inline dropdown)
+    @PostMapping("/toggle")
+    public String toggleStatus(@RequestParam Long id,
+                               @RequestParam String status) {
+        invoiceService.toggleStatus(id, status);
+        return "redirect:/invoices";
+    }
+
     @GetMapping("/detail/{id}")
 public String invoiceDetail(@PathVariable Long id, Model model){
 

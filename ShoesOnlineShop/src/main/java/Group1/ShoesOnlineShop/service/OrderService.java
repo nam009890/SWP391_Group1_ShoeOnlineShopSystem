@@ -74,7 +74,6 @@ public Order findById(Long id) {
 public String updateOrder(Long id,
                         String phone,
                         String address,
-                        Integer quantity,
                         String status) {
 
     Order order = orderRepository.findById(id)
@@ -101,33 +100,10 @@ public String updateOrder(Long id,
         throw new IllegalArgumentException("Address must be less than 255 characters");
     }
 
-    // =========================
-    // QUANTITY VALIDATION
-    // =========================
-    if (quantity == null) {
-        throw new IllegalArgumentException("Quantity must be not null or empty");
-    }
-
-    if (quantity <= 0) {
-        throw new IllegalArgumentException("Quantity must be positive integer");
-    }
     // Update order info
     order.setPhone(phone);
     order.setShippingAddress(address);
-order.setOrderStatus(status);
-    // Update quantity trong OrderDetail
-    if (order.getOrderDetails() != null && !order.getOrderDetails().isEmpty()) {
-
-        OrderDetail detail = order.getOrderDetails().get(0);
-        detail.setQuantity(quantity);
-
-        // Nếu có tính lại tổng tiền
-        order.setTotalAmount(
-                detail.getProduct().getProductPrice().multiply(
-                        BigDecimal.valueOf(quantity)
-                )
-        );
-    }
+    order.setOrderStatus(status);
 
     orderRepository.save(order);
     return "Update order successfully!";

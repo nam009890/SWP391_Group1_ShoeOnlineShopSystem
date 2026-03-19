@@ -35,7 +35,7 @@ public class OrderUpdateTest {
 
         // Fake Product
         Product product = new Product();
-        product.setProductPrice(BigDecimal.valueOf(100));
+        product.setPrice(BigDecimal.valueOf(100));
 
         // Fake OrderDetail
         OrderDetail detail = new OrderDetail();

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Orders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .status-pill { display:inline-block; padding:4px 12px; border-radius:20px; font-size:11.5px; font-weight:600; }
+        .status-PENDING   { background:#fef3c7; color:#92400e; }
+        .status-APPROVED  { background:#d1fae5; color:#065f46; }
+        .status-SHIPPED   { background:#dbeafe; color:#1e40af; }
+        .status-DELIVERED { background:#d1fae5; color:#059669; }
+        .status-CANCELLED { background:#fee2e2; color:#991b1b; }
+        .status-CONFIRMED { background:#f3e8ff; color:#7e22ce; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+    <a href="/admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a href="/admin/products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
+    <a href="/admin/categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>Categories</a>
+    <a href="/admin/users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+    <a href="/admin/orders" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
+    <a href="/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div>
+            <h4>Order Management</h4>
+            <p>View-only order overview</p>
+        </div>
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="toolbar" style="flex-wrap:wrap; gap:15px;">
+            <form action="/admin/orders" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
+                <div class="search-input">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search ID, Name, Phone…">
+                </div>
+                <button type="submit" class="btn-search">Search</button>
+
+                <select name="status" class="form-select" style="min-width:160px; width:auto; height:38px;" onchange="this.form.submit()">
+                    <option value="">All Statuses</option>
+                    <option value="PENDING"   th:selected="${status == 'PENDING'}">Pending</option>
+                    <option value="APPROVED"  th:selected="${status == 'APPROVED'}">Approved</option>
+                    <option value="SHIPPED"   th:selected="${status == 'SHIPPED'}">Shipped</option>
+                    <option value="DELIVERED" th:selected="${status == 'DELIVERED'}">Delivered</option>
+                    <option value="CANCELLED" th:selected="${status == 'CANCELLED'}">Cancelled</option>
+                </select>
+            </form>
+            <div style="margin-left:auto; font-size:13px; color:var(--text-mid);">
+                Total: <strong th:text="${totalItems}">0</strong> orders
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:80px">Order ID</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Shipping Address</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Order Date</th>
+                    <th style="width:80px; text-align:center">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}" th:if="${!orders.isEmpty()}">
+                    <td style="font-weight:700; color:var(--accent);" th:text="'#' + ${order.orderId}">#1</td>
+                    <td style="font-weight:600;">
+                        <span th:if="${order.user != null}" th:text="${order.user.fullName}">Customer</span>
+                        <span th:if="${order.user == null}" style="color:var(--text-light); font-size:12px; font-weight:normal; font-style:italic;">[Not updated]</span>
+                    </td>
+                    <td>
+                        <span th:if="${order.phone != null and !order.phone.isEmpty()}" th:text="${order.phone}">Phone</span>
+                        <span th:if="${order.phone == null or order.phone.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                    </td>
+                    <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        <span th:if="${order.shippingAddress != null and !order.shippingAddress.isEmpty()}" th:text="${order.shippingAddress}">Address</span>
+                        <span th:if="${order.shippingAddress == null or order.shippingAddress.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                    </td>
+                    <td style="font-weight:600;" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
+                    <td><span class="status-pill" th:classappend="'status-' + ${order.orderStatus}" th:text="${order.orderStatus}">PENDING</span></td>
+                    <td><span class="date-chip" th:text="${order.paymentStatus}">PENDING</span></td>
+                    <td>
+                        <span class="date-chip" th:if="${order.orderDate != null}" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">Date</span>
+                        <span th:if="${order.orderDate == null}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Empty]</span>
+                    </td>
+                    <td style="text-align:center;">
+                        <a th:href="@{/admin/orders/detail/{id}(id=${order.orderId})}" style="padding:5px 12px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">View</a>
+                    </td>
+                </tr>
+                <tr th:if="${orders.isEmpty()}" class="empty-row">
+                    <td colspan="9">No orders found.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination-bar" th:if="${totalPages > 1}">
+            <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
+            <div class="page-btns">
+                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/orders(page=${currentPage - 1}, status=${status}, keyword=${keyword})}">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </a>
+                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/orders(page=${i}, status=${status}, keyword=${keyword})}" th:text="${i}">1</a>
+                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/orders(page=${currentPage + 1}, status=${status}, keyword=${keyword})}">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

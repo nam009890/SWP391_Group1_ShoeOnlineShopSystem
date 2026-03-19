@@ -185,7 +185,7 @@ public class SliderService {
             for (int i = 0; i < productIds.size(); i++) {
                 Long pId = productIds.get(i);
                 Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
-                Product p = products.stream().filter(prod -> prod.getId().equals(pId)).findFirst().orElse(null);
+                Product p = products.stream().filter(prod -> prod.getProductId().equals(pId)).findFirst().orElse(null);
                 if (p != null) {
                     targetSlider.addProduct(p, discount);
                 }

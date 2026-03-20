@@ -234,9 +234,9 @@
                                 <tbody>
                                     <tr th:each="p, stt : ${products}">
                                         <td th:text="${stt.count}">1</td>
-                                        <td th:text="${p.name}" class="p-name">Product Name</td>
-                                        <td class="p-price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}">1,000,000</td>
-                                        <td class="text-center"><input type="checkbox" class="form-check-input product-checkbox" th:value="${p.id}"></td>
+                                        <td th:text="${p.productName}" class="p-name">Product Name</td>
+                                        <td class="p-price" th:text="${#numbers.formatDecimal(p.productPrice, 0, 'COMMA', 0, 'POINT')}">1,000,000</td>
+                                        <td class="text-center"><input type="checkbox" class="form-check-input product-checkbox" th:value="${p.productId}"></td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -127,15 +127,15 @@
                         <tbody>
                             <tr th:each="sp, stat : ${slider.sliderProducts}">
                                 <td style="color:var(--text-mid); font-weight:600" th:text="${stat.count}"></td>
-                                <td th:text="${sp.product.name}"></td>
+                                <td th:text="${sp.product.productName}"></td>
                                 <td>
-                                    <span th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+                                    <span th:text="${#numbers.formatDecimal(sp.product.productPrice, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
                                 </td>
                                 <td>
                                     <span class="badge-discount" th:text="${sp.discount > 0 ? sp.discount + '%' : 'No discount'}"></span>
                                 </td>
                                 <td style="font-weight:700; color:var(--accent)">
-                                    <span th:text="${#numbers.formatDecimal(sp.product.price - (sp.product.price * sp.discount / 100), 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
+                                    <span th:text="${#numbers.formatDecimal(sp.product.productPrice - (sp.product.productPrice * sp.discount / 100), 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(slider.sliderProducts)}" class="empty-row">

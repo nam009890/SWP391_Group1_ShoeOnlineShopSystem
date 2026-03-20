@@ -128,10 +128,10 @@
                                             <tbody>
                                                 <tr th:each="sp, stat : ${slider.sliderProducts}">
                                                     <td style="color:var(--text-mid);font-weight:600" th:text="${stat.count}">1</td>
-                                                    <td class="p-name" th:text="${sp.product.name}">Product Name</td>
-                                                    <td class="p-price" th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">Price</td>
+                                                    <td class="p-name" th:text="${sp.product.productName}">Product Name</td>
+                                                    <td class="p-price" th:text="${#numbers.formatDecimal(sp.product.productPrice, 0, 'COMMA', 0, 'POINT')} + ' VND'">Price</td>
                                                     <td>
-                                                        <select name="productDiscounts" class="form-select form-select-sm discount-select" style="width:auto;font-family:'DM Sans',sans-serif" th:onchange="'calcPrice(this, ' + ${sp.product.price} + ')'">
+                                                        <select name="productDiscounts" class="form-select form-select-sm discount-select" style="width:auto;font-family:'DM Sans',sans-serif" th:onchange="'calcPrice(this, ' + ${sp.product.productPrice} + ')'">
                                                             <option value="0" th:selected="${sp.discount == 0}">No discount</option>
                                                             <option value="10" th:selected="${sp.discount == 10}">10%</option>
                                                             <option value="20" th:selected="${sp.discount == 20}">20%</option>
@@ -140,10 +140,10 @@
                                                             <option value="50" th:selected="${sp.discount == 50}">50%</option>
                                                         </select>
                                                     </td>
-                                                    <td style="font-weight:700; color:var(--accent)" class="final-price" th:text="${#numbers.formatDecimal(sp.product.price - (sp.product.price * sp.discount / 100), 0, 'COMMA', 0, 'POINT')} + ' VND'">Price</td>
+                                                    <td style="font-weight:700; color:var(--accent)" class="final-price" th:text="${#numbers.formatDecimal(sp.product.productPrice - (sp.product.productPrice * sp.discount / 100), 0, 'COMMA', 0, 'POINT')} + ' VND'">Price</td>
                                                     <td>
                                                         <a href="javascript:void(0)" class="btn-del-link" onclick="this.closest('tr').remove(); updateRowNumbers('productTable'); updateCount()">Delete</a>
-                                                        <input type="hidden" name="productIds" th:value="${sp.product.id}">
+                                                        <input type="hidden" name="productIds" th:value="${sp.product.productId}">
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -215,10 +215,10 @@
                                                     <tbody>
                                                         <tr th:each="p, status : ${products}">
                                                             <td th:text="${status.count}">1</td>
-                                                            <td class="modal-p-name" th:text="${p.name}">Product Name</td>
-                                                            <td class="modal-p-price" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}">Price</td>
+                                                            <td class="modal-p-name" th:text="${p.productName}">Product Name</td>
+                                                            <td class="modal-p-price" th:text="${#numbers.formatDecimal(p.productPrice, 0, 'COMMA', 0, 'POINT')}">Price</td>
                                                             <td class="text-center">
-                                                                <input type="checkbox" th:value="${p.id}" class="form-check-input product-cb border-secondary"
+                                                                <input type="checkbox" th:value="${p.productId}" class="form-check-input product-cb border-secondary"
                                                                        th:checked="${slider.sliderProducts != null and #lists.contains(slider.sliderProducts.![product], p)}">
                                                             </td>
                                                         </tr>

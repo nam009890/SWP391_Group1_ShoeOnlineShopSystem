@@ -127,8 +127,8 @@ public class SliderService {
             String contentType = imageFile.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
                 errors.put("imageUrl", "Only image files are allowed!");
-            } else if (imageFile.getSize() > 5 * 1024 * 1024) {
-                errors.put("imageUrl", "Image size must be less than 5MB!");
+            } else if (imageFile.getSize() > 20 * 1024 * 1024) {
+                errors.put("imageUrl", "Image size must be less than 20MB!");
             } else {
                 try {
                     BufferedImage img = ImageIO.read(imageFile.getInputStream());

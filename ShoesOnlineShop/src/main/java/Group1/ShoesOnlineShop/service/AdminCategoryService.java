@@ -120,6 +120,10 @@ public class AdminCategoryService {
             }
         }
 
+        if (category.getDisplayOrder() != null && category.getDisplayOrder() < 0) {
+            errors.put("displayOrder", "Thứ tự hiển thị phải >= 0!");
+        }
+
         return errors;
     }
 }

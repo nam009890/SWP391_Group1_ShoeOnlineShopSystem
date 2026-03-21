@@ -2,6 +2,10 @@ package Group1.ShoesOnlineShop.controller;
 
 import Group1.ShoesOnlineShop.entity.Order;
 import Group1.ShoesOnlineShop.service.OrderService;
+import Group1.ShoesOnlineShop.repository.UserRepository;
+import Group1.ShoesOnlineShop.repository.ProductRepository;
+import Group1.ShoesOnlineShop.entity.User;
+import Group1.ShoesOnlineShop.entity.Product;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +22,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @CrossOrigin
 public class OrderController {
 
-        private final OrderService orderService;
-          public OrderController(OrderService orderService) {
+    private final OrderService orderService;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+
+    public OrderController(OrderService orderService, UserRepository userRepository, ProductRepository productRepository) {
         this.orderService = orderService;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @GetMapping
@@ -40,6 +49,39 @@ public class OrderController {
         model.addAttribute("keyword", keyword);
 
        return "order-list";
+    }
+
+    // ====== SHOW CREATE PAGE ======
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        List<User> users = userRepository.findAll();
+        List<Product> products = productRepository.findAll();
+
+        model.addAttribute("users", users);
+        model.addAttribute("products", products);
+        model.addAttribute("statuses",
+                List.of("PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"));
+
+        return "create-order";
+    }
+
+    // ====== HANDLE CREATE ======
+    @PostMapping("/create")
+    public String createOrder(@RequestParam Long userId,
+                              @RequestParam Long productId,
+                              @RequestParam Integer quantity,
+                              @RequestParam String phone,
+                              @RequestParam String address,
+                              @RequestParam String status,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            String message = orderService.createOrder(userId, productId, quantity, phone, address, status);
+            redirectAttributes.addFlashAttribute("successMessage", message);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/orders/create";
+        }
+        return "redirect:/orders";
     }
 
     @PostMapping("/update-status")

@@ -123,7 +123,7 @@ order.setOrderStatus(status);
 
         // Nếu có tính lại tổng tiền
         order.setTotalAmount(
-                detail.getProduct().getProductPrice().multiply(
+                detail.getProduct().getPrice().multiply(
                         BigDecimal.valueOf(quantity)
                 )
         );

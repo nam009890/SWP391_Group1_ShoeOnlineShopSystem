@@ -10,10 +10,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleMaxSizeException(MaxUploadSizeExceededException exc, RedirectAttributes redirectAttributes, jakarta.servlet.http.HttpServletRequest request) {
-        redirectAttributes.addFlashAttribute("errorMessage", "Error: File size too large! Please upload an image smaller than 5MB.");
+        redirectAttributes.addFlashAttribute("errorMessage", "Error: File size too large! Please upload an image smaller than 20MB.");
         
         String referer = request.getHeader("Referer");
-        if (referer != null) {
+        if (referer != null && !referer.contains("/save")) {
             return "redirect:" + referer;
         }
         return "redirect:/sliders";

@@ -146,19 +146,17 @@
                             </thead>
                             <tbody>
 
-                                <!-- Empty state -->
-                                <tr class="empty-row" th:if="${#lists.isEmpty(orders.content)}">
-                                    <td colspan="7">No orders found.</td>
-                                </tr>
 
-                                <tr th:each="o, stat : ${orders.content}">
-                                    <td th:text="${stat.count + (orders.number * orders.size)}"></td>
-                                    <td>
-                                        <div style="font-weight:600; color:var(--text-dark);" th:text="${o.user.fullName}"></div>
-                                    </td>
-                                    <td th:text="${o.phone}"></td>
-                                    <td th:text="${o.shippingAddress}"></td>
-                                    <td style="font-weight:700; color:var(--danger);" th:text="${o.totalAmount}"></td>
+                    <select name="status" class="form-select" style="width:140px;">
+                        <option value="">All Status</option>
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}"
+                                th:text="${s}"
+                                th:selected="${s == currentStatus}">
+                        </option>
+                    </select>
+                </form>
+            </div>
 
                                     <td>
                                         <form th:action="@{/orders/update-status}" method="post">

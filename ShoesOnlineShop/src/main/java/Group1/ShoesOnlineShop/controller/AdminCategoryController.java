@@ -101,7 +101,7 @@ public class AdminCategoryController {
 
         // Save
         adminCategoryService.saveCategory(category);
-        redirectAttributes.addFlashAttribute("successMessage", "Tạo danh mục \"" + category.getName() + "\" thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Category \"" + category.getName() + "\" created successfully!");
         return "redirect:/admin/categories";
     }
 
@@ -168,7 +168,7 @@ public class AdminCategoryController {
 
 
         adminCategoryService.saveCategory(category);
-        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật danh mục \"" + category.getName() + "\" thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Category \"" + category.getName() + "\" updated successfully!");
         return "redirect:/admin/categories";
     }
 
@@ -178,9 +178,9 @@ public class AdminCategoryController {
         Category category = adminCategoryService.getCategoryById(id);
         if (category != null) {
             adminCategoryService.deleteCategory(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Đã xóa danh mục \"" + category.getName() + "\"!");
+            redirectAttributes.addFlashAttribute("successMessage", "Category \"" + category.getName() + "\" deleted successfully!");
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy danh mục!");
+            redirectAttributes.addFlashAttribute("errorMessage", "Category not found!");
         }
         return "redirect:/admin/categories";
     }

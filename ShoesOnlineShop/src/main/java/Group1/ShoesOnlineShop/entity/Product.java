@@ -19,7 +19,8 @@ public class Product {
     @Column(name = "product_price")
     private BigDecimal price;
     
-
+@Column(name = "product_description", length = 500)
+private String productDescription;
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
@@ -61,13 +62,34 @@ public class Product {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    
+     public Long getProductId() { return id; }
+    public void setProductId(Long id) { this.id = id; }
 
-    // Getters và Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
+    public String getProductName() { return name; }
+    public void setProductName(String name) { this.name = name; }
 
+    public String getProductDescription() { return productDescription; }
+    public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
+
+    public BigDecimal getProductPrice() { return price; }
+    public void setProductPrice(BigDecimal price) { this.price = price; }
+
+    public Integer getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

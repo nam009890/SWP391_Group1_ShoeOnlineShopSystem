@@ -1,5 +1,6 @@
 package Group1.ShoesOnlineShop.service;
 
+import Group1.ShoesOnlineShop.entity.Product;
 import Group1.ShoesOnlineShop.entity.Slider;
 import Group1.ShoesOnlineShop.repository.SliderRepository;
 import Group1.ShoesOnlineShop.repository.CouponRepository;
@@ -64,10 +65,12 @@ public class SliderService {
             slider.setCoupons(new java.util.ArrayList<>());
         }
 
+        slider.getSliderProducts().clear();
         if (productIds != null && !productIds.isEmpty()) {
-            slider.setProducts(productRepository.findAllById(productIds));
-        } else {
-            slider.setProducts(new java.util.ArrayList<>());
+            List<Product> products = productRepository.findAllById(productIds);
+            for (Product p : products) {
+                slider.addProduct(p, 0); // Default discount 0 for tests/legacy logic
+            }
         }
 
         sliderRepository.save(slider);
@@ -124,8 +127,8 @@ public class SliderService {
             String contentType = imageFile.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
                 errors.put("imageUrl", "Only image files are allowed!");
-            } else if (imageFile.getSize() > 5 * 1024 * 1024) {
-                errors.put("imageUrl", "Image size must be less than 5MB!");
+            } else if (imageFile.getSize() > 20 * 1024 * 1024) {
+                errors.put("imageUrl", "Image size must be less than 20MB!");
             } else {
                 try {
                     BufferedImage img = ImageIO.read(imageFile.getInputStream());
@@ -141,7 +144,7 @@ public class SliderService {
     }
 
     // 2. HÀM XỬ LÝ LƯU FILE VÀ GHI DATABASE
-    public void processAndSaveSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds, MultipartFile imageFile) throws IOException {
+    public void processAndSaveSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds, List<Integer> productDiscounts, MultipartFile imageFile) throws IOException {
         Slider targetSlider;
         
         // Lấy Slider cũ ra (nếu Update) hoặc tạo mới (nếu Create)
@@ -176,10 +179,17 @@ public class SliderService {
             targetSlider.setCoupons(new java.util.ArrayList<>());
         }
 
+        targetSlider.getSliderProducts().clear();
         if (productIds != null && !productIds.isEmpty()) {
-            targetSlider.setProducts(productRepository.findAllById(productIds));
-        } else {
-            targetSlider.setProducts(new java.util.ArrayList<>());
+            List<Product> products = productRepository.findAllById(productIds);
+            for (int i = 0; i < productIds.size(); i++) {
+                Long pId = productIds.get(i);
+                Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
+                Product p = products.stream().filter(prod -> prod.getProductId().equals(pId)).findFirst().orElse(null);
+                if (p != null) {
+                    targetSlider.addProduct(p, discount);
+                }
+            }
         }
 
         // Lưu vào DB

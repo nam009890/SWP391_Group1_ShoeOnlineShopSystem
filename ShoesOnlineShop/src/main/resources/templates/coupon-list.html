@@ -17,7 +17,7 @@
             </div>
             <span class="nav-label">Navigation</span>
 
-            <a href="/home">
+            <a href="/MarketingHome">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Dashboard
             </a>
@@ -48,14 +48,14 @@
                     <h4>Coupon Code Management</h4>
                     <p>Create and manage promotional discount codes</p>
                 </div>
-                <div class="user-pill" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="user-pill" style="cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="user-avatar">MKT</div>
                     <div>
                         <div class="user-name">Username</div>
                         <div class="user-role">Marketing</div>
                     </div>
                 </div>
-                <ul class="dropdown-menu dropdown-menu-end">
+                                <ul class="dropdown-menu dropdown-menu-end">
                     <li>
                         <a class="dropdown-item" href="/profile">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -63,7 +63,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="/profile/change-password">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                             Change Password
                         </a>
@@ -136,7 +136,8 @@
                             <td><span style="background:#fef2f2; color:var(--danger); padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700" th:text="${coupon.discountPercent + '%'}">10%</span></td>
                             <td>
                                 <span th:if="${!coupon.isActive}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Inactive</span>
-                                <span th:if="${coupon.isActive and (coupon.endDate < today or coupon.createDate > today)}" class="status-badge status-upcoming" style="font-size:11px; padding:3px 8px;">Expired</span>
+                                <span th:if="${coupon.isActive and coupon.endDate < today}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Expired</span>
+                                <span th:if="${coupon.isActive and coupon.createDate > today}" class="status-badge status-upcoming" style="font-size:11px; background: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; padding:3px 8px;">Upcoming</span>
                                 <span th:if="${coupon.isActive and coupon.createDate <= today and coupon.endDate >= today}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active & Valid</span>
                             </td>
                             <td><span class="date-chip" th:text="${#temporals.format(coupon.endDate, 'dd/MM/yyyy')}">31/12/2024</span></td>
@@ -167,5 +168,6 @@
             </div>
         </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

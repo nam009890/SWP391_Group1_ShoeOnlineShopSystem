@@ -23,7 +23,7 @@ public class ProfileController {
     public String showProfile(Model model) {
         User user = userService.getUserById(CURRENT_USER_ID);
         if (user == null) {
-            return "redirect:/home";
+            return "redirect:/MarketingHome";
         }
         model.addAttribute("user", user);
         return "marketing-profile";
@@ -57,5 +57,43 @@ public class ProfileController {
         }
 
         return "redirect:/profile";
+    }
+
+    @GetMapping("/profile/change-password")
+    public String showChangePasswordForm(Model model) {
+        User user = userService.getUserById(CURRENT_USER_ID);
+        if (user == null) {
+            return "redirect:/MarketingHome";
+        }
+        model.addAttribute("user", user);
+        return "marketing-change-password";
+    }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            RedirectAttributes redirectAttributes) {
+        
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New passwords do not match!");
+            return "redirect:/profile/change-password";
+        }
+
+        boolean success = userService.changePassword(CURRENT_USER_ID, currentPassword, newPassword);
+        if (success) {
+            redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Incorrect current password!");
+        }
+
+        return "redirect:/profile/change-password";
+    }
+
+    @GetMapping("/logout")
+    public String logout(jakarta.servlet.http.HttpSession session) {
+        session.invalidate();
+        return "redirect:/home";
     }
 }

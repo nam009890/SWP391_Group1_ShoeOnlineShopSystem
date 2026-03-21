@@ -86,6 +86,9 @@ private String productDescription;
     // Alias to support legacy templates using 'productName' instead of 'name'
     public String getProductName() { return name; }
 
+    // Alias to support templates using 'productPrice' instead of 'price'
+    public BigDecimal getProductPrice() { return price; }
+
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
 

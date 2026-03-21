@@ -104,19 +104,19 @@ public class AdminCategoryService {
         Map<String, String> errors = new HashMap<>();
 
         if (category.getName() == null || category.getName().trim().isEmpty()) {
-            errors.put("name", "Tên danh mục không được để trống!");
+            errors.put("name", "Category name must not be empty!");
         } else {
             boolean nameDuplicate = (category.getId() == null)
                     ? categoryRepository.existsByName(category.getName().trim())
                     : categoryRepository.existsByNameAndIdNot(category.getName().trim(), category.getId());
             if (nameDuplicate) {
-                errors.put("name", "Tên danh mục này đã tồn tại!");
+                errors.put("name", "This category name already exists!");
             }
         }
 
         if (category.getParent() != null && category.getId() != null) {
             if (category.getParent().getId().equals(category.getId())) {
-                errors.put("parent", "Danh mục không thể là cha của chính nó!");
+                errors.put("parent", "A category cannot be its own parent!");
             }
         }
 

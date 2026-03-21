@@ -107,7 +107,7 @@ class AdminCategoryServiceTest {
         assertTrue(errors.isEmpty());
     }
 
-    // 7. VALIDATION - displayOrder âm (service hiện không validate displayOrder, nên không có lỗi)
+    // 7. VALIDATION - displayOrder âm → phải có lỗi
     @Test
     void testValidateCategory_NegativeDisplayOrder() {
         Category category = new Category();
@@ -118,7 +118,8 @@ class AdminCategoryServiceTest {
 
         Map<String, String> errors = adminCategoryService.validateCategory(category);
 
-        assertTrue(errors.isEmpty());
+        assertFalse(errors.isEmpty());
+        assertTrue(errors.containsKey("displayOrder"));
     }
 
     // 8. DELETE - Xóa danh mục

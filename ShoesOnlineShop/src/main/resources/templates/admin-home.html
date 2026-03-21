@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .stat-products { border-left: 4px solid #8b5cf6; }
+        .stat-orders   { border-left: 4px solid var(--warning); }
+        .icon-products { background: #ede9fe; color: #7c3aed; }
+        .icon-orders   { background: #fef3c7; color: #92400e; }
+        .order-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+        .status-PENDING   { background:#fef3c7; color:#92400e; }
+        .status-APPROVED  { background:#d1fae5; color:#065f46; }
+        .status-SHIPPED   { background:#dbeafe; color:#1e40af; }
+        .status-DELIVERED { background:#d1fae5; color:#065f46; }
+        .status-CANCELLED { background:#fee2e2; color:#991b1b; }
+        .status-CONFIRMED { background:#f3e8ff; color:#7e22ce; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+
+    <a href="/admin" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+    </a>
+    <a href="/admin/products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Products
+    </a>
+    <a href="/admin/categories">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+        Categories
+    </a>
+    <a href="/admin/users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Users
+    </a>
+    <a href="/admin/orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>
+        Orders
+    </a>
+    <a href="/admin/financials">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Financials
+    </a>
+</div>
+
+<div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+        <div>
+            <h4>Admin Dashboard</h4>
+            <p>Welcome back — here's your business overview.</p>
+        </div>
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div>
+                <div class="user-name">Administrator</div>
+                <div class="user-role">Admin</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-4 mb-4 row-cols-1 row-cols-md-5">
+        <div class="col">
+            <div class="stat-card stat-coupon" onclick="window.location.href='/admin/financials'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="stat-icon icon-coupon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+                <div>
+                    <div class="stat-label">Month Revenue</div>
+                    <div class="stat-value" style="font-size:22px;" th:text="${#numbers.formatDecimal(monthRevenue, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</div>
+                    <div class="stat-sub">This month's total sales</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="stat-card stat-slider" onclick="window.location.href='/admin/products'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="stat-icon icon-slider">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                </div>
+                <div>
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-value" th:text="${totalProducts}">0</div>
+                    <div class="stat-sub">Items in catalog</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="stat-card stat-content" onclick="window.location.href='/admin/users'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="stat-icon icon-content">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>
+                </div>
+                <div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value" th:text="${totalUsers}">0</div>
+                    <div class="stat-sub">Registered accounts</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="stat-card stat-products" onclick="window.location.href='/admin/orders'" style="cursor:pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="stat-icon icon-products">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>
+                </div>
+                <div>
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value" th:text="${totalOrders}">0</div>
+                    <div class="stat-sub">All time orders</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="stat-card" onclick="window.location.href='/admin/categories'" style="cursor:pointer; transition: transform 0.2s; border-left: 4px solid #10b981;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="stat-icon" style="background: #d1fae5; color: #059669;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+                </div>
+                <div>
+                    <div class="stat-label">Total Categories</div>
+                    <div class="stat-value" th:text="${totalCategories != null ? totalCategories : 0}">0</div>
+                    <div class="stat-sub">Product groupings</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions + Recent Orders -->
+    <div class="row g-4">
+        <!-- Quick Actions -->
+        <div class="col-md-3">
+            <div class="actions-card">
+                <div class="actions-header">
+                    <svg width="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <h6>Quick Actions</h6>
+                </div>
+                <div class="actions-body" style="flex-direction:column; gap:10px; padding:16px">
+                    <a href="/admin/products/create" class="qa-btn qa-slider" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 14px; background:var(--accent-light); color:var(--accent); border-radius:8px; font-weight:600; font-size:13.5px;">
+                        <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add Product
+                    </a>
+                    <a href="/admin/categories/create" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 14px; background:#dbeafe; color:#1e40af; border-radius:8px; font-weight:600; font-size:13.5px;">
+                        <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+                        Add Category
+                    </a>
+                    <a href="/admin/users" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 14px; background:#d1fae5; color:#065f46; border-radius:8px; font-weight:600; font-size:13.5px;">
+                        <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        Manage Users
+                    </a>
+                    <a href="/admin/financials" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 14px; background:#fef3c7; color:#92400e; border-radius:8px; font-weight:600; font-size:13.5px;">
+                        <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                        View Financials
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="col-md-9">
+            <div class="card" style="margin-bottom:0">
+                <div class="card-header-bar">
+                    <h6>Recent Orders</h6>
+                    <a href="/admin/orders" style="font-size:12px; color:var(--accent); text-decoration:none; font-weight:600;">View All →</a>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${recentOrders}" th:if="${!recentOrders.isEmpty()}">
+                            <td style="font-weight:700; color:var(--accent);" th:text="'#' + ${order.orderId}">#1</td>
+                            <td>
+                                <span th:if="${order.user != null}" th:text="${order.user.fullName}">Customer Name</span>
+                                <span th:if="${order.user == null}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                            </td>
+                            <td>
+                                <span th:if="${order.phone != null and !order.phone.isEmpty()}" th:text="${order.phone}">Phone</span>
+                                <span th:if="${order.phone == null or order.phone.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
+                            </td>
+                            <td style="font-weight:600;" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
+                            <td>
+                                <span class="order-status" th:classappend="'status-' + ${order.orderStatus}" th:text="${order.orderStatus}">PENDING</span>
+                            </td>
+                            <td><span class="date-chip" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/01/2025 00:00</span></td>
+                        </tr>
+                        <tr th:if="${recentOrders.isEmpty()}" class="empty-row">
+                            <td colspan="6">No orders found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

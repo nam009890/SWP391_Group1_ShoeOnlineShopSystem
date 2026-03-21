@@ -163,7 +163,7 @@ public class SliderService {
         // Xử lý lưu File Ảnh vào hệ thống
         if (imageFile != null && !imageFile.isEmpty()) {
             String fileName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(imageFile.getOriginalFilename());
-            Path uploadPath = Paths.get("src/main/resources/static/uploads/");
+            Path uploadPath = Group1.ShoesOnlineShop.config.WebMvcConfig.UPLOAD_DIR;
             if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
 
             try (InputStream inputStream = imageFile.getInputStream()) {

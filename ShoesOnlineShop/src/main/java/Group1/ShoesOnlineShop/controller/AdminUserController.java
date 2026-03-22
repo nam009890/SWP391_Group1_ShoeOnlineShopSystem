@@ -12,11 +12,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin/users")
+@RequestMapping("/internal/admin/users")
 public class AdminUserController {
 
     @Autowired
     private AdminUserService adminUserService;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     // 1. Danh sách users
     @GetMapping
@@ -45,7 +48,7 @@ public class AdminUserController {
     @GetMapping("/detail/{id}")
     public String showDetail(@PathVariable(name = "id") Long id, Model model) {
         User user = adminUserService.getUserById(id);
-        if (user == null) return "redirect:/admin/users";
+        if (user == null) return "redirect:/internal/admin/users";
 
         model.addAttribute("user", user);
         return "admin-user-detail";
@@ -55,7 +58,7 @@ public class AdminUserController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable(name = "id") Long id, Model model) {
         User user = adminUserService.getUserById(id);
-        if (user == null) return "redirect:/admin/users";
+        if (user == null) return "redirect:/internal/admin/users";
 
         model.addAttribute("user", user);
         return "admin-user-update";
@@ -69,13 +72,13 @@ public class AdminUserController {
             RedirectAttributes redirectAttributes
     ) {
         User existingUser = adminUserService.getUserById(id);
-        if (existingUser == null) return "redirect:/admin/users";
+        if (existingUser == null) return "redirect:/internal/admin/users";
 
         // Chỉ cập nhật role và status (Admin không đổi password ở đây)
         // Prevent assigning the ADMIN role to any user
         if ("ADMIN".equalsIgnoreCase(formUser.getUserRole()) && !"ADMIN".equalsIgnoreCase(existingUser.getUserRole())) {
             redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: Cannot assign ADMIN role to another user!");
-            return "redirect:/admin/users/update/" + id;
+            return "redirect:/internal/admin/users/update/" + id;
         }
 
         existingUser.setUserRole(formUser.getUserRole());
@@ -88,7 +91,7 @@ public class AdminUserController {
         if (!errors.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Validation failed: " + errors.values().iterator().next());
-            return "redirect:/admin/users/update/" + id;
+            return "redirect:/internal/admin/users/update/" + id;
         }
 
         try {
@@ -98,20 +101,57 @@ public class AdminUserController {
             redirectAttributes.addFlashAttribute("errorMessage", "System error: Failed to update user!");
         }
 
-        return "redirect:/admin/users";
+        return "redirect:/internal/admin/users";
     }
 
     // 5. Block / Unblock
     @GetMapping("/block/{id}")
     public String toggleBlock(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         User user = adminUserService.getUserById(id);
-        if (user == null) return "redirect:/admin/users";
+        if (user == null) return "redirect:/internal/admin/users";
 
         boolean wasActive = user.getIsActive();
         adminUserService.toggleBlock(id);
         redirectAttributes.addFlashAttribute("successMessage",
                 wasActive ? "User has been blocked!" : "User has been unblocked!");
 
-        return "redirect:/admin/users";
+        return "redirect:/internal/admin/users";
+    }
+
+    // 6. Form tạo mới user
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("user", new User());
+        return "admin-user-create";
+    }
+
+    // 7. Xử lý tạo mới
+    @PostMapping("/save")
+    public String saveNewUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+        user.setIsActive(true);
+        if (user.getUserRole() == null || user.getUserRole().trim().isEmpty()) {
+            user.setUserRole("CUSTOMER");
+        } else if ("ADMIN".equalsIgnoreCase(user.getUserRole())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: Cannot assign ADMIN role to a new user!");
+            return "redirect:/internal/admin/users/create";
+        }
+
+        Map<String, String> errors = adminUserService.validateUser(user);
+        if (!errors.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: " + errors.values().iterator().next());
+            return "redirect:/internal/admin/users/create";
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+
+        try {
+            adminUserService.saveUser(user);
+            redirectAttributes.addFlashAttribute("successMessage", "User '" + user.getUserName() + "' created successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "System error: Failed to create user!");
+            return "redirect:/internal/admin/users/create";
+        }
+
+        return "redirect:/internal/admin/users";
     }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/financials")
+@RequestMapping("/internal/admin/financials")
 public class AdminFinancialController {
 
     @Autowired

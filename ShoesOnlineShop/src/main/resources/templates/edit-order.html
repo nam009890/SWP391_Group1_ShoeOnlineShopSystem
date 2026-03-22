@@ -28,7 +28,7 @@
 
         <span class="nav-label">Management</span>
 
-        <a th:href="@{/orders}" class="active">
+        <a th:href="@{/internal/orders}" class="active">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -37,7 +37,7 @@
             Order Management
         </a>
 
-        <a th:href="@{/feedbacks}">
+        <a th:href="@{/internal/feedbacks}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -84,7 +84,7 @@
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
             </svg>
-            <a th:href="@{/orders}">Order Management</a>
+            <a th:href="@{/internal/orders}">Order Management</a>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -115,7 +115,7 @@
                     <span th:text="${errorMessage}"></span>
                 </div>
 
-                <form th:action="@{/orders/update}" method="post">
+                <form th:action="@{/internal/orders/update}" method="post">
                     <input type="hidden" name="id" th:value="${order.orderId}"/>
 
                     <!-- Order ID -->
@@ -170,7 +170,7 @@
                     </div>
 
                     <div class="form-footer" style="border-top:1px solid var(--border); padding-top:20px; margin-top:8px;">
-                        <a th:href="@{/orders}" class="btn-outline">
+                        <a th:href="@{/internal/orders}" class="btn-outline">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                  stroke="currentColor" stroke-width="2" style="width:14px;">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>

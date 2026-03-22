@@ -31,14 +31,14 @@
 
     <span class="nav-label">Management</span>
 
-    <a th:href="@{/orders}">
+    <a th:href="@{/internal/orders}">
         Order Management
     </a>
 
-    <a th:href="@{/feedbacks}" class="active">
+    <a th:href="@{/internal/feedbacks}" class="active">
         Feedback Management
     </a>
-<a th:href="@{/invoices}" >
+<a th:href="@{/internal/invoices}" >
 Invoice Management
 </a>
     <div class="sidebar-logout">
@@ -140,7 +140,7 @@ Invoice Management
                     <td th:text="${#temporals.format(f.createdAt,'dd/MM/yyyy')}"></td>
 
                     <td>
-                        <form th:action="@{/feedbacks/toggle}" method="post">
+                        <form th:action="@{/internal/feedbacks/toggle}" method="post">
 
                             <input type="hidden" name="id" th:value="${f.feedbackId}">
 
@@ -155,12 +155,12 @@ Invoice Management
                     <td>
 
                         <a class="btn btn-sm btn-outline-primary"
-                           th:href="@{/feedbacks/view/{id}(id=${f.feedbackId})}">
+                           th:href="@{/internal/feedbacks/view/{id}(id=${f.feedbackId})}">
                             Detail
                         </a>
 
                         <a class="btn btn-sm btn-danger"
-                           th:href="@{/feedbacks/delete/{id}(id=${f.feedbackId})}"
+                           th:href="@{/internal/feedbacks/delete/{id}(id=${f.feedbackId})}"
                            onclick="return confirm('Delete this feedback?')">
                             Delete
                         </a>
@@ -184,12 +184,12 @@ Invoice Management
             <div>
 
                 <a class="btn btn-sm btn-outline-secondary"
-                   th:href="@{/feedbacks(page=${feedbacks.number - 1},status=${currentStatus},keyword=${keyword})}">
+                   th:href="@{/internal/feedbacks(page=${feedbacks.number - 1},status=${currentStatus},keyword=${keyword})}">
                     Prev
                 </a>
 
                 <a class="btn btn-sm btn-outline-secondary"
-                   th:href="@{/feedbacks(page=${feedbacks.number + 1},status=${currentStatus},keyword=${keyword})}">
+                   th:href="@{/internal/feedbacks(page=${feedbacks.number + 1},status=${currentStatus},keyword=${keyword})}">
                     Next
                 </a>
 

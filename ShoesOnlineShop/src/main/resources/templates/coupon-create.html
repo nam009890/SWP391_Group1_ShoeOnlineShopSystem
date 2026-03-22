@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Create Coupon</title>
@@ -17,19 +17,19 @@
             </div>
             <span class="nav-label">Navigation</span>
 
-            <a href="/MarketingHome">
+            <a href="/internal/MarketingHome">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Dashboard
             </a>
-            <a href="/sliders">
+            <a href="/internal/sliders">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
                 Slider
             </a>
-            <a href="/coupons" class="active">
+            <a href="/internal/coupons" class="active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
                 Coupon Code
             </a>
-            <a href="/contents">
+            <a href="/internal/contents">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 Content
             </a>
@@ -73,7 +73,7 @@
 
             <!-- Breadcrumb -->
             <div class="breadcrumb-bar">
-                <a href="/coupons">Coupon Management</a>
+                <a href="/internal/coupons">Coupon Management</a>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 <span>Create Coupon</span>
             </div>
@@ -88,7 +88,7 @@
                     <h6>Coupon Information</h6>
                 </div>
                 <div class="card-body-pad">
-                    <form th:action="@{/coupons/save}" th:object="${coupon}" method="post">
+                    <form th:action="@{/internal/coupons/save}" th:object="${coupon}" method="post">
 
                         <!-- Coupon Name -->
                         <div class="row mb-4 align-items-start">
@@ -175,7 +175,7 @@
 
                         <!-- Footer -->
                         <div class="form-footer" style="margin-top:28px; border-radius:0; border-left:none; border-right:none; border-bottom:none; padding-left:0; padding-right:0; padding-bottom:0">
-                            <a href="/coupons" class="btn-outline">
+                            <a href="/internal/coupons" class="btn-outline">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
                                 Back
                             </a>

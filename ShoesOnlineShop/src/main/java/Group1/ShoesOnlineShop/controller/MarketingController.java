@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/internal/MarketingHome")
 public class MarketingController {
 
     @Autowired
@@ -36,9 +38,8 @@ public class MarketingController {
     @Autowired
     private ContentRepository contentRepository;
 
-    @GetMapping("/MarketingHome")
+    @GetMapping
     public String showMarketingHome(Model model) {
-        // Fetch accurate statistics
         long activeSliders = sliderRepository.countByIsActive(true);
         long runningCoupons = couponRepository.countByIsActive(true);
         long totalContents = contentRepository.count();
@@ -47,7 +48,6 @@ public class MarketingController {
         model.addAttribute("runningCoupons", runningCoupons);
         model.addAttribute("totalContents", totalContents);
 
-        // Fetch Recent Activity
         List<ActivityDTO> activities = new ArrayList<>();
 
         List<Slider> recentSliders = sliderRepository.findTop5ByOrderByCreatedAtDesc();
@@ -68,7 +68,6 @@ public class MarketingController {
             activities.add(new ActivityDTO("Content \"" + c.getContentTitle() + "\" was created", "Content Management", timeAgo, c.getCreatedAt(), "var(--success)"));
         }
 
-        // Sort by createdAt desc and take top 5
         List<ActivityDTO> recentActivities = activities.stream()
                 .sorted(Comparator.comparing(ActivityDTO::getCreatedAt).reversed())
                 .limit(5)
@@ -76,7 +75,7 @@ public class MarketingController {
 
         model.addAttribute("recentActivities", recentActivities);
 
-        return "marketing-home"; // Returns marketing-home.html
+        return "marketing-home";
     }
 
     private String calculateTimeAgo(LocalDateTime createdAt) {
@@ -92,7 +91,7 @@ public class MarketingController {
         return days + "d ago";
     }
 
-    @GetMapping("/MarketingHome/activities")
+    @GetMapping("/activities")
     public String showAllActivities(Model model) {
         List<ActivityDTO> allActivities = new ArrayList<>();
 
@@ -111,7 +110,6 @@ public class MarketingController {
             allActivities.add(new ActivityDTO("Content \"" + c.getContentTitle() + "\" was created", "Content Management", calculateTimeAgo(c.getCreatedAt()), c.getCreatedAt(), "var(--success)"));
         }
 
-        // Sort by createdAt desc and take top 100 max
         List<ActivityDTO> sortedActivities = allActivities.stream()
                 .sorted(Comparator.comparing(ActivityDTO::getCreatedAt).reversed())
                 .limit(100)

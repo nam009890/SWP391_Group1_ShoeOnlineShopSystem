@@ -23,11 +23,11 @@
 
     <span class="nav-label">Management</span>
 
-    <a th:href="@{/orders}" class="active">
+    <a th:href="@{/internal/orders}" class="active">
         Order Management
     </a>
 
-    <a th:href="@{/feedbacks}">
+    <a th:href="@{/internal/feedbacks}">
         Feedback Management
     </a>
 
@@ -57,7 +57,7 @@
     <div class="breadcrumb-bar">
         <a th:href="@{/}">Home</a>
         <span>></span>
-        <a th:href="@{/orders}">Order Management</a>
+        <a th:href="@{/internal/orders}">Order Management</a>
         <span>></span>
         <span>Order Detail</span>
     </div>
@@ -111,7 +111,7 @@
 
 
         <div class="form-footer">
-            <a th:href="@{/orders}" class="btn-outline">
+            <a th:href="@{/internal/orders}" class="btn-outline">
                 Back
             </a>
         </div>

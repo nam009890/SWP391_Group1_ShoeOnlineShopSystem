@@ -92,12 +92,8 @@
                     <th style="width:60px">Image</th>
                     <th>Product Name</th>
                     <th>Category</th>
-<<<<<<< HEAD
-                    <th>Price (â‚«)</th>
-=======
                     <th>Price (₫)</th>
                     <th>Size/Color</th>
->>>>>>> 1b85790e17c015b81441798ba543cc13b396021b
                     <th>Stock</th>
                     <th>Status</th>
                     <th style="width:220px; text-align:center">Actions</th>
@@ -113,17 +109,14 @@
                         </div>
                     </td>
                     <td style="font-weight:600; color:var(--text-dark);" th:text="${product.name}">Product Name</td>
-<<<<<<< HEAD
-                    <td><span class="date-chip" th:text="${product.category != null ? product.category.name : 'â€”'}">Category</span></td>
-                    <td style="font-weight:600;" th:text="${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') : 'â€”'}">0</td>
-=======
+
                     <td><span class="date-chip" th:text="${product.category != null ? product.category.name : '—'}">Category</span></td>
                     <td style="font-weight:600;" th:text="${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') : '—'}">0</td>
                     <td>
                         <div style="font-size:12px; color:var(--text-mid);" th:text="'Size: ' + (${product.size != null and product.size != '' ? product.size : 'N/A'})">Size</div>
                         <div style="font-size:12px; color:var(--text-mid);" th:text="'Color: ' + (${product.color != null and product.color != '' ? product.color : 'N/A'})">Color</div>
                     </td>
->>>>>>> 1b85790e17c015b81441798ba543cc13b396021b
+
                     <td th:text="${product.stockQuantity != null ? product.stockQuantity : 0}">0</td>
                     <td>
                         <span th:if="${product.isActive}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active</span>

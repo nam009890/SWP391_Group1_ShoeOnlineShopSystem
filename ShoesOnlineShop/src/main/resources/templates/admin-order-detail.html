@@ -99,12 +99,12 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Order Date</div>
-                        <div class="detail-value" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : 'â€”'}">â€”</div>
+                        <div class="detail-value" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
                     </div>
                     <div class="detail-row" style="border-bottom:none">
                         <div class="detail-label" style="font-size:14px; font-weight:700;">Total Amount</div>
                         <div class="detail-value" style="font-size:18px; font-weight:800; color:var(--danger);"
-                             th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</div>
+                             th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
                     </div>
                 </div>
             </div>
@@ -134,9 +134,9 @@
                                     <span th:if="${item.product == null}" style="color:var(--text-light); font-style:italic;">[Product deleted]</span>
                                 </div>
                             </td>
-                            <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</td>
+                            <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</td>
                             <td th:text="${item.quantity}">1</td>
-                            <td style="font-weight:600;" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</td>
+                            <td style="font-weight:600;" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</td>
                         </tr>
                         <tr th:if="${order.orderDetails == null or order.orderDetails.isEmpty()}" class="empty-row">
                             <td colspan="4">No items found.</td>
@@ -147,7 +147,7 @@
                     <div>
                         <span style="font-size:13px; color:var(--text-mid);">Grand Total: </span>
                         <span style="font-size:18px; font-weight:800; color:var(--danger);"
-                              th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</span>
+                              th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</span>
                     </div>
                 </div>
             </div>
@@ -155,7 +155,7 @@
     </div>
 
     <div style="margin-top:20px;">
-        <a href="/internal/admin/orders" class="btn-outline">â† Back to Orders</a>
+        <a href="/internal/admin/orders" class="btn-outline">&larr; Back to Orders</a>
     </div>
 </div>
 

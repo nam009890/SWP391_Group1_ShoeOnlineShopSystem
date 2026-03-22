@@ -143,7 +143,7 @@
                             <div class="col-md-8">
                                 <select th:field="*{discountPercent}" class="form-select"
                                         th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
-                                    <option value="">â€” Select Discount â€”</option>
+                                    <option value="">&mdash; Select Discount &mdash;</option>
                                     <option th:each="i : ${#numbers.sequence(5, 50, 5)}" th:value="${i}" th:text="${i + '%'}"></option>
                                 </select>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('discountPercent')}" th:errors="*{discountPercent}"></div>
@@ -206,7 +206,7 @@
                 const inputs = document.querySelectorAll('form input[type="text"], form input[type="date"]');
                 inputs.forEach(input => input.value = '');
 
-                // Tráº£ dropdown giáº£m giÃ¡ vá» dÃ²ng Ä‘áº§u tiÃªn
+                // Trả dropdown giảm giá về dòng đầu tiên
                 const selects = document.querySelectorAll('form select');
                 selects.forEach(select => select.selectedIndex = 0);
 
@@ -214,7 +214,7 @@
                 const checkboxes = document.querySelectorAll('form input[type="checkbox"]');
                 checkboxes.forEach(cb => cb.checked = false);
 
-                // Dá»n luÃ´n mÃ u Ä‘á» bÃ¡o lá»—i cá»§a Form (náº¿u cÃ³)
+                // Dọn luôn màu đỏ báo lỗi của Form (nếu có)
                 const invalidInputs = document.querySelectorAll('.is-invalid');
                 invalidInputs.forEach(el => el.classList.remove('is-invalid'));
                 const errorTexts = document.querySelectorAll('.invalid-feedback, .text-danger');

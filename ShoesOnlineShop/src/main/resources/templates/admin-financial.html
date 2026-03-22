@@ -73,11 +73,11 @@
                 <input type="date" name="endDate" class="form-control" th:value="${endDate}" style="width:auto;">
             </div>
             <button type="submit" class="btn-save" style="height:40px; padding:0 28px;">
-                GO â†’
+                GO &rarr;
             </button>
             <div style="font-size:13px; color:var(--text-mid); margin-left:auto; align-self:center;">
                 Showing: <strong th:text="${#temporals.format(startDate, 'dd/MM/yyyy')}">01/01/2025</strong>
-                â†’ <strong th:text="${#temporals.format(endDate, 'dd/MM/yyyy')}">31/01/2025</strong>
+                &rarr; <strong th:text="${#temporals.format(endDate, 'dd/MM/yyyy')}">31/01/2025</strong>
             </div>
         </form>
     </div>
@@ -91,7 +91,7 @@
                 </div>
                 <div>
                     <div class="fin-label">Total Revenue</div>
-                    <div class="fin-val" style="color:var(--success); font-size:20px;" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</div>
+                    <div class="fin-val" style="color:var(--success); font-size:20px;" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
                     <div class="fin-sub">from non-cancelled orders</div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                 </div>
                 <div>
                     <div class="fin-label">Estimated Cost</div>
-                    <div class="fin-val" style="color:var(--danger); font-size:20px;" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</div>
+                    <div class="fin-val" style="color:var(--danger); font-size:20px;" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
                     <div class="fin-sub">~70% of revenue (estimated)</div>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                     <div class="fin-label">Net Profit</div>
                     <div class="fin-val" style="font-size:20px;"
                          th:classappend="${netProfit >= 0} ? 'profit-positive' : 'profit-negative'"
-                         th:text="${#numbers.formatDecimal(netProfit, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</div>
+                         th:text="${#numbers.formatDecimal(netProfit, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
                     <div class="fin-sub">Revenue minus estimated cost</div>
                 </div>
             </div>
@@ -157,8 +157,8 @@
                 <tr th:each="tx : ${transactions}" th:if="${!transactions.isEmpty()}">
                     <td style="font-weight:700; color:var(--accent);" th:text="'#' + ${tx.orderId}">#1</td>
                     <td th:text="${tx.user != null ? tx.user.fullName : 'N/A'}">Customer</td>
-                    <td><span class="date-chip" th:text="${tx.orderDate != null ? #temporals.format(tx.orderDate, 'dd/MM/yyyy') : 'â€”'}">â€”</span></td>
-                    <td style="font-weight:600;" th:text="${#numbers.formatDecimal(tx.totalAmount, 0, 'COMMA', 0, 'POINT') + ' â‚«'}">0 â‚«</td>
+                    <td><span class="date-chip" th:text="${tx.orderDate != null ? #temporals.format(tx.orderDate, 'dd/MM/yyyy') : '&mdash;'}">&mdash;</span></td>
+                    <td style="font-weight:600;" th:text="${#numbers.formatDecimal(tx.totalAmount, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</td>
                     <td>
                         <span style="display:inline-block; padding:3px 10px; border-radius:20px; font-size:11.5px; font-weight:600;"
                               th:text="${tx.orderStatus}"

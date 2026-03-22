@@ -26,16 +26,16 @@
     </div>
 
     <div th:if="${param.error}" class="error">
-        TÃ i khoáº£n khÃ´ng tá»“n táº¡i hoáº·c khÃ´ng cÃ³ quyá»n truy cáº­p.
+        Tài khoản không tồn tại hoặc không có quyền truy cập.
     </div>
     <div th:if="${param.logout}" class="success">
-        ÄÄƒng xuáº¥t thÃ nh cÃ´ng.
+        Đăng xuất thành công.
     </div>
 
     <form th:action="@{/internal/login/process}" method="post">
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Staff Username" required pattern="^\S+$" title="Username khÃ´ng Ä‘Æ°á»£c chá»©a khoáº£ng tráº¯ng" autofocus>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Staff Username" required pattern="^\S+$" title="Username không được chứa khoảng trắng" autofocus>
         </div>
         <div class="form-group">
             <label for="password">Password</label>

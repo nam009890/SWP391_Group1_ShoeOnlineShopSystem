@@ -79,7 +79,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Price (₫) <span style="color:var(--danger)">*</span></label>
+                            <label class="form-label">Price (VND) <span style="color:var(--danger)">*</span></label>
                             <input type="number" name="price" th:value="${product.price}" class="form-control"
                                    th:classappend="${#fields.hasErrors('price')} ? 'is-invalid' : ''"
                                    placeholder="e.g. 1500000" min="0" step="1000">
@@ -138,7 +138,7 @@
                             <option value="" disabled selected>-- Select Shoe Category (Required) --</option>
                             <th:block th:each="root : ${categories}">
                                 <!-- If root has children, show as optgroup -->
-                                <optgroup th:if="${root.children != null and !root.children.isEmpty()}" th:label="${'â­ ' + root.name}">
+                                <optgroup th:if="${root.children != null and !root.children.isEmpty()}" th:label="${'&#11088; ' + root.name}">
                                     <option th:each="child : ${root.children}" th:value="${child.id}" th:text="${child.name}" th:selected="${product.category != null and product.category.id == child.id}"></option>
                                 </optgroup>
                                 <!-- If root has NO children, show as a direct option -->

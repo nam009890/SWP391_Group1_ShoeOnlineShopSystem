@@ -59,7 +59,7 @@ public class ContentController {
         try {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String fileName = System.currentTimeMillis() + "_" + org.springframework.util.StringUtils.cleanPath(imageFile.getOriginalFilename());
-                java.nio.file.Path uploadPath = java.nio.file.Paths.get("src/main/resources/static/uploads/contents/");
+                java.nio.file.Path uploadPath = Group1.ShoesOnlineShop.config.WebMvcConfig.UPLOAD_DIR.resolve("contents");
                 
                 if (!java.nio.file.Files.exists(uploadPath)) {
                     java.nio.file.Files.createDirectories(uploadPath);

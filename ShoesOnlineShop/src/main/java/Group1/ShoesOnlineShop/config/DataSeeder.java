@@ -31,8 +31,10 @@ public class DataSeeder implements CommandLineRunner {
 
         // =============== SALE STAFF ===============
         List<User> mockSales = Arrays.asList(
-            createUser("sale1", "sale1@shoeweb.com", "Pham Van Sale", "0911111111", "100 Le Loi, Quan 1, TP HCM", "123456", "SALE_STAFF"),
-            createUser("sale2", "sale2@shoeweb.com", "Vo Thi Seller", "0912222222", "200 Tran Hung Dao, Ha Noi", "123456", "SALE_STAFF")
+            createUser("sale3", "sale3@shoeweb.com", "Pham Van Sale4", "0911111114", "101 Le Loi, Quan 1, TP HCM", "123456", "SALE_STAFF"),
+            createUser("sale4", "sale4@shoeweb.com", "Vo Thi Seller3", "0912222227", "201 Tran Hung Dao, Ha Noi", "123456", "SALE_STAFF"),
+            createUser("sale5", "sale5@shoeweb.com", "Nguyen Van Sale5", "0913333333", "202 Le Duan, Da Nang", "123456", "SALE_STAFF"),
+            createUser("sale6", "sale6@shoeweb.com", "Tran Thi Sale6", "0914444444", "203 Nguyen Trai, Ha Noi", "123456", "SALE_STAFF")
         );
 
         // =============== MARKETING STAFF ===============
@@ -57,10 +59,17 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedUsers(List<User> users, String roleName) {
         for (User user : users) {
-            if (userRepository.findByUserName(user.getUserName()).isEmpty()) {
-                user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-                userRepository.save(user);
-                System.out.println("Seeded " + roleName + ": " + user.getUserName());
+            try {
+                if (userRepository.findByUserName(user.getUserName()).isEmpty() && 
+                    userRepository.findByUserEmail(user.getUserEmail()).isEmpty()) {
+                    user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+                    userRepository.save(user);
+                    System.out.println("Seeded " + roleName + ": " + user.getUserName());
+                } else {
+                    System.out.println("Skipped seeding " + roleName + ": " + user.getUserName() + " (Username or Email already exists)");
+                }
+            } catch (Exception e) {
+                System.out.println("Error seeding " + roleName + ": " + user.getUserName() + " - " + e.getMessage());
             }
         }
     }

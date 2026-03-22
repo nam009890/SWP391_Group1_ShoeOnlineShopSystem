@@ -23,11 +23,16 @@ public class AdminUserService {
     private AdminUserRepository adminUserRepository;
 
     // === GET LIST WITH FILTER & PAGINATION ===
-    public Page<User> getUsers(String keyword, String role, Boolean isActive, int page, int size) {
+    public Page<User> getUsers(String keyword, String role, Boolean isActive, int page, int size, Long excludeUserId) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
         Specification<User> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
+
+            // Exclude the current admin from results
+            if (excludeUserId != null) {
+                predicates.add(cb.notEqual(root.get("userId"), excludeUserId));
+            }
 
             if (keyword != null && !keyword.trim().isEmpty()) {
                 String like = "%" + keyword.toLowerCase() + "%";

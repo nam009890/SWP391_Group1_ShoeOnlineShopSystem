@@ -29,10 +29,12 @@
             <h4>Product Detail</h4>
             <p>Viewing product information</p>
         </div>
+        <a href="/internal/admin/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">AD</div>
             <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
         </div>
+        </a>
     </div>
 
     <div class="breadcrumb-bar">
@@ -87,6 +89,14 @@
                     <div class="detail-row">
                         <div class="detail-label">Stock Quantity</div>
                         <div class="detail-value" th:text="${product.stockQuantity != null ? product.stockQuantity : 0}">0</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Size</div>
+                        <div class="detail-value" th:text="${product.size != null and product.size != '' ? product.size : '—'}">—</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Color</div>
+                        <div class="detail-value" th:text="${product.color != null and product.color != '' ? product.color : '—'}">—</div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Category</div>

@@ -96,7 +96,7 @@
                             <div class="col-md-9">
                                 <input type="text" th:field="*{contentTitle}" class="form-control"
                                        th:classappend="${#fields.hasErrors('contentTitle')} ? 'is-invalid' : ''"
-                                       placeholder="Enter content titleâ€¦" required>
+                                       placeholder="Enter content title..." required>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('contentTitle')}" th:errors="*{contentTitle}"></div>
                             </div>
                         </div>
@@ -108,9 +108,9 @@
                             </div>
                             <div class="col-md-5">
                                 <select th:field="*{contentType}" class="form-select">
-                                    <option value="BANNER">ðŸ–¼ Banner</option>
+                                    <option value="BANNER">&#128444; Banner</option>
                                     <option value="PROMO">ðŸ· Promotion</option>
-                                    <option value="ABOUT">ðŸ“– About Us</option>
+                                    <option value="ABOUT">&#128214; About Us</option>
                                 </select>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                             </div>
                             <div class="col-md-9">
                                 <div th:if="${content.imageUrl != null and !content.imageUrl.isEmpty()}" class="mb-2">
-                                    <img th:src="@{${content.imageUrl}}" alt="Current Thumbnail" style="height: 80px; border-radius: 6px; border: 1px solid var(--border);">
+                                    <img th:src="@{${content.imageUrl != null and content.imageUrl.startsWith('/uploads') ? content.imageUrl : '/uploads/contents/' + content.imageUrl}}" alt="Current Thumbnail" style="height: 80px; border-radius: 6px; border: 1px solid var(--border);">
                                 </div>
 
                                 <input type="file" name="imageFile" class="form-control" accept="image/png, image/jpeg, image/webp">
@@ -163,7 +163,7 @@
         <script>
             $(document).ready(function () {
                 $('#summernote').summernote({
-                    placeholder: 'Write your content here. You can drag & drop images or use the toolbar aboveâ€¦',
+                    placeholder: 'Write your content here. You can drag & drop images or use the toolbar above...',
                     tabsize: 2,
                     height: 420,
                     toolbar: [

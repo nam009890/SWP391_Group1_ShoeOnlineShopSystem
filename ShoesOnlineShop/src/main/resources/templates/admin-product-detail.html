@@ -84,7 +84,7 @@
                     <div class="detail-row">
                         <div class="detail-label">Price</div>
                         <div class="detail-value" style="font-size:18px; font-weight:800; color:var(--danger);"
-                             th:text="${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' â‚«' : 'â€”'}">0 â‚«</div>
+                             th:text="${product.price != null ? #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VND' : '&mdash;'}">0 VND</div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Stock Quantity</div>
@@ -100,7 +100,7 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Category</div>
-                        <div class="detail-value" th:text="${product.category != null ? product.category.name : 'â€”'}">Category</div>
+                        <div class="detail-value" th:text="${product.category != null ? product.category.name : '&mdash;'}">Category</div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Status</div>
@@ -111,11 +111,11 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Created At</div>
-                        <div class="detail-value" th:text="${product.createdAt != null ? #temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm') : 'â€”'}">â€”</div>
+                        <div class="detail-value" th:text="${product.createdAt != null ? #temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Updated At</div>
-                        <div class="detail-value" th:text="${product.updatedAt != null ? #temporals.format(product.updatedAt, 'dd/MM/yyyy HH:mm') : 'â€”'}">â€”</div>
+                        <div class="detail-value" th:text="${product.updatedAt != null ? #temporals.format(product.updatedAt, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
                     </div>
                 </div>
             </div>

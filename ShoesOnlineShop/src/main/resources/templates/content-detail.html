@@ -110,7 +110,7 @@
                 <!-- Thumbnail if present -->
                 <div th:if="${content.imageUrl != null and !content.imageUrl.isEmpty()}"
                      style="padding: 20px 32px 0">
-                    <img th:src="${content.imageUrl}" class="article-thumbnail" alt="Thumbnail">
+                    <img th:src="${content.imageUrl != null and content.imageUrl.startsWith('/uploads') ? content.imageUrl : '/uploads/contents/' + content.imageUrl}" class="article-thumbnail" alt="Thumbnail">
                 </div>
                 <!-- Demo thumbnail placeholder -->
                 <div style="padding: 20px 32px 0" th:unless="${content != null and content.imageUrl != null and !content.imageUrl.isEmpty()}">

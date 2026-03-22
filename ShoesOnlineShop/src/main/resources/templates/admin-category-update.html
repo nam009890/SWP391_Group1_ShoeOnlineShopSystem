@@ -93,7 +93,7 @@
                                 <label class="form-label">Category Name <span style="color:var(--danger)">*</span></label>
                                 <input type="text" name="name" th:value="${category.name}"
                                        th:class="${errors?.containsKey('name')} ? 'form-control is-invalid' : 'form-control'"
-                                       placeholder="Ex: Running Shoes, T-Shirtsâ€¦" maxlength="100">
+                                       placeholder="Ex: Running Shoes, T-Shirts…" maxlength="100">
                                 <div th:if="${errors?.containsKey('name')}" class="error-text" th:text="${errors['name']}"></div>
                             </div>
 

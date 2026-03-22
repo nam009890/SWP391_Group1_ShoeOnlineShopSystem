@@ -79,7 +79,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Price (â‚«) <span style="color:var(--danger)">*</span></label>
+                            <label class="form-label">Price (₫) <span style="color:var(--danger)">*</span></label>
                             <input type="number" name="price" th:value="${product.price}" class="form-control"
                                    th:classappend="${#fields.hasErrors('price')} ? 'is-invalid' : ''"
                                    placeholder="e.g. 1500000" min="0" step="1000">

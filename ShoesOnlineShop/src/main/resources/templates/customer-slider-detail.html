@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${slider.sliderTitle} + ' | ShoesOnlineShop'">Slider Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a0a0a;
+            --primary-light: #1a1a2e;
+            --accent: #e94560;
+            --accent-hover: #ff6b81;
+            --surface: #16213e;
+            --bg: #0f0f23;
+            --text: #eaeaea;
+            --text-muted: #a0a0b0;
+            --glass: rgba(255,255,255,0.06);
+            --glass-border: rgba(255,255,255,0.1);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --transition: all 0.35s cubic-bezier(.25,.46,.45,.94);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; line-height:1.6; }
+        a { text-decoration:none; color:inherit; }
+
+        /* NAVBAR */
+        .navbar {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0 3rem; height:72px; background:rgba(10,10,10,0.85);
+            backdrop-filter:blur(20px); border-bottom:1px solid var(--glass-border);
+            position:fixed; width:100%; top:0; z-index:1000;
+        }
+        .navbar-brand { font-family:'Teko',sans-serif; font-size:2.2rem; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:3px; }
+        .nav-actions { display:flex; gap:1rem; align-items:center; }
+        .nav-actions a { color:var(--text); font-size:.8rem; font-weight:600; text-transform:uppercase; letter-spacing:.5px; padding:.5rem 1rem; border-radius:6px; transition:var(--transition); }
+        .nav-actions a:hover { background:var(--glass); color:var(--accent); }
+
+        /* HERO BANNER */
+        .slider-hero {
+            margin-top:72px; width:100%; height:55vh; position:relative; overflow:hidden;
+        }
+        .slider-hero img {
+            width:100%; height:100%; object-fit:cover;
+        }
+        .slider-hero-overlay {
+            position:absolute; bottom:0; left:0; right:0;
+            padding:3rem 4rem;
+            background:linear-gradient(transparent, rgba(0,0,0,0.85));
+        }
+        .slider-hero-title {
+            font-family:'Teko',sans-serif; font-size:3.5rem; font-weight:700;
+            text-transform:uppercase; color:#fff; letter-spacing:2px; line-height:1;
+        }
+
+        /* SECTION LAYOUT */
+        .page-content { padding:4rem; }
+        .section-title {
+            font-family:'Teko',sans-serif; font-size:2.5rem; text-transform:uppercase;
+            letter-spacing:2px; color:#fff; margin-bottom:2rem; display:flex; align-items:center; gap:.75rem;
+        }
+        .section-title svg { width:28px; height:28px; stroke:var(--accent); fill:none; stroke-width:2; }
+
+        /* COUPONS */
+        .coupons-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem;
+            margin-bottom:4rem;
+        }
+        .coupon-card {
+            background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+            padding:1.8rem; position:relative; overflow:hidden; transition:var(--transition);
+        }
+        .coupon-card:hover { transform:translateY(-4px); border-color:var(--accent); box-shadow:0 12px 40px rgba(233,69,96,.15); }
+        .coupon-card::before {
+            content:''; position:absolute; top:-30px; right:-30px; width:100px; height:100px;
+            background:linear-gradient(135deg,var(--accent),var(--accent-hover)); border-radius:50%; opacity:.15;
+        }
+        .coupon-discount {
+            font-family:'Teko',sans-serif; font-size:3rem; font-weight:700;
+            background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1;
+        }
+        .coupon-name { font-weight:600; font-size:1.05rem; margin:.5rem 0 .3rem; color:#fff; }
+        .coupon-code-wrap { display:flex; align-items:center; gap:.75rem; margin-top:.8rem; }
+        .coupon-code {
+            background:rgba(233,69,96,.12); border:1px dashed var(--accent); border-radius:8px;
+            padding:.5rem 1rem; font-family:monospace; font-size:.95rem; font-weight:700;
+            color:var(--accent-hover); letter-spacing:2px;
+        }
+        .copy-btn {
+            background:var(--accent); color:#fff; border:none; border-radius:6px;
+            padding:.5rem .8rem; font-size:.75rem; font-weight:700; cursor:pointer;
+            text-transform:uppercase; transition:var(--transition);
+        }
+        .copy-btn:hover { background:var(--accent-hover); }
+        .coupon-dates { font-size:.8rem; color:var(--text-muted); margin-top:.6rem; }
+
+        /* PRODUCTS */
+        .products-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.8rem;
+        }
+        .product-card {
+            background:var(--glass); border:1px solid var(--glass-border); border-radius:var(--radius);
+            overflow:hidden; cursor:pointer; transition:var(--transition);
+        }
+        .product-card:hover { transform:translateY(-8px); border-color:rgba(233,69,96,.3); box-shadow:0 16px 48px rgba(0,0,0,.3); }
+        .product-img-wrap {
+            height:260px; background:linear-gradient(135deg,#1a1a2e,#16213e);
+            display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;
+        }
+        .product-img-wrap img {
+            max-width:85%; max-height:85%; object-fit:contain;
+            transition:transform .5s cubic-bezier(.25,.46,.45,.94);
+            filter:drop-shadow(0 10px 20px rgba(0,0,0,.3));
+        }
+        .product-card:hover .product-img-wrap img { transform:scale(1.08) translateY(-8px); }
+        .product-badge {
+            position:absolute; top:1rem; left:1rem; background:var(--accent); color:#fff;
+            font-size:.7rem; font-weight:700; padding:.3rem .8rem; border-radius:20px; text-transform:uppercase;
+        }
+        .product-info { padding:1.2rem 1.5rem; }
+        .product-category-label { font-size:.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:.4rem; }
+        .product-name { font-weight:600; font-size:1rem; color:#fff; margin-bottom:.5rem; }
+        .product-price { font-weight:700; font-size:1.15rem; color:var(--accent-hover); }
+
+        .empty-state { text-align:center; padding:4rem 2rem; color:var(--text-muted); }
+        .empty-state svg { width:64px; height:64px; stroke:var(--text-muted); margin-bottom:1rem; }
+
+        /* BACK LINK */
+        .back-link {
+            display:inline-flex; align-items:center; gap:.5rem; color:var(--text-muted);
+            font-size:.9rem; font-weight:600; margin-bottom:2rem; transition:var(--transition);
+        }
+        .back-link:hover { color:var(--accent); }
+        .back-link svg { width:18px; height:18px; }
+
+        /* FOOTER */
+        .footer { background:var(--primary); border-top:1px solid var(--glass-border); padding:3rem 4rem; text-align:center; }
+        .footer-logo { font-family:'Teko',sans-serif; font-size:2rem; text-transform:uppercase; letter-spacing:3px; color:#fff; margin-bottom:.5rem; }
+        .footer p { font-size:.85rem; color:var(--text-muted); }
+
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        .animate-in { animation:fadeInUp .6s ease forwards; }
+
+        @media(max-width:768px) {
+            .navbar{padding:0 1.5rem}
+            .slider-hero{height:35vh}
+            .slider-hero-title{font-size:2.5rem}
+            .page-content{padding:2rem 1.5rem}
+            .coupons-grid{grid-template-columns:1fr}
+            .products-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+        <div class="nav-actions">
+            <a th:href="@{/products}">ALL PRODUCTS</a>
+            <a th:href="@{/}">HOME</a>
+            <th:block th:if="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/profile}" th:text="${#authentication.name.toUpperCase()}">USER</a>
+                <a th:href="@{/logout}">LOGOUT</a>
+            </th:block>
+            <th:block th:unless="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/login}">LOG IN</a>
+                <a th:href="@{/register}">SIGN UP</a>
+            </th:block>
+            <a href="/cart">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <section class="slider-hero">
+        <img th:src="${slider.imageUrl}" th:alt="${slider.sliderTitle}"
+             onerror="this.style.display='none'">
+        <div class="slider-hero-overlay">
+            <div class="slider-hero-title" th:text="${slider.sliderTitle}">Slider Title</div>
+        </div>
+    </section>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+        <a th:href="@{/}" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Home
+        </a>
+
+        <!-- COUPONS SECTION -->
+        <div th:if="${slider.coupons != null and !slider.coupons.isEmpty()}">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24"><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6M12 2v20M2 12h20M7.5 2a2.5 2.5 0 0 0 0 5H12M16.5 2a2.5 2.5 0 0 1 0 5H12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Coupon Codes
+            </div>
+            <div class="coupons-grid">
+                <div class="coupon-card animate-in" th:each="coupon, iterStat : ${slider.coupons}"
+                     th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'">
+                    <div class="coupon-discount" th:text="${coupon.discountPercent} + '%'">20%</div>
+                    <div class="coupon-name" th:text="${coupon.couponName}">Coupon Name</div>
+                    <div class="coupon-code-wrap">
+                        <div class="coupon-code" th:text="${coupon.couponCode}" th:id="'code-' + ${coupon.id}">CODE123</div>
+                        <button class="copy-btn" th:attr="data-code=${coupon.couponCode}" onclick="copyCode(this)">COPY</button>
+                    </div>
+                    <div class="coupon-dates">
+                        Valid: <span th:text="${coupon.createDate}">2026-01-01</span> — <span th:text="${coupon.endDate}">2026-12-31</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" th:if="${slider.coupons == null or slider.coupons.isEmpty()}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+            <p>No coupon codes available for this promotion.</p>
+        </div>
+
+        <!-- PRODUCTS SECTION -->
+        <div th:if="${slider.sliderProducts != null and !slider.sliderProducts.isEmpty()}">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24"><path d="M20 12V22H4V12M22 7H2v5h20V7zM12 22V7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Featured Products
+            </div>
+            <div class="products-grid">
+                <a th:each="sp, iterStat : ${slider.sliderProducts}"
+                   th:href="@{/product/{id}(id=${sp.product.id})}"
+                   class="product-card animate-in"
+                   th:style="'animation-delay:' + ${iterStat.index * 0.08} + 's; text-decoration:none;'">
+                    <div class="product-img-wrap">
+                        <span class="product-badge" th:if="${sp.discount != null and sp.discount > 0}"
+                              th:text="'-' + ${sp.discount} + '%'">-10%</span>
+                        <span class="product-badge" th:if="${sp.discount == null or sp.discount == 0}">Featured</span>
+                        <img th:src="${sp.product.imageUrl}" th:alt="${sp.product.name}"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category-label" th:text="${sp.product.category != null ? sp.product.category.name : ''}">Category</div>
+                        <div class="product-name" th:text="${sp.product.name}">Product Name</div>
+                        <div class="product-price" th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="empty-state" th:if="${slider.sliderProducts == null or slider.sliderProducts.isEmpty()}" style="margin-top:2rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 12V22H4V12M22 7H2v5h20V7zM12 22V7"/></svg>
+            <p>No products in this promotion.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">SHOESONLINESHOP</div>
+        <p>&copy; 2026 ShoesOnlineShop Group 1. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const code = btn.getAttribute('data-code');
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'COPIED!';
+                btn.style.background = '#2ecc71';
+                setTimeout(() => {
+                    btn.textContent = 'COPY';
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

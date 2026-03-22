@@ -190,7 +190,7 @@
                                         <option th:each="c : ${rootCategories}"
                                             th:value="${c.id}"
                                             th:text="${c.name}"
-                                            th:selected="${category.parent != null &amp;&amp; category.parent.id == c.id}">
+                                            th:selected="${category.parent != null && category.parent.id == c.id}">
                                         </option>
                                     </select>
                                     <div th:if="${errors?.containsKey('parent')}" class="error-text"
@@ -279,7 +279,5 @@
             if (sel) updateParentHint(sel);
         });
     </script>
-
 </body>
-
 </html>

@@ -50,6 +50,9 @@ public class Invoice {
 
         @Column(name = "is_active", columnDefinition = "BIT DEFAULT 1")
 private Boolean isActive = true;
+
+    @Column(name = "status", length = 50)
+    private String status = "Active";
     
     @PrePersist
     protected void onCreate() {

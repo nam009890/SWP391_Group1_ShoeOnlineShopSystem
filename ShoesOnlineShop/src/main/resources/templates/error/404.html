@@ -11,7 +11,18 @@
         <h1 class="error-code">404</h1>
         <h2 class="error-title">Oops! Page not found.</h2>
         <p class="error-desc">The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.</p>
-        <a href="/MarketingHome" class="btn-home">Back to Dashboard</a>
+        <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a href="/internal/admin/home" class="btn-home">Back to Admin Dashboard</a>
+        </div>
+        <div th:if="${#authorization.expression('hasRole(''SALE_STAFF'')')}">
+            <a href="/internal/orders" class="btn-home">Back to Sale Dashboard</a>
+        </div>
+        <div th:if="${#authorization.expression('hasRole(''MARKETING_STAFF'')')}">
+            <a href="/internal/MarketingHome" class="btn-home">Back to Marketing Dashboard</a>
+        </div>
+        <div th:if="${#authorization.expression('!isAuthenticated() or hasRole(''CUSTOMER'')')}">
+            <a href="/home" class="btn-home">Back to Homepage</a>
+        </div>
     </div>
 </body>
 </html>

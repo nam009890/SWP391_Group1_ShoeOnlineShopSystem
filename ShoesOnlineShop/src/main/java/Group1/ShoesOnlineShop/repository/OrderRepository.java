@@ -28,5 +28,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                              @Param("keyword") String keyword,
                              Pageable pageable);
         List<Order> findByOrderStatus(String status);
-
+        List<Order> findByUser_UserIdOrderByCreatedAtDesc(Long userId);
 }

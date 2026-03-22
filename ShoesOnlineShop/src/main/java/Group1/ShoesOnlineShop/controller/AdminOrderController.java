@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin/orders")
+@RequestMapping("/internal/admin/orders")
 public class AdminOrderController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class AdminOrderController {
     @GetMapping("/detail/{id}")
     public String showDetail(@PathVariable(name = "id") Long id, Model model) {
         Order order = adminOrderService.getOrderById(id);
-        if (order == null) return "redirect:/admin/orders";
+        if (order == null) return "redirect:/internal/admin/orders";
 
         model.addAttribute("order", order);
         return "admin-order-detail";

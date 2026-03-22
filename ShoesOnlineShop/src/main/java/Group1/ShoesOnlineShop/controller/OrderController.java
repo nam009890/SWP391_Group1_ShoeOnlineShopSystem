@@ -18,7 +18,7 @@ import java.util.List;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/orders")
+@RequestMapping("/internal/orders")
 @CrossOrigin
 public class OrderController {
 
@@ -47,6 +47,7 @@ public class OrderController {
         List.of("PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"));
         model.addAttribute("currentStatus", status);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("sort", sort);
 
        return "order-list";
     }
@@ -79,22 +80,22 @@ public class OrderController {
             redirectAttributes.addFlashAttribute("successMessage", message);
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/orders/create";
+            return "redirect:/internal/orders/create";
         }
-        return "redirect:/orders";
+        return "redirect:/internal/orders";
     }
 
     @PostMapping("/update-status")
     public String updateStatus(@RequestParam Long id,
                                @RequestParam String status) {
         orderService.updateStatus(id, status);
-        return "redirect:/orders";
+        return "redirect:/internal/orders";
     }
 
   @GetMapping("/delete/{id}")
 public String delete(@PathVariable Long id) {
     orderService.deleteOrder(id);
-    return "redirect:/orders";
+    return "redirect:/internal/orders";
 }
    // ====== SHOW EDIT PAGE ======
     @GetMapping("/edit/{id}")
@@ -115,20 +116,19 @@ public String delete(@PathVariable Long id) {
 public String updateOrder(@RequestParam Long id,
                           @RequestParam String phone,
                           @RequestParam String address,
-                          @RequestParam Integer quantity,
                           @RequestParam String status,
                           RedirectAttributes redirectAttributes) {
 
     try {
-        String message = orderService.updateOrder(id, phone, address, quantity, status);
+        String message = orderService.updateOrder(id, phone, address, status);
         redirectAttributes.addFlashAttribute("successMessage", message);
 
     } catch (IllegalArgumentException e) {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        return "redirect:/orders/edit/" + id;
+        return "redirect:/internal/orders/edit/" + id;
     }
 
-    return "redirect:/orders";
+    return "redirect:/internal/orders";
 }
 @GetMapping("/view/{id}")
 public String viewOrder(@PathVariable Long id, Model model) {

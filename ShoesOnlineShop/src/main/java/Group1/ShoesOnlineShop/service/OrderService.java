@@ -53,6 +53,10 @@ public class OrderService {
     return orderRepository.searchOrders(status, keyword, pageable);
 }
 
+   public List<Order> getOrdersByUser(Long userId) {
+       return orderRepository.findByUser_UserIdOrderByCreatedAtDesc(userId);
+   }
+
    public void updateStatus(Long id, String status) {
 
     Order order = orderRepository.findById(id)
@@ -82,7 +86,6 @@ public Order findById(Long id) {
 public String updateOrder(Long id,
                         String phone,
                         String address,
-                        Integer quantity,
                         String status) {
 
     Order order = orderRepository.findById(id)
@@ -109,33 +112,10 @@ public String updateOrder(Long id,
         throw new IllegalArgumentException("Address must be less than 255 characters");
     }
 
-    // =========================
-    // QUANTITY VALIDATION
-    // =========================
-    if (quantity == null) {
-        throw new IllegalArgumentException("Quantity must be not null or empty");
-    }
-
-    if (quantity <= 0) {
-        throw new IllegalArgumentException("Quantity must be positive integer");
-    }
     // Update order info
     order.setPhone(phone);
     order.setShippingAddress(address);
-order.setOrderStatus(status);
-    // Update quantity trong OrderDetail
-    if (order.getOrderDetails() != null && !order.getOrderDetails().isEmpty()) {
-
-        OrderDetail detail = order.getOrderDetails().get(0);
-        detail.setQuantity(quantity);
-
-        // Nếu có tính lại tổng tiền
-        order.setTotalAmount(
-                detail.getProduct().getPrice().multiply(
-                        BigDecimal.valueOf(quantity)
-                )
-        );
-    }
+    order.setOrderStatus(status);
 
     orderRepository.save(order);
     return "Update order successfully!";
@@ -188,5 +168,61 @@ public String createOrder(Long userId, Long productId, Integer quantity, String 
     orderRepository.save(order);
     return "Create order successfully!";
 }
- 
+
+@Transactional
+public Order createOrderFromCart(User user, java.util.List<Group1.ShoesOnlineShop.entity.Cart> cartItems, String phone, String address, String paymentMethod) {
+    if (phone == null || phone.trim().isEmpty() || !phone.matches("^0\\d{9}$")) {
+        throw new IllegalArgumentException("Invalid phone number");
+    }
+    if (address == null || address.trim().isEmpty() || address.length() > 255) {
+        throw new IllegalArgumentException("Invalid address");
+    }
+    if (cartItems == null || cartItems.isEmpty()) {
+        throw new IllegalArgumentException("Cart is empty");
+    }
+
+    Order order = new Order();
+    order.setUser(user);
+    order.setPhone(phone);
+    order.setShippingAddress(address);
+    order.setOrderStatus("PENDING");
+    order.setPaymentStatus("PENDING");
+    order.setIsActive(true);
+
+    BigDecimal totalAmount = BigDecimal.ZERO;
+    List<OrderDetail> details = new java.util.ArrayList<>();
+
+    for (Group1.ShoesOnlineShop.entity.Cart cart : cartItems) {
+        Product p = cart.getProduct();
+        OrderDetail detail = new OrderDetail();
+        detail.setOrder(order);
+        detail.setProduct(p);
+        detail.setQuantity(cart.getQuantity());
+        detail.setUnitPrice(p.getPrice());
+
+        BigDecimal sub = p.getPrice().multiply(BigDecimal.valueOf(cart.getQuantity()));
+        detail.setSubtotal(sub);
+        totalAmount = totalAmount.add(sub);
+        
+        details.add(detail);
+        
+        // update product stock quantity
+        p.setStockQuantity(p.getStockQuantity() - cart.getQuantity());
+        productRepository.save(p);
+    }
+
+    order.setTotalAmount(totalAmount);
+    order.setOrderDetails(details);
+
+    // Initial Payment Record
+    Group1.ShoesOnlineShop.entity.Payment defaultPayment = new Group1.ShoesOnlineShop.entity.Payment();
+    defaultPayment.setOrder(order);
+    defaultPayment.setPaymentAmount(totalAmount);
+    defaultPayment.setPaymentMethod(paymentMethod);
+    defaultPayment.setPaymentStatus("PENDING");
+    order.setPayments(java.util.Collections.singletonList(defaultPayment));
+
+    return orderRepository.save(order);
+}
+
 }

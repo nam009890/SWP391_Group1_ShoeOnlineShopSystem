@@ -16,4 +16,7 @@ public interface ContentRepository extends JpaRepository<Content, Long> ,JpaSpec
    
    java.util.List<Content> findTop5ByOrderByCreatedAtDesc();
    java.util.List<Content> findTop50ByOrderByCreatedAtDesc();
+
+    // Active content for home page
+    java.util.List<Content> findByIsActiveTrueOrderByCreatedAtDesc();
 }

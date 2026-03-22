@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import Group1.ShoesOnlineShop.entity.Feedback;
 @Controller
-@RequestMapping("/feedbacks")
+@RequestMapping("/internal/feedbacks")
 public class FeedbackController {
 
     @Autowired
@@ -35,13 +35,13 @@ public class FeedbackController {
     @PostMapping("/toggle")
     public String toggle(@RequestParam Long id) {
         feedbackService.toggleStatus(id);
-        return "redirect:/feedbacks";
+        return "redirect:/internal/feedbacks";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         feedbackService.delete(id);
-        return "redirect:/feedbacks";
+        return "redirect:/internal/feedbacks";
     }
     
     @GetMapping("/view/{id}")

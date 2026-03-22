@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -91,6 +91,7 @@
             <p>View and manage customer product feedback</p>
         </div>
 
+        <a href="/internal/admin/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">SS</div>
             <div>
@@ -98,6 +99,7 @@
                 <div class="user-role">Administrator</div>
             </div>
         </div>
+        </a>
     </div>
 
 
@@ -184,7 +186,7 @@
                     <td th:text="${#temporals.format(f.createdAt,'dd/MM/yyyy')}"></td>
 
                     <td>
-                        <form th:action="@{/feedbacks/toggle}" method="post">
+                        <form th:action="@{/internal/feedbacks/toggle}" method="post">
 
                             <input type="hidden" name="id" th:value="${f.feedbackId}">
 
@@ -199,12 +201,12 @@
                     <td>
 
                         <a class="btn btn-sm btn-outline-primary"
-                           th:href="@{/feedbacks/view/{id}(id=${f.feedbackId})}">
+                           th:href="@{/internal/feedbacks/view/{id}(id=${f.feedbackId})}">
                             Detail
                         </a>
 
                         <a class="btn btn-sm btn-danger"
-                           th:href="@{/feedbacks/delete/{id}(id=${f.feedbackId})}"
+                           th:href="@{/internal/feedbacks/delete/{id}(id=${f.feedbackId})}"
                            onclick="return confirm('Delete this feedback?')">
                             Delete
                         </a>

@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin - Create Category</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .error-text {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        /* Badge preview loáº¡i danh má»¥c */
+        .cat-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+        .cat-type-badge.root {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+        .cat-type-badge.child {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        /* Hint box dÆ°á»›i select */
+        .parent-hint {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+        .parent-hint.hint-root {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .parent-hint.hint-child {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+            </div>
+            <span class="brand-name">Admin Panel</span>
+        </div>
+        <span class="nav-label">Navigation</span>
+        <a href="/internal/admin/home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            Dashboard
+        </a>
+        <a href="/internal/admin/products">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            Products
+        </a>
+        <a href="/internal/admin/categories" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z" />
+            </svg>
+            Categories
+        </a>
+        <a href="/internal/admin/users">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+            </svg>
+            Users
+        </a>
+        <a href="/internal/admin/orders">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <polyline points="9 11 12 14 22 4" />
+            </svg>
+            Orders
+        </a>
+        <a href="/internal/admin/financials">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+            </svg>
+            Financials
+        </a>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div>
+                <h4>Create New Category</h4>
+                <p>Add a new product category to the system</p>
+            </div>
+            <a href="/internal/admin/profile" style="text-decoration:none;">
+            <div class="user-pill">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div class="user-name">Administrator</div>
+                    <div class="user-role">Admin</div>
+                </div>
+            </div>
+            </a>
+        </div>
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-bar">
+            <a href="/internal/admin/categories">Categories</a>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+            <span>Create New</span>
+        </div>
+
+        <form action="/internal/admin/categories/create" method="post">
+
+            <div class="row g-4">
+                <div class="col-md-3"></div>
+
+
+                <!-- Right: Form Fields -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header-bar">
+                            <h6>Category Information</h6>
+                        </div>
+                        <div class="card-body-pad">
+                            <div class="row g-3">
+
+                                <!-- Name -->
+                                <div class="col-12">
+                                    <label class="form-label">Category Name <span
+                                            style="color:var(--danger)">*</span></label>
+                                    <input type="text" name="name" th:value="${category.name}"
+                                        th:class="${errors?.containsKey('name')} ? 'form-control is-invalid' : 'form-control'"
+                                        placeholder="Ex: Running Shoes, T-Shirts, Shortsâ€¦" maxlength="100">
+                                    <div th:if="${errors?.containsKey('name')}" class="error-text"
+                                        th:text="${errors['name']}"></div>
+                                </div>
+
+                                <!-- Parent Category â€” chuáº©n WooCommerce/Shopify -->
+                                <div class="col-12">
+                                    <label class="form-label" for="parentId">
+                                        Parent Category
+                                        <span style="font-weight:400; color:#94a3b8; font-size:12px;">(Leave blank if it is a root category)</span>
+                                    </label>
+                                    <select name="parentId" id="parentId" class="form-select"
+                                        th:classappend="${errors?.containsKey('parent')} ? 'is-invalid'"
+                                        onchange="updateParentHint(this)">
+                                        <!--
+                                            value="" = khÃ´ng cÃ³ cha â†’ backend nháº­n null â†’ lÆ°u lÃ m root category
+                                            value="{id}" = chá»n cha â†’ backend gáº¯n parent â†’ lÆ°u lÃ m sub-category
+                                        -->
+                                        <option value=""
+                                            th:selected="${category.parent == null}">
+                                            â€” None (Create root category)
+                                        </option>
+                                        <option th:each="c : ${rootCategories}"
+                                            th:value="${c.id}"
+                                            th:text="${c.name}"
+                                            th:selected="${category.parent != null &amp;&amp; category.parent.id == c.id}">
+                                        </option>
+                                    </select>
+                                    <div th:if="${errors?.containsKey('parent')}" class="error-text"
+                                        th:text="${errors['parent']}"></div>
+
+                                    <!-- Hint Ä‘á»™ng hiá»ƒn thá»‹ loáº¡i category sáº½ táº¡o -->
+                                    <div id="hint-root" class="parent-hint hint-root">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="15" height="15" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="14"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="12" y1="14" x2="6" y2="15"/><line x1="12" y1="14" x2="18" y2="15"/></svg>
+                                        <span>Will create a <strong>Root Category</strong> â€” displayed at the highest level, can contain subcategories.</span>
+                                    </div>
+                                    <div id="hint-child" class="parent-hint hint-child" style="display:none">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" width="15" height="15" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="19" r="3"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+                                        <span id="hint-child-text">Will create a <strong>Subcategory</strong> belonging to the selected parent category.</span>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <!-- Status -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Status</label>
+                                    <select name="isActive" class="form-select">
+                                        <option value="true"
+                                            th:selected="${category.isActive == null || category.isActive}">Active
+                                        </option>
+                                        <option value="false"
+                                            th:selected="${category.isActive != null && !category.isActive}">Inactive
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-top:1px solid var(--border);">
+                            <a href="/internal/admin/categories" class="btn-outline">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    style="width:14px;">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn-save">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    style="width:14px; display:inline; margin-right:6px;">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Create Category
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Cáº­p nháº­t hint khi user thay Ä‘á»•i dropdown
+        function updateParentHint(select) {
+            var hintRoot  = document.getElementById('hint-root');
+            var hintChild = document.getElementById('hint-child');
+            var hintText  = document.getElementById('hint-child-text');
+            var selectedText = select.options[select.selectedIndex].text;
+
+            if (!select.value || select.value === '') {
+                // KhÃ´ng chá»n cha â†’ root category
+                hintRoot.style.display  = 'flex';
+                hintChild.style.display = 'none';
+            } else {
+                // Chá»n cha â†’ sub-category
+                hintRoot.style.display  = 'none';
+                hintChild.style.display = 'flex';
+                hintText.innerHTML = 'Will create a <strong>Subcategory</strong> under parent: <strong>"' + selectedText + '"</strong>';
+            }
+        }
+
+        // Cháº¡y khi trang load Ä‘á»ƒ set hint theo giÃ¡ trá»‹ máº·c Ä‘á»‹nh (dÃ¹ng khi cÃ³ lá»—i server tráº£ vá»)
+        document.addEventListener('DOMContentLoaded', function () {
+            var sel = document.getElementById('parentId');
+            if (sel) updateParentHint(sel);
+        });
+    </script>
+
+</body>
+
+</html>

@@ -24,12 +24,12 @@
         <span class="brand-name">Admin Panel</span>
     </div>
     <span class="nav-label">Navigation</span>
-    <a href="/admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
-    <a href="/admin/products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
-    <a href="/admin/categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>Categories</a>
-    <a href="/admin/users" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Users</a>
-    <a href="/admin/orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
-    <a href="/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
+    <a href="/internal/admin/home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a href="/internal/admin/products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
+    <a href="/internal/admin/categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>Categories</a>
+    <a href="/internal/admin/users" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Users</a>
+    <a href="/internal/admin/orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
+    <a href="/internal/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
 </div>
 
 <div class="main">
@@ -53,7 +53,7 @@
         </div>
 
         <div class="toolbar" style="flex-wrap:wrap; gap:15px;">
-            <form action="/admin/users" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
+            <form action="/internal/admin/users" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
                 <div class="search-input">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                     <input type="text" name="keyword" th:value="${keyword}" placeholder="Search name or email…">
@@ -74,8 +74,14 @@
                     <option value="false" th:selected="${isActive == false}">Blocked</option>
                 </select>
             </form>
-            <div style="margin-left:auto; font-size:13px; color:var(--text-mid);">
-                Total: <strong th:text="${totalItems}">0</strong> users
+            <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
+                <div style="font-size:13px; color:var(--text-mid);">
+                    Total: <strong th:text="${totalItems}">0</strong> users
+                </div>
+                <a th:href="@{/internal/admin/users/create}" class="btn-create">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add User
+                </a>
             </div>
         </div>
 
@@ -118,12 +124,12 @@
                     <td><span class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : '—'}">—</span></td>
                     <td>
                         <div class="action-btns" style="justify-content:center;">
-                            <a th:href="@{/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
-                            <a th:href="@{/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
+                            <a th:href="@{/internal/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
+                            <a th:href="@{/internal/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
                             <a th:if="${user.isActive}" href="javascript:void(0)"
-                               class="btn-del" th:onclick="'showConfirmModal(\'/admin/users/block/' + ${user.userId} + '\', \'block\')'">Block</a>
+                               class="btn-del" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'block\')'">Block</a>
                             <a th:if="${!user.isActive}" href="javascript:void(0)"
-                               class="btn-upd" th:onclick="'showConfirmModal(\'/admin/users/block/' + ${user.userId} + '\', \'unblock\')'">Unblock</a>
+                               class="btn-upd" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'unblock\')'">Unblock</a>
                         </div>
                     </td>
                 </tr>
@@ -136,11 +142,11 @@
         <div class="pagination-bar" th:if="${totalPages > 1}">
             <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
             <div class="page-btns">
-                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/admin/users(page=${currentPage - 1}, keyword=${keyword}, role=${role}, isActive=${isActive})}">
+                <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/internal/admin/users(page=${currentPage - 1}, keyword=${keyword}, role=${role}, isActive=${isActive})}">
                     <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                 </a>
-                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/admin/users(page=${i}, keyword=${keyword}, role=${role}, isActive=${isActive})}" th:text="${i}">1</a>
-                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/admin/users(page=${currentPage + 1}, keyword=${keyword}, role=${role}, isActive=${isActive})}">
+                <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/internal/admin/users(page=${i}, keyword=${keyword}, role=${role}, isActive=${isActive})}" th:text="${i}">1</a>
+                <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/internal/admin/users(page=${currentPage + 1}, keyword=${keyword}, role=${role}, isActive=${isActive})}">
                     <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
             </div>

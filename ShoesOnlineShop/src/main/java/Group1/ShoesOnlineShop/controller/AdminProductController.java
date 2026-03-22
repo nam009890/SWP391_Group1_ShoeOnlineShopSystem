@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin/products")
+@RequestMapping("/internal/admin/products")
 public class AdminProductController {
 
     @Autowired
@@ -108,14 +108,14 @@ public class AdminProductController {
             redirectAttributes.addFlashAttribute("errorMessage", "System error: Failed to save product!");
         }
 
-        return "redirect:/admin/products";
+        return "redirect:/internal/admin/products";
     }
 
     // 4. Form cập nhật
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable(name = "id") Long id, Model model) {
         Product product = adminProductService.getProductById(id);
-        if (product == null) return "redirect:/admin/products";
+        if (product == null) return "redirect:/internal/admin/products";
 
         model.addAttribute("product", product);
         model.addAttribute("categories", adminCategoryService.getRootCategories(null));
@@ -126,7 +126,7 @@ public class AdminProductController {
     @GetMapping("/detail/{id}")
     public String showDetail(@PathVariable(name = "id") Long id, Model model) {
         Product product = adminProductService.getProductById(id);
-        if (product == null) return "redirect:/admin/products";
+        if (product == null) return "redirect:/internal/admin/products";
 
         model.addAttribute("product", product);
         return "admin-product-detail";
@@ -141,6 +141,6 @@ public class AdminProductController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Cannot delete product! It may be associated with existing orders.");
         }
-        return "redirect:/admin/products";
+        return "redirect:/internal/admin/products";
     }
 }

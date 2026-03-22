@@ -23,7 +23,7 @@ public class ProfileController {
     public String showProfile(Model model) {
         User user = userService.getUserById(CURRENT_USER_ID);
         if (user == null) {
-            return "redirect:/MarketingHome";
+            return "redirect:/internal/MarketingHome";
         }
         model.addAttribute("user", user);
         return "marketing-profile";
@@ -63,7 +63,7 @@ public class ProfileController {
     public String showChangePasswordForm(Model model) {
         User user = userService.getUserById(CURRENT_USER_ID);
         if (user == null) {
-            return "redirect:/MarketingHome";
+            return "redirect:/internal/MarketingHome";
         }
         model.addAttribute("user", user);
         return "marketing-change-password";

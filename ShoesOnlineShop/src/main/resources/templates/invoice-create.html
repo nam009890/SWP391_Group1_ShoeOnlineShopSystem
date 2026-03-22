@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create Invoice</title>
@@ -88,11 +88,11 @@
 
 <!-- Select Order -->
 
-<form th:action="@{/invoices/create}" method="post">
+<form th:action="@{/internal/invoices/create}" method="post">
 
 <label>Select Order</label>
 
-<select onchange="window.location.href='/invoices/create/' + this.value">
+<select onchange="window.location.href='/internal/invoices/create/' + this.value">
 
 <option value="">Select Order</option>
 
@@ -165,7 +165,7 @@
 Add Invoice
 </button>
 
-<a href="/invoices" class="btn btn-back">
+<a href="/internal/invoices" class="btn btn-back">
 Back to List
 </a>
 

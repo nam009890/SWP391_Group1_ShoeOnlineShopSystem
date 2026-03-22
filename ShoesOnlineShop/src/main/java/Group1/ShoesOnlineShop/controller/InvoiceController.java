@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/invoices")
+@RequestMapping("/internal/invoices")
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -62,7 +62,7 @@ public class InvoiceController {
 
         invoiceService.deleteInvoice(id);
 
-        return "redirect:/invoices";
+        return "redirect:/internal/invoices";
     }
 
         // =========================
@@ -102,7 +102,7 @@ public class InvoiceController {
 
         invoiceService.generateInvoice(orderId);
 
-        return "redirect:/invoices";
+        return "redirect:/internal/invoices";
     }
     
     @GetMapping("/detail/{id}")

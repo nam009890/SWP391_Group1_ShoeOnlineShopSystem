@@ -109,6 +109,19 @@ public class AdminUserService {
             }
         }
 
+        if (user.getUserName() != null) {
+            if (user.getUserName().trim().isEmpty()) {
+                errors.put("userName", "Username cannot be blank!");
+            } else {
+                boolean userNameDuplicate = (user.getUserId() == null)
+                        ? adminUserRepository.existsByUserName(user.getUserName())
+                        : adminUserRepository.existsByUserNameAndUserIdNot(user.getUserName(), user.getUserId());
+                if (userNameDuplicate) {
+                    errors.put("userName", "This username is already taken!");
+                }
+            }
+        }
+
         if (user.getPhone() != null && !user.getPhone().isEmpty()) {
             if (!user.getPhone().matches("^[0-9]{10,11}$")) {
                 errors.put("phone", "Phone number must be 10-11 digits!");

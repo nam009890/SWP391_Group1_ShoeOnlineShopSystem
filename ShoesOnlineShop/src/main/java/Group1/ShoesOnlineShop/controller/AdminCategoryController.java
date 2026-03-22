@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin/categories")
+@RequestMapping("/internal/admin/categories")
 public class AdminCategoryController {
 
     @Autowired
@@ -102,7 +102,7 @@ public class AdminCategoryController {
         // Save
         adminCategoryService.saveCategory(category);
         redirectAttributes.addFlashAttribute("successMessage", "Category \"" + category.getName() + "\" created successfully!");
-        return "redirect:/admin/categories";
+        return "redirect:/internal/admin/categories";
     }
 
     // ========================== DETAIL ==========================
@@ -110,7 +110,7 @@ public class AdminCategoryController {
     public String detail(@PathVariable(name = "id") Long id, Model model) {
         Category category = adminCategoryService.getCategoryById(id);
         if (category == null) {
-            return "redirect:/admin/categories";
+            return "redirect:/internal/admin/categories";
         }
         model.addAttribute("category", category);
         return "admin-category-detail";
@@ -121,7 +121,7 @@ public class AdminCategoryController {
     public String updateForm(@PathVariable(name = "id") Long id, Model model) {
         Category category = adminCategoryService.getCategoryById(id);
         if (category == null) {
-            return "redirect:/admin/categories";
+            return "redirect:/internal/admin/categories";
         }
         model.addAttribute("category", category);
         model.addAttribute("rootCategories", adminCategoryService.getRootCategories(category));
@@ -140,7 +140,7 @@ public class AdminCategoryController {
         // Fetch existing category
         Category existing = adminCategoryService.getCategoryById(id);
         if (existing == null) {
-            return "redirect:/admin/categories";
+            return "redirect:/internal/admin/categories";
         }
 
         // Preserve id
@@ -169,7 +169,7 @@ public class AdminCategoryController {
 
         adminCategoryService.saveCategory(category);
         redirectAttributes.addFlashAttribute("successMessage", "Category \"" + category.getName() + "\" updated successfully!");
-        return "redirect:/admin/categories";
+        return "redirect:/internal/admin/categories";
     }
 
     // ========================== DELETE ==========================
@@ -182,6 +182,6 @@ public class AdminCategoryController {
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Category not found!");
         }
-        return "redirect:/admin/categories";
+        return "redirect:/internal/admin/categories";
     }
 }

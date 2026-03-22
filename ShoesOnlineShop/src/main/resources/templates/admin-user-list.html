@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin - Users</title>
@@ -57,7 +57,7 @@
             <form action="/internal/admin/users" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
                 <div class="search-input">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search name or email…">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search name or emailâ€¦">
                 </div>
                 <button type="submit" class="btn-search">Search</button>
 
@@ -112,7 +112,7 @@
                         </div>
                     </td>
                     <td th:text="${user.userEmail}">email@example.com</td>
-                    <td th:text="${user.phone != null ? user.phone : '—'}">—</td>
+                    <td th:text="${user.phone != null ? user.phone : 'â€”'}">â€”</td>
                     <td>
                         <span class="role-badge"
                               th:classappend="'role-' + ${user.userRole}"
@@ -122,7 +122,7 @@
                         <span th:if="${user.isActive}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active</span>
                         <span th:if="${!user.isActive}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Blocked</span>
                     </td>
-                    <td><span class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : '—'}">—</span></td>
+                    <td><span class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : 'â€”'}">â€”</span></td>
                     <td>
                         <div class="action-btns" style="justify-content:center;">
                             <a th:href="@{/internal/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
@@ -197,3 +197,4 @@ function showConfirmModal(url, actionType) {
 </script>
 </body>
 </html>
+

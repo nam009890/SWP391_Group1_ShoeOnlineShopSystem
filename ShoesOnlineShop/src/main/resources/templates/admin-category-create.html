@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -13,7 +13,7 @@
             font-size: 12px;
             margin-top: 4px;
         }
-        /* Badge preview loại danh mục */
+        /* Badge preview loáº¡i danh má»¥c */
         .cat-type-badge {
             display: inline-flex;
             align-items: center;
@@ -35,7 +35,7 @@
             color: #1d4ed8;
             border: 1px solid #bfdbfe;
         }
-        /* Hint box dưới select */
+        /* Hint box dÆ°á»›i select */
         .parent-hint {
             display: flex;
             align-items: flex-start;
@@ -163,12 +163,12 @@
                                             style="color:var(--danger)">*</span></label>
                                     <input type="text" name="name" th:value="${category.name}"
                                         th:class="${errors?.containsKey('name')} ? 'form-control is-invalid' : 'form-control'"
-                                        placeholder="Ex: Running Shoes, T-Shirts, Shorts…" maxlength="100">
+                                        placeholder="Ex: Running Shoes, T-Shirts, Shortsâ€¦" maxlength="100">
                                     <div th:if="${errors?.containsKey('name')}" class="error-text"
                                         th:text="${errors['name']}"></div>
                                 </div>
 
-                                <!-- Parent Category — chuẩn WooCommerce/Shopify -->
+                                <!-- Parent Category â€” chuáº©n WooCommerce/Shopify -->
                                 <div class="col-12">
                                     <label class="form-label" for="parentId">
                                         Parent Category
@@ -178,12 +178,12 @@
                                         th:classappend="${errors?.containsKey('parent')} ? 'is-invalid'"
                                         onchange="updateParentHint(this)">
                                         <!--
-                                            value="" = không có cha → backend nhận null → lưu làm root category
-                                            value="{id}" = chọn cha → backend gắn parent → lưu làm sub-category
+                                            value="" = khÃ´ng cÃ³ cha â†’ backend nháº­n null â†’ lÆ°u lÃ m root category
+                                            value="{id}" = chá»n cha â†’ backend gáº¯n parent â†’ lÆ°u lÃ m sub-category
                                         -->
                                         <option value=""
                                             th:selected="${category.parent == null}">
-                                            — None (Create root category)
+                                            â€” None (Create root category)
                                         </option>
                                         <option th:each="c : ${rootCategories}"
                                             th:value="${c.id}"
@@ -194,10 +194,10 @@
                                     <div th:if="${errors?.containsKey('parent')}" class="error-text"
                                         th:text="${errors['parent']}"></div>
 
-                                    <!-- Hint động hiển thị loại category sẽ tạo -->
+                                    <!-- Hint Ä‘á»™ng hiá»ƒn thá»‹ loáº¡i category sáº½ táº¡o -->
                                     <div id="hint-root" class="parent-hint hint-root">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="15" height="15" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="14"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="12" y1="14" x2="6" y2="15"/><line x1="12" y1="14" x2="18" y2="15"/></svg>
-                                        <span>Will create a <strong>Root Category</strong> — displayed at the highest level, can contain subcategories.</span>
+                                        <span>Will create a <strong>Root Category</strong> â€” displayed at the highest level, can contain subcategories.</span>
                                     </div>
                                     <div id="hint-child" class="parent-hint hint-child" style="display:none">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2" width="15" height="15" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="19" r="3"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
@@ -252,7 +252,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Cập nhật hint khi user thay đổi dropdown
+        // Cáº­p nháº­t hint khi user thay Ä‘á»•i dropdown
         function updateParentHint(select) {
             var hintRoot  = document.getElementById('hint-root');
             var hintChild = document.getElementById('hint-child');
@@ -260,18 +260,18 @@
             var selectedText = select.options[select.selectedIndex].text;
 
             if (!select.value || select.value === '') {
-                // Không chọn cha → root category
+                // KhÃ´ng chá»n cha â†’ root category
                 hintRoot.style.display  = 'flex';
                 hintChild.style.display = 'none';
             } else {
-                // Chọn cha → sub-category
+                // Chá»n cha â†’ sub-category
                 hintRoot.style.display  = 'none';
                 hintChild.style.display = 'flex';
                 hintText.innerHTML = 'Will create a <strong>Subcategory</strong> under parent: <strong>"' + selectedText + '"</strong>';
             }
         }
 
-        // Chạy khi trang load để set hint theo giá trị mặc định (dùng khi có lỗi server trả về)
+        // Cháº¡y khi trang load Ä‘á»ƒ set hint theo giÃ¡ trá»‹ máº·c Ä‘á»‹nh (dÃ¹ng khi cÃ³ lá»—i server tráº£ vá»)
         document.addEventListener('DOMContentLoaded', function () {
             var sel = document.getElementById('parentId');
             if (sel) updateParentHint(sel);

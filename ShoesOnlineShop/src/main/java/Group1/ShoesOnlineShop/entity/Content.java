@@ -29,6 +29,15 @@ public class Content {
     @Column(name = "content_type", nullable = false, length = 20)
     private String contentType;
 
+    @Column(name = "link_url", length = 500)
+    private String linkUrl;
+
+    @Column(name = "target_type", length = 50)
+    private String targetType;
+
+    @Column(name = "target_id", length = 200)
+    private String targetId;
+
     @Column(name = "is_active")
     private Boolean isActive = true;
 
@@ -70,6 +79,15 @@ public class Content {
 
     public String getContentType() { return contentType; }
     public void setContentType(String contentType) { this.contentType = contentType; }
+
+    public String getLinkUrl() { return linkUrl; }
+    public void setLinkUrl(String linkUrl) { this.linkUrl = linkUrl; }
+
+    public String getTargetType() { return targetType; }
+    public void setTargetType(String targetType) { this.targetType = targetType; }
+
+    public String getTargetId() { return targetId; }
+    public void setTargetId(String targetId) { this.targetId = targetId; }
 
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }

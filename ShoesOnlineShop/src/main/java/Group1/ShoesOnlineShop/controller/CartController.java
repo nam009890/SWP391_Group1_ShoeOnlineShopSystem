@@ -42,7 +42,7 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public String addToCart(@RequestParam Long productId, @RequestParam(defaultValue = "1") Integer quantity, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String addToCart(@RequestParam(name = "productId") Long productId, @RequestParam(name = "quantity", defaultValue = "1") Integer quantity, HttpSession session, RedirectAttributes redirectAttributes) {
         String sessionId = session.getId();
         Long userId = (Long) session.getAttribute("userId");
         
@@ -52,19 +52,19 @@ public class CartController {
     }
 
     @PostMapping("/update")
-    public String updateCart(@RequestParam Long cartId, @RequestParam Integer quantity) {
+    public String updateCart(@RequestParam(name = "cartId") Long cartId, @RequestParam(name = "quantity") Integer quantity) {
         cartService.updateQuantity(cartId, quantity);
         return "redirect:/cart";
     }
 
     @GetMapping("/remove/{cartId}")
-    public String removeFromCart(@PathVariable Long cartId) {
+    public String removeFromCart(@PathVariable(name = "cartId") Long cartId) {
         cartService.removeFromCart(cartId);
         return "redirect:/cart";
     }
 
     @PostMapping("/checkout")
-    public String checkout(@RequestParam String shippingAddress, @RequestParam String phone, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String checkout(@RequestParam(name = "shippingAddress") String shippingAddress, @RequestParam(name = "phone") String phone, HttpSession session, RedirectAttributes redirectAttributes) {
         if (!phone.matches("^[0-9]+$")) {
             redirectAttributes.addFlashAttribute("errorMessage", "Số điện thoại chỉ được chứa số.");
             return "redirect:/cart";

@@ -26,4 +26,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> searchActiveProductsByCategory(@Param("keyword") String keyword, @Param("category") String category, Pageable pageable);
     
     List<Product> findTop8ByIsActiveTrueOrderByIdDesc();
+
+    List<Product> findByCategoryNameAndIsActiveTrue(String categoryName);
+
+    List<Product> findByIsActiveTrueOrderByIdDesc();
+
+    List<Product> findByNameContainingIgnoreCaseAndIsActiveTrue(String name);
 }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface SliderRepository extends JpaRepository<Slider, Long> {
@@ -18,4 +19,6 @@ public interface SliderRepository extends JpaRepository<Slider, Long> {
 
     boolean existsBySliderTitle(String sliderTitle);
     boolean existsBySliderTitleAndIdNot(String sliderTitle, Long id);
+
+    List<Slider> findByIsActiveTrue();
 }

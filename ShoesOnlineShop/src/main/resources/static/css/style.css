@@ -951,111 +951,81 @@ tbody td {
    FOOTER SECTION
    ========================================= */
 .footer-section {
-    background: #ffffff;
-    border-top: 1px solid var(--border);
-    padding: 60px 0 40px;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 60px 40px 40px;
     margin-top: 60px;
-    color: var(--text-dark);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 40px;
 }
 
-.footer-row {
+.footer-minimal-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
     justify-content: space-between;
-}
-
-.footer-col {
-    flex: 1;
-    min-width: 200px;
-}
-
-.footer-col.company-info {
-    flex: 1.5;
-}
-
-.footer-title {
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    color: #001e2d;
-    letter-spacing: 0.05em;
-}
-
-.footer-col p {
-    font-size: 13.5px;
-    line-height: 1.6;
-    margin-bottom: 8px;
-    color: #444;
-}
-
-.footer-col p strong {
-    font-weight: 700;
-    color: #001e2d;
-}
-
-.footer-col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-col ul li {
-    margin-bottom: 10px;
-}
-
-.footer-col ul li a {
-    text-decoration: none;
-    color: #555;
-    font-size: 13.5px;
-    transition: color 0.2s;
-}
-
-.footer-col ul li a:hover {
-    color: var(--accent);
-}
-
-.payment-icons {
-    display: flex;
+    gap: 30px;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 24px;
-    align-items: center;
+    margin-bottom: 40px;
 }
 
-.payment-icon-svg {
-    height: 24px;
-    width: auto;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+.footer-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1;
+    min-width: 240px;
 }
 
-.payment-icon-svg:hover {
-    opacity: 1;
+.footer-ico {
+    font-size: 24px;
+    margin-top: 2px;
 }
 
-.cert-icons {
+.footer-text-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
 }
 
-.cert-icon-placeholder {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
+.footer-label {
+    font-size: 12px;
+    font-weight: 800;
     text-transform: uppercase;
-    color: white;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    margin-bottom: 4px;
 }
 
-.bg-blue { background: #0056b3; }
-.bg-green { background: #28a745; }
+.footer-val {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: #f8fafc;
+}
+
+.footer-bottom-line {
+    text-align: center;
+    font-size: 12px;
+    color: #64748b;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 25px;
+}
+
+@media (max-width: 900px) {
+    .footer-minimal-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-minimal-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .footer-info-item {
+        justify-content: flex-start;
+    }
+}

@@ -2,6 +2,9 @@ package Group1.ShoesOnlineShop.service;
 
 import Group1.ShoesOnlineShop.entity.Coupon;
 import Group1.ShoesOnlineShop.repository.CouponRepository;
+import Group1.ShoesOnlineShop.repository.UserCouponRepository;
+import Group1.ShoesOnlineShop.repository.UserRepository;
+import Group1.ShoesOnlineShop.entity.UserCoupon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,12 @@ public class CouponService {
 
     @Autowired
     private CouponRepository couponRepository;
+
+    @Autowired
+    private UserCouponRepository userCouponRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Page<Coupon> getCoupons(String keyword, Integer discount, Boolean status, String validity, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
@@ -125,4 +134,20 @@ public class CouponService {
 
         return errors;
     }
+    // Get active coupons for home page
+    public java.util.List<Group1.ShoesOnlineShop.entity.Coupon> getActiveCoupons() {
+        return getCoupons("", null, true, "VALID", 1, 10).getContent();
+    }
+
+    // Save coupon for user
+    public void saveCouponForUser(Long userId, Long couponId) {
+        if (!userCouponRepository.existsByUser_UserIdAndCoupon_Id(userId, couponId)) {
+            userRepository.findById(userId).ifPresent(user -> {
+                couponRepository.findById(couponId).ifPresent(coupon -> {
+                    userCouponRepository.save(new UserCoupon(user, coupon));
+                });
+            });
+        }
+    }
 }
+

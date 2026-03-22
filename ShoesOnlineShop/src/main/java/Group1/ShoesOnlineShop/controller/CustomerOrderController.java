@@ -18,8 +18,8 @@ public class CustomerOrderController {
 
     @GetMapping
     public String listOrders(HttpSession session, Model model, 
-                             @RequestParam(defaultValue = "1") int page,
-                             @RequestParam(defaultValue = "5") int size) {
+                             @RequestParam(name = "page", defaultValue = "1") int page,
+                             @RequestParam(name = "size", defaultValue = "5") int size) {
         
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
@@ -35,7 +35,7 @@ public class CustomerOrderController {
     }
 
     @GetMapping("/detail/{id}")
-    public String orderDetail(@PathVariable Long id, Model model) {
+    public String orderDetail(@PathVariable(name = "id") Long id, Model model) {
         Order order = customerOrderService.getOrderById(id);
         if (order == null) {
             return "redirect:/orders";

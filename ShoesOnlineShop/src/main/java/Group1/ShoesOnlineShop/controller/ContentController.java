@@ -22,12 +22,12 @@ public class ContentController {
     @GetMapping("/contents")
     public String listContents(
             Model model,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(required = false) String type, // Nhận thêm filter type
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "type", required = false) String type, // Nhận thêm filter type
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
     ) {
-        Page<Content> pageContents = contentService.getContents(keyword, type, page, size);
+        Page<Content> pageContents = contentService.getContents(keyword, type, null, page, size);
         model.addAttribute("contents", pageContents.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageContents.getTotalPages());
@@ -87,7 +87,7 @@ public class ContentController {
     }
 
     @GetMapping("/contents/update/{id}")
-    public String showUpdateContentForm(@PathVariable Long id, Model model) {
+    public String showUpdateContentForm(@PathVariable(name = "id") Long id, Model model) {
         Content content = contentService.getContentById(id);
         if (content == null) return "redirect:/contents";
         model.addAttribute("content", content);
@@ -95,14 +95,14 @@ public class ContentController {
     }
 
     @GetMapping("/contents/delete/{id}")
-    public String deleteContent(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteContent(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         contentService.deleteContent(id);
         redirectAttributes.addFlashAttribute("successMessage", "Content deleted successfully!");
         return "redirect:/contents";
     }
 
     @GetMapping("/contents/detail/{id}")
-    public String showContentDetail(@PathVariable Long id, Model model) {
+    public String showContentDetail(@PathVariable(name = "id") Long id, Model model) {
         Content content = contentService.getContentById(id);
         if (content == null) return "redirect:/contents";
         model.addAttribute("content", content);

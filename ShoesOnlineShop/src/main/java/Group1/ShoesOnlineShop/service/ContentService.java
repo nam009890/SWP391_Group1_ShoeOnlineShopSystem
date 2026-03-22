@@ -28,8 +28,8 @@ public class ContentService {
     @Autowired
     private ContentRepository contentRepository;
 
-    // 1. Hàm get có áp dụng bộ lọc (Keyword & Type)
-    public Page<Content> getContents(String keyword, String type, int page, int size) {
+    // 1. Hàm get có áp dụng bộ lọc (Keyword, Type & Active)
+    public Page<Content> getContents(String keyword, String type, Boolean isActive, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
 
         Specification<Content> spec = (root, query, cb) -> {
@@ -39,6 +39,9 @@ public class ContentService {
             }
             if (type != null && !type.trim().isEmpty()) {
                 predicates.add(cb.equal(root.get("contentType"), type));
+            }
+            if (isActive != null) {
+                predicates.add(cb.equal(root.get("isActive"), isActive));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };

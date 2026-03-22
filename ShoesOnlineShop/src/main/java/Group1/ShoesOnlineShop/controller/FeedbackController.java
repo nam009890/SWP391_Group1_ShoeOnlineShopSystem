@@ -41,7 +41,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/{orderId}/{productId}")
-    public String showFeedbackForm(@PathVariable Long orderId, @PathVariable Long productId, Model model) {
+    public String showFeedbackForm(@PathVariable(name = "orderId") Long orderId, @PathVariable(name = "productId") Long productId, Model model) {
         model.addAttribute("orderId", orderId);
         model.addAttribute("productId", productId);
         return "customer-feedback";
@@ -49,10 +49,10 @@ public class FeedbackController {
 
     @PostMapping("/submit")
     public String submitFeedback(
-            @RequestParam Long orderId, 
-            @RequestParam Long productId,
-            @RequestParam Integer rating,
-            @RequestParam String comments,
+            @RequestParam(name = "orderId") Long orderId, 
+            @RequestParam(name = "productId") Long productId,
+            @RequestParam(name = "rating") Integer rating,
+            @RequestParam(name = "comments") String comments,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
             

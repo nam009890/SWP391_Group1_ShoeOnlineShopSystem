@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 @Service
 public class SliderService {
@@ -35,7 +36,6 @@ public class SliderService {
     @Autowired
     private ProductRepository productRepository;
 
-    // Đã thêm tham số isActive vào đây
     public Page<Slider> getSliders(String keyword, Boolean isActive, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
         
@@ -61,13 +61,13 @@ public class SliderService {
         if (couponIds != null && !couponIds.isEmpty()) {
             slider.setCoupons(couponRepository.findAllById(couponIds));
         } else {
-            slider.setCoupons(new java.util.ArrayList<>());
+            slider.setCoupons(new ArrayList<>());
         }
 
         if (productIds != null && !productIds.isEmpty()) {
             slider.setProducts(productRepository.findAllById(productIds));
         } else {
-            slider.setProducts(new java.util.ArrayList<>());
+            slider.setProducts(new ArrayList<>());
         }
 
         sliderRepository.save(slider);
@@ -102,11 +102,11 @@ public class SliderService {
         }
         return errors;
     }
+
     public Map<String, String> validateSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds, MultipartFile imageFile) {
         Map<String, String> errors = new HashMap<>();
         boolean isUpdate = (sliderForm.getId() != null);
 
-        // Validate Logic DB
         if (sliderForm.getSliderTitle() != null && isSliderTitleExists(sliderForm.getSliderTitle(), sliderForm.getId())) {
             errors.put("sliderTitle", "This Slider title already exists, please choose another!");
         }
@@ -117,7 +117,6 @@ public class SliderService {
             errors.put("coupons", "Please select at least one coupon!");
         }
 
-        // Validate File Ảnh
         if (!isUpdate && (imageFile == null || imageFile.isEmpty())) {
             errors.put("imageUrl", "Please upload an image!");
         } else if (imageFile != null && !imageFile.isEmpty()) {
@@ -140,11 +139,8 @@ public class SliderService {
         return errors;
     }
 
-    // 2. HÀM XỬ LÝ LƯU FILE VÀ GHI DATABASE
     public void processAndSaveSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds, MultipartFile imageFile) throws IOException {
         Slider targetSlider;
-        
-        // Lấy Slider cũ ra (nếu Update) hoặc tạo mới (nếu Create)
         if (sliderForm.getId() != null) {
             targetSlider = sliderRepository.findById(sliderForm.getId()).orElse(new Slider());
         } else {
@@ -152,12 +148,10 @@ public class SliderService {
             targetSlider.setCreatedAt(LocalDateTime.now());
         }
 
-        // Cập nhật các trường thông tin cơ bản
         targetSlider.setSliderTitle(sliderForm.getSliderTitle());
         targetSlider.setIsActive(sliderForm.getIsActive() != null ? sliderForm.getIsActive() : false);
         targetSlider.setUpdatedAt(LocalDateTime.now());
 
-        // Xử lý lưu File Ảnh vào hệ thống
         if (imageFile != null && !imageFile.isEmpty()) {
             String fileName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(imageFile.getOriginalFilename());
             Path uploadPath = Paths.get("src/main/resources/static/uploads/");
@@ -169,20 +163,46 @@ public class SliderService {
             }
         }
 
-        // Xử lý lưu Coupon và Product đính kèm
         if (couponIds != null && !couponIds.isEmpty()) {
             targetSlider.setCoupons(couponRepository.findAllById(couponIds));
         } else {
-            targetSlider.setCoupons(new java.util.ArrayList<>());
+            targetSlider.setCoupons(new ArrayList<>());
         }
 
         if (productIds != null && !productIds.isEmpty()) {
             targetSlider.setProducts(productRepository.findAllById(productIds));
         } else {
-            targetSlider.setProducts(new java.util.ArrayList<>());
+            targetSlider.setProducts(new ArrayList<>());
         }
 
-        // Lưu vào DB
         sliderRepository.save(targetSlider);
+    }
+
+    public List<Slider> getActiveSliders() {
+        return getMockSliders();
+    }
+
+    private List<Slider> getMockSliders() {
+        List<Slider> mockSliders = new ArrayList<>();
+        
+        mockSliders.add(createMockSlider(1L, "New Year Sale 2026", "/images/slider1.jpg", "/products"));
+        mockSliders.add(createMockSlider(2L, "Summer Collection", "/images/slider2.jpg", "/products?category=sneaker"));
+        mockSliders.add(createMockSlider(3L, "Jordan Special Offer", "/images/slider3.jpg", "/products/detail/6"));
+        mockSliders.add(createMockSlider(4L, "Running Shoes Discount", "/images/slider4.jpg", "/products?category=running"));
+        mockSliders.add(createMockSlider(5L, "Vietnam Brand Biti's", "/images/slider5.jpg", "/products?brand=bitis"));
+        
+        return mockSliders;
+    }
+
+    private Slider createMockSlider(Long id, String title, String imageUrl, String linkUrl) {
+        Slider s = new Slider();
+        s.setId(id);
+        s.setSliderTitle(title);
+        s.setImageUrl(imageUrl);
+        s.setLinkUrl(linkUrl);
+        s.setIsActive(true);
+        s.setCreatedAt(LocalDateTime.now());
+        s.setUpdatedAt(LocalDateTime.now());
+        return s;
     }
 }

@@ -23,27 +23,56 @@ public class CustomerProductController {
     @GetMapping("/products")
     public String listProducts(
             Model model,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(required = false) String category,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "12") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "brand", required = false) String brand,
+            @RequestParam(name = "sort", required = false) String sort,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "12") int size
     ) {
-        Page<Product> productPage = customerProductService.getActiveProducts(keyword, category, page, size);
-        
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("totalItems", productPage.getTotalElements());
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            Page<Product> productPage = customerProductService.getActiveProducts(keyword, category, sort, page, size);
+            model.addAttribute("products", productPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", productPage.getTotalPages());
+            model.addAttribute("totalItems", productPage.getTotalElements());
+        } else if ("newest".equalsIgnoreCase(sort)) {
+            java.util.List<Product> products = customerProductService.getNewest();
+            model.addAttribute("products", products);
+            model.addAttribute("totalItems", (long) products.size());
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("currentPage", 1);
+        } else if (brand != null && !brand.trim().isEmpty()) {
+            java.util.List<Product> products = customerProductService.getByBrand(brand);
+            model.addAttribute("products", products);
+            model.addAttribute("totalItems", (long) products.size());
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("currentPage", 1);
+        } else if (category != null && !category.trim().isEmpty()) {
+            java.util.List<Product> products = customerProductService.getByCategory(category);
+            model.addAttribute("products", products);
+            model.addAttribute("totalItems", (long) products.size());
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("currentPage", 1);
+        } else {
+            java.util.List<Product> products = customerProductService.getAll();
+            model.addAttribute("products", products);
+            model.addAttribute("totalItems", (long) products.size());
+            model.addAttribute("totalPages", 1);
+            model.addAttribute("currentPage", 1);
+        }
         
         // Keep filter state
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
+        model.addAttribute("brand", brand);
+        model.addAttribute("sort", sort);
         
-        return "customer-product-list";
+        return "customer-products";
     }
 
     @GetMapping("/products/detail/{id}")
-    public String productDetail(@PathVariable Long id, Model model) {
+    public String productDetail(@PathVariable(name = "id") Long id, Model model) {
         Product product = customerProductService.getProductById(id);
         if (product == null) {
             return "redirect:/products";

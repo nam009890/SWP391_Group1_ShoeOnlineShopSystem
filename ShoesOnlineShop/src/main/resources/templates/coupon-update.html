@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Update Coupon</title>
@@ -17,24 +17,24 @@
             </div>
             <span class="nav-label">Navigation</span>
 
-            <a href="/MarketingHome">
+            <a href="/internal/MarketingHome">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Dashboard
             </a>
-            <a href="/sliders">
+            <a href="/internal/sliders">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
                 Slider
             </a>
-            <a href="/coupons" class="active">
+            <a href="/internal/coupons" class="active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
                 Coupon Code
             </a>
-            <a href="/contents">
+            <a href="/internal/contents">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                 Content
             </a>
             <div class="sidebar-logout">
-                <a href="/logout">
+                <a href="/internal/logout">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                     Logout
                 </a>
@@ -57,13 +57,13 @@
                 </div>
                                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <a class="dropdown-item" href="/profile">
+                        <a class="dropdown-item" href="/internal/profile">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             Edit Profile
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="/profile/change-password">
+                        <a class="dropdown-item" href="/internal/profile/change-password">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                             Change Password
                         </a>
@@ -73,7 +73,7 @@
 
             <!-- Breadcrumb -->
             <div class="breadcrumb-bar">
-                <a href="/coupons">Coupon Management</a>
+                <a href="/internal/coupons">Coupon Management</a>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 <span>Update Coupon</span>
             </div>
@@ -85,10 +85,10 @@
                 </div>
                 <div class="card-header-bar">
                     <h6>Edit Coupon Information</h6>
-                    <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${coupon.id}" style="font-weight:600; color:var(--text-mid)">—</span></span>
+                    <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${coupon.id}" style="font-weight:600; color:var(--text-mid)">â€”</span></span>
                 </div>
                 <div class="card-body-pad">
-                    <form th:action="@{/coupons/save}" th:object="${coupon}" method="post">
+                    <form th:action="@{/internal/coupons/save}" th:object="${coupon}" method="post">
                         <input type="hidden" th:field="*{id}">
 
                         <!-- Coupon Name -->
@@ -143,7 +143,7 @@
                             <div class="col-md-8">
                                 <select th:field="*{discountPercent}" class="form-select"
                                         th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
-                                    <option value="">— Select Discount —</option>
+                                    <option value="">â€” Select Discount â€”</option>
                                     <option value="5">5%</option>
                                     <option value="10">10%</option>
                                     <option value="15">15%</option>
@@ -181,7 +181,7 @@
 
                         <!-- Footer -->
                         <div class="form-footer" style="margin-top:28px; border-radius:0; border-left:none; border-right:none; border-bottom:none; padding-left:0; padding-right:0; padding-bottom:0">
-                            <a href="/coupons" class="btn-outline">
+                            <a href="/internal/coupons" class="btn-outline">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
                                 Back
                             </a>
@@ -207,21 +207,21 @@
                                         document.getElementById('couponCodeInput').value = code;
                                     }
 
-                                    // HÀM RESET MỚI: Quét sạch toàn bộ Text, Date, và Select
+                                    // HÃ€M RESET Má»šI: QuÃ©t sáº¡ch toÃ n bá»™ Text, Date, vÃ  Select
                                     function clearAllFields() {
-                                        // Xóa các ô nhập chữ và ngày tháng
+                                        // XÃ³a cÃ¡c Ã´ nháº­p chá»¯ vÃ  ngÃ y thÃ¡ng
                                         const inputs = document.querySelectorAll('form input[type="text"], form input[type="date"]');
                                         inputs.forEach(input => input.value = '');
 
-                                        // Trả dropdown giảm giá về dòng đầu tiên
+                                        // Tráº£ dropdown giáº£m giÃ¡ vá» dÃ²ng Ä‘áº§u tiÃªn
                                         const selects = document.querySelectorAll('form select');
                                         selects.forEach(select => select.selectedIndex = 0);
 
-                                        // Bỏ check các ô trạng thái
+                                        // Bá» check cÃ¡c Ã´ tráº¡ng thÃ¡i
                                         const checkboxes = document.querySelectorAll('form input[type="checkbox"]');
                                         checkboxes.forEach(cb => cb.checked = false);
 
-                                        // Dọn luôn màu đỏ báo lỗi của Form (nếu có)
+                                        // Dá»n luÃ´n mÃ u Ä‘á» bÃ¡o lá»—i cá»§a Form (náº¿u cÃ³)
                                         const invalidInputs = document.querySelectorAll('.is-invalid');
                                         invalidInputs.forEach(el => el.classList.remove('is-invalid'));
                                         const errorTexts = document.querySelectorAll('.invalid-feedback, .text-danger');

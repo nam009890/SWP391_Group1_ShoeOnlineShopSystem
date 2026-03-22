@@ -14,15 +14,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/internal/coupons")
 public class CouponController {
 
-    // CHỈ GỌI SERVICE - KIẾN TRÚC CHUẨN ĐI LÀM
     @Autowired
     private CouponService couponService;
 
-    // 1. Hiển thị trang danh sách
-   // 1. Hiển thị danh sách + Xử lý Filter
-    @GetMapping("/coupons")
+    @GetMapping
     public String listCoupons(
             Model model,
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
@@ -32,49 +30,41 @@ public class CouponController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size
     ) {
-        // GỌI SERVICE VỚI ĐỦ 6 THAM SỐ
         Page<Coupon> pageCoupons = couponService.getCoupons(keyword, discount, status, validity, page, size);
 
         model.addAttribute("coupons", pageCoupons.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageCoupons.getTotalPages());
         model.addAttribute("totalItems", pageCoupons.getTotalElements());
-        
-        // Lưu lại bộ lọc để giữ trạng thái cho giao diện
         model.addAttribute("keyword", keyword);
         model.addAttribute("discount", discount);
         model.addAttribute("status", status);
         model.addAttribute("validity", validity);
-        
-        // Truyền ngày hôm nay xuống để UI tự check Hết hạn hay Còn hạn
         model.addAttribute("today", java.time.LocalDate.now()); 
 
         return "coupon-list"; 
     }
 
-    // 2. Hiển thị form tạo mới
-    @GetMapping("/coupons/create")
+    @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("coupon", new Coupon());
         return "coupon-create"; 
     }
 
-   @PostMapping("/coupons/save")
+    @PostMapping("/save")
     public String saveCoupon(
             @Valid @ModelAttribute("coupon") Coupon coupon, 
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
-            Model model) { // THÊM Model model vào đây
+            Model model) {
 
         boolean isNew = (coupon.getId() == null);
 
-        // Lỗi nhập liệu cơ bản (trống, sai định dạng)
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Please check the highlighted fields and try again!");
             return isNew ? "coupon-create" : "coupon-update";
         }
 
-        // Lỗi nghiệp vụ (Trùng tên, ngày sai)
         Map<String, String> logicErrors = couponService.validateCouponLogic(coupon);
         if (!logicErrors.isEmpty()) {
             logicErrors.forEach((field, message) -> bindingResult.rejectValue(field, "error.coupon", message));
@@ -83,44 +73,38 @@ public class CouponController {
         }
 
         try {
-            // Ép kiểu Status an toàn
             coupon.setIsActive(coupon.getIsActive() != null && coupon.getIsActive());
             couponService.saveCoupon(coupon);
-            // Gắn thông báo thành công
             redirectAttributes.addFlashAttribute("successMessage", isNew ? "Coupon created successfully!" : "Coupon updated successfully!");
         } catch (Exception e) {
-            // Gắn thông báo thất bại nếu hệ thống sập hoặc lỗi DB
             redirectAttributes.addFlashAttribute("errorMessage", "System error: Failed to save coupon!");
         }
         
-        return "redirect:/coupons";
+        return "redirect:/internal/coupons";
     }
 
-    // 4. Hiển thị form cập nhật
-    @GetMapping("/coupons/update/{id}")
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable(name = "id") Long id, Model model) {
         Coupon coupon = couponService.getCouponById(id);
         if (coupon == null) {
-            return "redirect:/coupons";
+            return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
         return "coupon-update"; 
     }
 
-    // 5. Xử lý xóa
-    @GetMapping("/coupons/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteCoupon(@PathVariable(name = "id") Long id, HttpSession session) {
         couponService.deleteCoupon(id);
         session.setAttribute("message", "Delete successfully!");
-        return "redirect:/coupons";
+        return "redirect:/internal/coupons";
     }
 
-    // 6. Hiển thị trang Detail
-    @GetMapping("/coupons/detail/{id}")
+    @GetMapping("/detail/{id}")
     public String showCouponDetail(@PathVariable(name = "id") Long id, Model model) {
         Coupon coupon = couponService.getCouponById(id);
         if (coupon == null) {
-            return "redirect:/coupons";
+            return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
         return "coupon-detail"; 

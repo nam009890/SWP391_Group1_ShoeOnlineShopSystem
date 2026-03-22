@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/internal/admin")
 public class AdminController {
 
     @Autowired

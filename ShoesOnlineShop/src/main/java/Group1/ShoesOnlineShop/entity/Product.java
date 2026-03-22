@@ -33,6 +33,12 @@ private String productDescription;
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
+    @Column(name = "size", length = 50)
+    private String size;
+
+    @Column(name = "color", length = 100)
+    private String color;
+
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
@@ -97,6 +103,12 @@ private String productDescription;
 
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
+
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }

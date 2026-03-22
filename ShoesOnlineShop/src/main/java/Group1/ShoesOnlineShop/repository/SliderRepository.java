@@ -22,4 +22,7 @@ public interface SliderRepository extends JpaRepository<Slider, Long> {
     long countByIsActive(Boolean isActive);
     java.util.List<Slider> findTop5ByOrderByCreatedAtDesc();
     java.util.List<Slider> findTop50ByOrderByCreatedAtDesc();
+
+    // Active sliders for home page carousel
+    java.util.List<Slider> findByIsActiveTrueOrderByCreatedAtDesc();
 }

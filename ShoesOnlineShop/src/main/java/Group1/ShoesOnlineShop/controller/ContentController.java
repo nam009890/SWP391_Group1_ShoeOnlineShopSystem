@@ -14,16 +14,17 @@ import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 
 @Controller
+@RequestMapping("/internal/contents")
 public class ContentController {
 
     @Autowired
     private ContentService contentService;
 
-    @GetMapping("/contents")
+    @GetMapping
     public String listContents(
             Model model,
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
-            @RequestParam(name = "type", required = false) String type, // Nhận thêm filter type
+            @RequestParam(name = "type", required = false) String type,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size
     ) {
@@ -32,22 +33,21 @@ public class ContentController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageContents.getTotalPages());
         model.addAttribute("keyword", keyword);
-        model.addAttribute("type", type); // Gửi type lại view để giữ trạng thái
+        model.addAttribute("type", type);
         return "content-list"; 
     }
 
-    @GetMapping("/contents/create")
+    @GetMapping("/create")
     public String showCreateContentForm(Model model) {
         model.addAttribute("content", new Content());
         return "content-create";
     }
 
-    // Xử lý tạo/sửa kèm theo file ảnh Thumbnail
-    @PostMapping("/contents/save")
+    @PostMapping("/save")
     public String saveContent(
             @Valid @ModelAttribute("content") Content content, 
             BindingResult result,
-            @RequestParam(value = "imageFile", required = false) org.springframework.web.multipart.MultipartFile imageFile,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model) {
 
@@ -57,7 +57,6 @@ public class ContentController {
         }
 
         try {
-            // Xử lý upload file ảnh (nếu người dùng có chọn file)
             if (imageFile != null && !imageFile.isEmpty()) {
                 String fileName = System.currentTimeMillis() + "_" + org.springframework.util.StringUtils.cleanPath(imageFile.getOriginalFilename());
                 java.nio.file.Path uploadPath = java.nio.file.Paths.get("src/main/resources/static/uploads/contents/");
@@ -68,11 +67,9 @@ public class ContentController {
                 
                 try (java.io.InputStream inputStream = imageFile.getInputStream()) {
                     java.nio.file.Files.copy(inputStream, uploadPath.resolve(fileName), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                    // Gắn đường dẫn nội bộ vào trường imageUrl
                     content.setImageUrl("/uploads/contents/" + fileName); 
                 }
             } else if (content.getId() != null) {
-                // Nếu đang Update mà không chọn ảnh mới -> Giữ nguyên ảnh cũ trong DB
                 Content existingContent = contentService.getContentById(content.getId());
                 if (existingContent != null) {
                     content.setImageUrl(existingContent.getImageUrl());
@@ -86,41 +83,38 @@ public class ContentController {
             return isNew ? "content-create" : "content-update";
         }
 
-        return "redirect:/contents";
+        return "redirect:/internal/contents";
     }
 
-    @GetMapping("/contents/update/{id}")
+    @GetMapping("/update/{id}")
     public String showUpdateContentForm(@PathVariable(name = "id") Long id, Model model) {
         Content content = contentService.getContentById(id);
-        if (content == null) return "redirect:/contents";
+        if (content == null) return "redirect:/internal/contents";
         model.addAttribute("content", content);
         return "content-update";
     }
 
-    @GetMapping("/contents/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteContent(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         contentService.deleteContent(id);
         redirectAttributes.addFlashAttribute("successMessage", "Content deleted successfully!");
-        return "redirect:/contents";
+        return "redirect:/internal/contents";
     }
 
-    @GetMapping("/contents/detail/{id}")
+    @GetMapping("/detail/{id}")
     public String showContentDetail(@PathVariable(name = "id") Long id, Model model) {
         Content content = contentService.getContentById(id);
-        if (content == null) return "redirect:/contents";
+        if (content == null) return "redirect:/internal/contents";
         model.addAttribute("content", content);
         return "content-detail"; 
     }
 
-    // ========================================================
-    // API NGẦM CHO SUMMERNOTE (CHÈN ẢNH VÀO GIỮA BÀI VIẾT)
-    // ========================================================
-    @PostMapping("/contents/upload-image")
-    @ResponseBody // Trả về String thẳng cho trình duyệt, không trả về HTML
+    @PostMapping("/upload-image")
+    @ResponseBody
     public ResponseEntity<String> uploadInlineImage(@RequestParam(name = "file") MultipartFile file) {
         try {
             String imageUrl = contentService.saveImageFile(file);
-            return ResponseEntity.ok(imageUrl); // Trả link ảnh về cho Summernote
+            return ResponseEntity.ok(imageUrl);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Upload failed");
         }

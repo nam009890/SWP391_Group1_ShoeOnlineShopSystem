@@ -42,12 +42,19 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public String addToCart(@RequestParam(name = "productId") Long productId, @RequestParam(name = "quantity", defaultValue = "1") Integer quantity, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String addToCart(
+            @RequestParam(name = "productId") Long productId,
+            @RequestParam(name = "quantity", defaultValue = "1") Integer quantity,
+            @RequestParam(name = "selectedColor", required = false) String selectedColor,
+            @RequestParam(name = "selectedSize", required = false) String selectedSize,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+            
         String sessionId = session.getId();
         Long userId = (Long) session.getAttribute("userId");
         
-        cartService.addToCart(productId, quantity, userId, sessionId);
-        redirectAttributes.addFlashAttribute("message", "Product added to cart!");
+        cartService.addToCart(productId, quantity, userId, sessionId, selectedColor, selectedSize);
+        redirectAttributes.addFlashAttribute("message", "Đã thêm sản phẩm vào giỏ hàng!");
         return "redirect:/products/detail/" + productId;
     }
 

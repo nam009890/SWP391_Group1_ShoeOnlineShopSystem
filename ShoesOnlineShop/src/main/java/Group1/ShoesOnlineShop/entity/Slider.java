@@ -35,8 +35,8 @@ public class Slider {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Column(name = "link_url", length = 500)
-    private String linkUrl;
+    @Column(name = "position")
+    private Integer position = 0;
 
     @ManyToMany
     @JoinTable(
@@ -69,8 +69,8 @@ public class Slider {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-    public String getLinkUrl() { return linkUrl; }
-    public void setLinkUrl(String linkUrl) { this.linkUrl = linkUrl; }
+    public Integer getPosition() { return position; }
+    public void setPosition(Integer position) { this.position = position; }
     public List<Coupon> getCoupons() { return coupons; }
     public void setCoupons(List<Coupon> coupons) { this.coupons = coupons; }
     public List<Product> getProducts() { return products; }

@@ -10,8 +10,8 @@ import java.util.List;
 public interface CartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findBySessionId(String sessionId);
     List<Cart> findByUserUserId(Long userId);
-    Cart findBySessionIdAndProduct_Id(String sessionId, Long productId);
-    Cart findByUserUserIdAndProduct_Id(Long userId, Long productId);
+    Cart findBySessionIdAndProduct_IdAndSelectedColorAndSelectedSize(String sessionId, Long productId, String selectedColor, String selectedSize);
+    Cart findByUserUserIdAndProduct_IdAndSelectedColorAndSelectedSize(Long userId, Long productId, String selectedColor, String selectedSize);
     void deleteBySessionId(String sessionId);
     void deleteByUserUserId(Long userId);
 }

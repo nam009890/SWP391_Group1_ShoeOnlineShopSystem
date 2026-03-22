@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tin tức - Shoes Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/customer.css}">
+</head>
+<body class="ss-page">
+
+    <div th:replace="~{customer-navbar :: navbar-fragment}"></div>
+
+    <div class="ss-main">
+        <div class="ss-page-header">
+            <div>
+                <h1 class="ss-page-title">TIN TỨC & BÀI VIẾT</h1>
+                <p class="ss-page-subtitle">Cập nhật tin tức mới nhất về giày và thời trang</p>
+            </div>
+        </div>
+
+        <div class="ss-article-grid" th:if="${not #lists.isEmpty(articles)}">
+            <a th:href="@{/articles/{id}(id=${article.id})}" class="ss-article-card" th:each="article : ${articles}">
+                <img th:src="${article.imageUrl != null ? article.imageUrl : 'https://via.placeholder.com/600x300?text=Article'}"
+                     class="ss-article-thumb" alt="Article">
+                <div class="ss-article-body">
+                    <span class="ss-article-type" th:text="${article.contentType}">BANNER</span>
+                    <h3 class="ss-article-title" th:text="${article.contentTitle}">Article Title</h3>
+                    <p class="ss-article-excerpt" th:text="${#strings.abbreviate(article.contentText, 120)}">Excerpt...</p>
+                    <div class="ss-article-date" th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy')}">01/01/2026</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="ss-empty" th:if="${#lists.isEmpty(articles)}">
+            <h3>Chưa có bài viết</h3>
+            <p>Các bài viết sẽ sớm được cập nhật!</p>
+        </div>
+    </div>
+
+    <div th:replace="~{footer :: footer-fragment}"></div>
+</body>
+</html>

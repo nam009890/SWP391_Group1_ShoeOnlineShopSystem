@@ -33,6 +33,12 @@ public class Cart {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(name = "selected_color", length = 50)
+    private String selectedColor;
+
+    @Column(name = "selected_size", length = 20)
+    private String selectedSize;
+
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
 

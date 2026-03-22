@@ -1,7 +1,11 @@
 package Group1.ShoesOnlineShop.controller;
 
 import Group1.ShoesOnlineShop.entity.Product;
+import Group1.ShoesOnlineShop.entity.ProductColor;
+import Group1.ShoesOnlineShop.entity.ProductSize;
 import Group1.ShoesOnlineShop.service.CustomerProductService;
+import Group1.ShoesOnlineShop.repository.ProductColorRepository;
+import Group1.ShoesOnlineShop.repository.ProductSizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import Group1.ShoesOnlineShop.service.FeedbackService;
 
+import java.util.List;
+
 @Controller
 public class CustomerProductController {
 
@@ -19,6 +25,12 @@ public class CustomerProductController {
 
     @Autowired
     private FeedbackService feedbackService;
+
+    @Autowired
+    private ProductColorRepository productColorRepository;
+
+    @Autowired
+    private ProductSizeRepository productSizeRepository;
 
     @GetMapping("/products")
     public String listProducts(
@@ -62,7 +74,6 @@ public class CustomerProductController {
             model.addAttribute("currentPage", 1);
         }
         
-        // Keep filter state
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         model.addAttribute("brand", brand);
@@ -80,7 +91,12 @@ public class CustomerProductController {
         
         model.addAttribute("product", product);
         
-        // Get feedbacks for this product and add to model
+        // Get colors and sizes for this product
+        List<ProductColor> colors = productColorRepository.findByProductId(id);
+        List<ProductSize> sizes = productSizeRepository.findByProductId(id);
+        model.addAttribute("colors", colors);
+        model.addAttribute("sizes", sizes);
+        
         model.addAttribute("feedbacks", feedbackService.getFeedbacksByProduct(id));
         
         return "customer-product-detail";

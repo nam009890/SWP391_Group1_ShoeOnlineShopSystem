@@ -16,9 +16,11 @@ public class Product {
     @Column(name = "product_name")
     private String name;
 
+    @Column(name = "product_description", columnDefinition = "NVARCHAR(MAX)")
+    private String description;
+
     @Column(name = "product_price")
     private BigDecimal price;
-    
 
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
@@ -29,10 +31,13 @@ public class Product {
     @Column(name = "category_name", length = 100)
     private String categoryName;
 
+    @Column(name = "category_id")
+    private Long categoryId;
+
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    // Quan hệ với các bảng khác
+    // Relationships
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
@@ -42,6 +47,12 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductColor> colors;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductSize> sizes;
 
     // Audit fields
 
@@ -67,6 +78,8 @@ public class Product {
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
     
@@ -78,8 +91,17 @@ public class Product {
     
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
     
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public List<ProductColor> getColors() { return colors; }
+    public void setColors(List<ProductColor> colors) { this.colors = colors; }
+
+    public List<ProductSize> getSizes() { return sizes; }
+    public void setSizes(List<ProductSize> sizes) { this.sizes = sizes; }
 
 }

@@ -185,21 +185,21 @@ public class SliderService {
     private List<Slider> getMockSliders() {
         List<Slider> mockSliders = new ArrayList<>();
         
-        mockSliders.add(createMockSlider(1L, "New Year Sale 2026", "/images/slider1.jpg", "/products"));
-        mockSliders.add(createMockSlider(2L, "Summer Collection", "/images/slider2.jpg", "/products?category=sneaker"));
-        mockSliders.add(createMockSlider(3L, "Jordan Special Offer", "/images/slider3.jpg", "/products/detail/6"));
-        mockSliders.add(createMockSlider(4L, "Running Shoes Discount", "/images/slider4.jpg", "/products?category=running"));
-        mockSliders.add(createMockSlider(5L, "Vietnam Brand Biti's", "/images/slider5.jpg", "/products?brand=bitis"));
+        mockSliders.add(createMockSlider(1L, "New Year Sale 2026", "/images/slider1.jpg", 1));
+        mockSliders.add(createMockSlider(2L, "Summer Collection", "/images/slider2.jpg", 2));
+        mockSliders.add(createMockSlider(3L, "Jordan Special Offer", "/images/slider3.jpg", 3));
+        mockSliders.add(createMockSlider(4L, "Running Shoes Discount", "/images/slider4.jpg", 4));
+        mockSliders.add(createMockSlider(5L, "Vietnam Brand Biti's", "/images/slider5.jpg", 5));
         
         return mockSliders;
     }
 
-    private Slider createMockSlider(Long id, String title, String imageUrl, String linkUrl) {
+    private Slider createMockSlider(Long id, String title, String imageUrl, Integer position) {
         Slider s = new Slider();
         s.setId(id);
         s.setSliderTitle(title);
         s.setImageUrl(imageUrl);
-        s.setLinkUrl(linkUrl);
+        s.setPosition(position);
         s.setIsActive(true);
         s.setCreatedAt(LocalDateTime.now());
         s.setUpdatedAt(LocalDateTime.now());

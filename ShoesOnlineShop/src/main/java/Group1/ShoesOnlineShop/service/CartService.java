@@ -32,15 +32,15 @@ public class CartService {
         }
     }
 
-    public void addToCart(Long productId, Integer quantity, Long userId, String sessionId) {
+    public void addToCart(Long productId, Integer quantity, Long userId, String sessionId, String selectedColor, String selectedSize) {
         Product product = productRepository.findById(productId).orElse(null);
         if (product == null) return;
 
         Cart cartItem = null;
         if (userId != null) {
-            cartItem = cartRepository.findByUserUserIdAndProduct_Id(userId, productId);
+            cartItem = cartRepository.findByUserUserIdAndProduct_IdAndSelectedColorAndSelectedSize(userId, productId, selectedColor, selectedSize);
         } else if (sessionId != null) {
-            cartItem = cartRepository.findBySessionIdAndProduct_Id(sessionId, productId);
+            cartItem = cartRepository.findBySessionIdAndProduct_IdAndSelectedColorAndSelectedSize(sessionId, productId, selectedColor, selectedSize);
         }
 
         if (cartItem != null) {
@@ -49,6 +49,8 @@ public class CartService {
             cartItem = new Cart();
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
+            cartItem.setSelectedColor(selectedColor);
+            cartItem.setSelectedSize(selectedSize);
             if (userId != null) {
                 User user = userRepository.findById(userId).orElse(null);
                 cartItem.setUser(user);

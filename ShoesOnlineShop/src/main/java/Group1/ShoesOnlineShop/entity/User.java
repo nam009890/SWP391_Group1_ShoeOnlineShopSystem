@@ -29,8 +29,15 @@ public class User {
     @Column(name = "user_email", unique = true, nullable = false, length = 100)
     private String userEmail;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash", nullable = true, length = 255)
     private String passwordHash;
+
+    // OAuth2 Support
+    @Column(name = "auth_provider", length = 20)
+    private String authProvider; // e.g., "LOCAL", "GOOGLE"
+
+    @Column(name = "provider_id", length = 50)
+    private String providerId;
 
     // THÊM VALIDATE TÊN
     @NotBlank(message = "Full Name cannot be blank")

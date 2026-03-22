@@ -2,6 +2,7 @@ package Group1.ShoesOnlineShop.config;
 
 import Group1.ShoesOnlineShop.security.CustomerAuthenticationSuccessHandler;
 import Group1.ShoesOnlineShop.security.InternalAuthenticationSuccessHandler;
+import Group1.ShoesOnlineShop.security.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,9 @@ public class SecurityConfig {
 
     @Autowired
     private InternalAuthenticationSuccessHandler internalSuccessHandler;
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -83,6 +87,14 @@ public class SecurityConfig {
                 .passwordParameter("password")
                 .successHandler(customerSuccessHandler)
                 .permitAll()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .successHandler(customerSuccessHandler)
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(customOAuth2UserService::loadStandardUser) 
+                    .oidcUserService(customOAuth2UserService)
+                )
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")

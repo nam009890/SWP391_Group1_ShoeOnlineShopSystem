@@ -15,6 +15,10 @@
         .error { color: red; text-align: center; margin-bottom: 10px; }
         .success { color: green; text-align: center; margin-bottom: 10px; }
         .internal-link { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #6c757d; font-size: 14px; }
+        .btn-google { background-color: #db4437; margin-top: 10px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: white; font-weight: bold; }
+        .btn-google:hover { background-color: #c23321; }
+        .divider { margin: 20px 0; border-bottom: 1px solid #eee; position: relative; text-align: center; }
+        .divider span { background: #fff; padding: 0 10px; position: relative; top: 10px; color: #999; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -43,8 +47,13 @@
         </div>
         <button type="submit" class="btn">Login</button>
     </form>
+
+    <div class="divider"><span>OR</span></div>
+
+    <a th:href="@{/oauth2/authorization/google}" class="btn btn-google">
+        Login with Google
+    </a>
     
-    <a th:href="@{/internal/login}" class="internal-link">Staff Login</a>
     <a th:href="@{/register}" class="internal-link" style="margin-top: 5px; color: #007bff;">Create an Account</a>
 </div>
 

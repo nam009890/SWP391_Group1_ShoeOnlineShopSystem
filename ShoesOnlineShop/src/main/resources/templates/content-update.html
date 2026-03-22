@@ -110,9 +110,9 @@
                             </div>
                             <div class="col-md-5">
                                 <select th:field="*{contentType}" class="form-select">
-                                    <option value="BANNER">ðŸ–¼ Banner</option>
+                                    <option value="BANNER">&#128444; Banner</option>
                                     <option value="PROMO">ðŸ· Promotion</option>
-                                    <option value="ABOUT">ðŸ“– About Us</option>
+                                    <option value="ABOUT">&#128214; About Us</option>
                                 </select>
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                             </div>
                             <div class="col-md-9">
                                 <div th:if="${content.imageUrl != null and !content.imageUrl.isEmpty()}" class="mb-2">
-                                    <img th:src="@{${content.imageUrl}}" alt="Current Thumbnail" style="height: 80px; border-radius: 6px; border: 1px solid var(--border);">
+                                    <img th:src="@{${content.imageUrl != null and content.imageUrl.startsWith('/uploads') ? content.imageUrl : '/uploads/contents/' + content.imageUrl}}" alt="Current Thumbnail" style="height: 80px; border-radius: 6px; border: 1px solid var(--border);">
                                 </div>
 
                                 <input type="file" name="imageFile" class="form-control" accept="image/png, image/jpeg, image/webp">

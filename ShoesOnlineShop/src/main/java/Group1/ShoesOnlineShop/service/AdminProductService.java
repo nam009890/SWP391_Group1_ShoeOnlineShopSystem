@@ -29,7 +29,7 @@ public class AdminProductService {
     @Autowired
     private AdminProductRepository adminProductRepository;
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/uploads/products/";
+    // Removed local UPLOAD_DIR in favor of WebMvcConfig.UPLOAD_DIR
 
     // === GET LIST WITH FILTER & PAGINATION ===
     public Page<Product> getProducts(String keyword, Long categoryId, Boolean isActive, int page, int size) {
@@ -94,7 +94,7 @@ public class AdminProductService {
             }
         }
 
-        Path uploadPath = Paths.get(UPLOAD_DIR);
+        Path uploadPath = Group1.ShoesOnlineShop.config.WebMvcConfig.UPLOAD_DIR.resolve("products");
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }

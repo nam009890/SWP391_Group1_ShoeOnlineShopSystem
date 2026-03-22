@@ -39,10 +39,12 @@
             <h4>User Management</h4>
             <p>Manage registered accounts</p>
         </div>
+        <a href="/internal/admin/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">AD</div>
             <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
         </div>
+        </a>
     </div>
 
     <div class="card">
@@ -125,12 +127,16 @@
                     <td><span class="date-chip" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : '—'}">—</span></td>
                     <td>
                         <div class="action-btns" style="justify-content:center;">
-                            <a th:href="@{/internal/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
-                            <a th:href="@{/internal/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
-                            <a th:if="${user.isActive}" href="javascript:void(0)"
-                               class="btn-del" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'block\')'">Block</a>
-                            <a th:if="${!user.isActive}" href="javascript:void(0)"
-                               class="btn-upd" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'unblock\')'">Unblock</a>
+                            <!-- Ẩn nút hành động cho admin khác (không phải mình) -->
+                            <th:block th:if="${!(user.userRole == 'ADMIN' and user.userId != currentAdminId)}">
+                                <a th:href="@{/internal/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
+                                <a th:href="@{/internal/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
+                                <a th:if="${user.isActive}" href="javascript:void(0)"
+                                   class="btn-del" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'block\')'">Block</a>
+                                <a th:if="${!user.isActive}" href="javascript:void(0)"
+                                   class="btn-upd" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'unblock\')'">Unblock</a>
+                            </th:block>
+                            <span th:if="${user.userRole == 'ADMIN' and user.userId != currentAdminId}" style="color:var(--text-mid); font-size:12px;">—</span>
                         </div>
                     </td>
                 </tr>

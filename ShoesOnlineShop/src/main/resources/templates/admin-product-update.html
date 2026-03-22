@@ -34,10 +34,15 @@
             <h4>Update Product</h4>
             <p>Edit product information below</p>
         </div>
+        <a href="/internal/admin/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">AD</div>
-            <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
+            <div>
+                <div class="user-name">Administrator</div>
+                <div class="user-role">Admin</div>
+            </div>
         </div>
+        </a>
     </div>
 
     <div class="breadcrumb-bar">
@@ -81,6 +86,44 @@
                         <div class="col-md-6">
                             <label class="form-label">Stock Quantity</label>
                             <input type="number" name="stockQuantity" th:value="${product.stockQuantity}" class="form-control" placeholder="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Kích Cỡ (Size)</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:14px;">
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="36" id="s36"><label class="form-check-label" for="s36">36</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="37" id="s37"><label class="form-check-label" for="s37">37</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="38" id="s38"><label class="form-check-label" for="s38">38</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="39" id="s39"><label class="form-check-label" for="s39">39</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="40" id="s40"><label class="form-check-label" for="s40">40</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="41" id="s41"><label class="form-check-label" for="s41">41</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="42" id="s42"><label class="form-check-label" for="s42">42</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="43" id="s43"><label class="form-check-label" for="s43">43</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="44" id="s44"><label class="form-check-label" for="s44">44</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="45" id="s45"><label class="form-check-label" for="s45">45</label></div>
+                            </div>
+                            <input type="text" id="sizeOther" class="form-control form-control-sm" placeholder="Nhập 1 cỡ khác" pattern="^\d+(\.\d+)?$" title="Vui lòng chỉ nhập số (VD: 40 hoặc 40.5)">
+                            <input type="hidden" name="size" id="hiddenSize" th:value="${product.size}">
+                            <div th:if="${#fields.hasErrors('size')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{size}">Error</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Màu sắc (Color)</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:14px;">
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Black" id="cDen"><label class="form-check-label" for="cDen">Black</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="White" id="cTrang"><label class="form-check-label" for="cTrang">White</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Red" id="cDo"><label class="form-check-label" for="cDo">Red</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Blue" id="cXanhD"><label class="form-check-label" for="cXanhD">Blue</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Green" id="cXanhL"><label class="form-check-label" for="cXanhL">Green</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Yellow" id="cVang"><label class="form-check-label" for="cVang">Yellow</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Grey" id="cXam"><label class="form-check-label" for="cXam">Grey</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Brown" id="cNau"><label class="form-check-label" for="cNau">Brown</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Pink" id="cHong"><label class="form-check-label" for="cHong">Pink</label></div>
+                            </div>
+                            <input type="text" id="colorOther" class="form-control form-control-sm" placeholder="Nhập 1 màu khác" pattern="^[a-zA-Z\s]+$" title="Vui lòng chỉ nhập chữ cái (VD: Black, White)">
+                            <input type="hidden" name="color" id="hiddenColor" th:value="${product.color}">
+                            <div th:if="${#fields.hasErrors('color')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{color}">Error</div>
                         </div>
                     </div>
 
@@ -180,6 +223,51 @@ function previewNew(input) {
         preview.style.display = 'none';
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Populate checkboxes from existing product data
+    let hiddenSize = document.getElementById('hiddenSize').value;
+    if (hiddenSize) {
+        let existingSizes = hiddenSize.split(',').map(s => s.trim()).filter(s => s);
+        let otherSizes = [];
+        existingSizes.forEach(s => {
+            let cb = document.querySelector(`.size-cb[value="${s}"]`);
+            if (cb) cb.checked = true;
+            else otherSizes.push(s);
+        });
+        document.getElementById('sizeOther').value = otherSizes.join(', ');
+    }
+
+    let hiddenColor = document.getElementById('hiddenColor').value;
+    if (hiddenColor) {
+        let existingColors = hiddenColor.split(',').map(c => c.trim()).filter(c => c);
+        let otherColors = [];
+        existingColors.forEach(c => {
+            let cb = document.querySelector(`.color-cb[value="${c}"]`);
+            if (cb) cb.checked = true;
+            else otherColors.push(c);
+        });
+        document.getElementById('colorOther').value = otherColors.join(', ');
+    }
+
+    // On Form Submit: Combine checkbox and custom inputs
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            let sizes = [];
+            document.querySelectorAll('.size-cb:checked').forEach(cb => sizes.push(cb.value));
+            let otherSize = document.getElementById('sizeOther').value.trim();
+            if (otherSize) sizes.push(otherSize);
+            document.getElementById('hiddenSize').value = sizes.join(', ');
+
+            let colors = [];
+            document.querySelectorAll('.color-cb:checked').forEach(cb => colors.push(cb.value));
+            let otherColor = document.getElementById('colorOther').value.trim();
+            if (otherColor) colors.push(otherColor);
+            document.getElementById('hiddenColor').value = colors.join(', ');
+        });
+    }
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

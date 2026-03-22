@@ -16,4 +16,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
             String keyword,
             Pageable pageable
     );
+
+    // Approved feedbacks for a product (customer-facing)
+    java.util.List<Feedback> findByProduct_IdAndIsApprovedTrueOrderByCreatedAtDesc(Long productId);
 }

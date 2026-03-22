@@ -24,4 +24,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
     List<Category> findByIsActiveTrueOrderByNameAsc();
 
     List<Category> findByParentIsNullOrderByNameAsc();
+
+    // Active root categories for home page
+    List<Category> findByParentIsNullAndIsActiveTrueOrderByDisplayOrderAscNameAsc();
 }

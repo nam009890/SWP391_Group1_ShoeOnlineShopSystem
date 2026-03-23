@@ -1,6 +1,7 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
+    <meta charset="UTF-8">
         <title>Coupon Detail</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -86,9 +87,9 @@
                     <div class="detail-meta">
                         <span style="font-family:'Courier New',monospace; font-size:18px; font-weight:800; color:var(--accent); letter-spacing:.06em" th:text="${coupon.couponCode}">SALE-ABC123</span>
 
-                        <span th:if="${!coupon.isActive}" class="status-badge status-expired">â— Inactive</span>
-                        <span th:if="${coupon.isActive and (coupon.endDate < today or coupon.createDate > today)}" class="status-badge status-upcoming">â— Expired / Upcoming</span>
-                        <span th:if="${coupon.isActive and coupon.createDate <= today and coupon.endDate >= today}" class="status-badge status-active">â— Active & Valid</span>
+                        <span th:if="${!coupon.isActive}" class="status-badge status-expired">&bull; Inactive</span>
+                        <span th:if="${coupon.isActive and (coupon.endDate < today or coupon.createDate > today)}" class="status-badge status-upcoming">&bull; Expired / Upcoming</span>
+                        <span th:if="${coupon.isActive and coupon.createDate <= today and coupon.endDate >= today}" class="status-badge status-active">&bull; Active & Valid</span>
                     </div>
                     <p style="font-size:13px; color:var(--text-mid); margin:0" th:text="${coupon.couponName}">Summer Sale Coupon</p>
                 </div>

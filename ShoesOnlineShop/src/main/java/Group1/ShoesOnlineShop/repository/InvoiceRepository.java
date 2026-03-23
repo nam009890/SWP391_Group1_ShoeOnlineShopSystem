@@ -12,12 +12,12 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("""
             SELECT i FROM Invoice i
             WHERE i.isActive = true
-            AND (:status IS NULL OR i.isActive = :status)
+            AND (:status IS NULL OR i.status = :status)
             AND (:keyword IS NULL OR LOWER(i.order.user.fullName) LIKE LOWER(CONCAT('%',:keyword,'%')))
            """)
     Page<Invoice> searchInvoices(
             @Param("keyword") String keyword,
-            @Param("status") Boolean status,
+            @Param("status") String status,
             Pageable pageable
     );
 

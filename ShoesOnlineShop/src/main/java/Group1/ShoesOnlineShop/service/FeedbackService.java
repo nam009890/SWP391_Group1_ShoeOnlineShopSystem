@@ -12,9 +12,9 @@ public class FeedbackService {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
-    public Page<Feedback> getAll(String status, String keyword, int page) {
+    public Page<Feedback> getAll(String status, String keyword, int page, String sort) {
 
-        Pageable pageable = PageRequest.of(page, 5, Sort.by("feedbackId").descending());
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(sort).ascending());
 
         Boolean approved = null;
 

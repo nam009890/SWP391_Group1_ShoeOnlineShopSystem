@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/internal/sliders")
 public class SliderController {
 
     @Autowired
@@ -35,13 +36,13 @@ public class SliderController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping("/sliders")
+    @GetMapping
     public String listSliders(
             Model model,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(required = false) Boolean status, // Filter Active/Deactive
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "status", required = false) Boolean status,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size
     ) {
         Page<Slider> pageSliders = sliderService.getSliders(keyword, status, page, size);
         model.addAttribute("sliders", pageSliders.getContent());
@@ -49,14 +50,11 @@ public class SliderController {
         model.addAttribute("totalPages", pageSliders.getTotalPages());
         model.addAttribute("keyword", keyword);
         model.addAttribute("status", status); 
-        
-        // THÊM DÒNG NÀY ĐỂ FIX LỖI THYMELEAF
         model.addAttribute("size", size); 
-        
         return "slider-list";
     }
 
-    @GetMapping("/sliders/create")
+    @GetMapping("/create")
     public String showCreateSliderForm(Model model) {
         model.addAttribute("slider", new Slider());
         model.addAttribute("coupons", couponRepository.findAll());
@@ -64,33 +62,30 @@ public class SliderController {
         return "slider-create";
     }
 
-    @PostMapping("/sliders/save")
+    @PostMapping("/save")
     public String saveSlider(
             @Valid @ModelAttribute("slider") Slider sliderForm,
             BindingResult bindingResult,
-            @RequestParam(required = false) List<Long> couponIds,
-            @RequestParam(required = false) List<Long> productIds,
-            @RequestParam(required = false) List<Integer> productDiscounts,
+            @RequestParam(name = "couponIds", required = false) List<Long> couponIds,
+            @RequestParam(name = "productIds", required = false) List<Long> productIds,
+            @RequestParam(name = "productDiscounts", required = false) List<Integer> productDiscounts,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model) {
 
         boolean isUpdate = (sliderForm.getId() != null);
 
-        // 1. Gọi Service để kiểm tra toàn bộ (Logic & Ảnh)
         Map<String, String> errors = sliderService.validateSlider(sliderForm, couponIds, productIds, imageFile);
         if (!errors.isEmpty()) {
             errors.forEach((field, message) -> bindingResult.rejectValue(field, "error.slider", message));
         }
 
-        // 2. Nếu có lỗi -> Trả về giao diện ngay lập tức
         if (bindingResult.hasErrors()) {
             model.addAttribute("coupons", couponRepository.findAll());
             model.addAttribute("products", productRepository.findAll());
             
-            // --- THÊM 6 DÒNG NÀY ĐỂ PHỤC HỒI SẢN PHẨM/COUPON KHI BỊ LỖI ---
             if (productIds != null && !productIds.isEmpty()) {
-                List<Group1.ShoesOnlineShop.entity.Product> pdList = productRepository.findAllById(productIds);
+                List<Product> pdList = productRepository.findAllById(productIds);
                 for (int i = 0; i < productIds.size(); i++) {
                     Long pId = productIds.get(i);
                     Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
@@ -103,9 +98,7 @@ public class SliderController {
             if (couponIds != null && !couponIds.isEmpty()) {
                 sliderForm.setCoupons(couponRepository.findAllById(couponIds));
             }
-            // -------------------------------------------------------------
 
-            // Nếu là form Update, lấy lại đường dẫn ảnh cũ để hiển thị preview
             if (isUpdate) {
                 Slider existing = sliderService.getSliderById(sliderForm.getId());
                 if (existing != null) sliderForm.setImageUrl(existing.getImageUrl());
@@ -113,42 +106,39 @@ public class SliderController {
             return isUpdate ? "slider-update" : "slider-create";
         }
 
-        // 3. Gọi Service xử lý lưu File và DB
         try {
             sliderService.processAndSaveSlider(sliderForm, couponIds, productIds, productDiscounts, imageFile);
             redirectAttributes.addFlashAttribute("successMessage", 
                 isUpdate ? "Slider updated successfully!" : "Slider created successfully!");
         } catch (Exception e) {
-            // Đề phòng lỗi I/O khi lưu file ảnh
             redirectAttributes.addFlashAttribute("errorMessage", "Error saving slider: " + e.getMessage());
         }
 
-        return "redirect:/sliders";
+        return "redirect:/internal/sliders";
     }
 
-    @GetMapping("/sliders/update/{id}")
-    public String showUpdateSliderForm(@PathVariable Long id, Model model) {
+    @GetMapping("/update/{id}")
+    public String showUpdateSliderForm(@PathVariable(name = "id") Long id, Model model) {
         Slider slider = sliderService.getSliderById(id);
-        if (slider == null) return "redirect:/sliders";
+        if (slider == null) return "redirect:/internal/sliders";
         model.addAttribute("slider", slider);
         model.addAttribute("coupons", couponRepository.findAll());
         model.addAttribute("products", productRepository.findAll());
         return "slider-update";
     }
 
-    // [Tạo mới] Màn hình xem chi tiết
-    @GetMapping("/sliders/detail/{id}")
-    public String showSliderDetail(@PathVariable Long id, Model model) {
+    @GetMapping("/detail/{id}")
+    public String showSliderDetail(@PathVariable(name = "id") Long id, Model model) {
         Slider slider = sliderService.getSliderById(id);
-        if (slider == null) return "redirect:/sliders";
+        if (slider == null) return "redirect:/internal/sliders";
         model.addAttribute("slider", slider);
         return "slider-detail";
     }
 
-    @GetMapping("/sliders/delete/{id}")
-    public String deleteSlider(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    @GetMapping("/delete/{id}")
+    public String deleteSlider(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         sliderService.deleteSlider(id);
         redirectAttributes.addFlashAttribute("successMessage", "Slider deleted successfully!");
-        return "redirect:/sliders";
+        return "redirect:/internal/sliders";
     }
 }

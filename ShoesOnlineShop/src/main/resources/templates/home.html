@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoesOnlineShop | Official Store</title>
+    <meta name="description" content="Shop the latest shoes online — sneakers, boots, sandals and more. Browse by category and find your perfect pair.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === CSS VARIABLES === */
+        :root {
+            --primary: #0a0a0a;
+            --primary-light: #1a1a2e;
+            --accent: #e94560;
+            --accent-hover: #ff6b81;
+            --surface: #16213e;
+            --surface-light: #1a1a2e;
+            --bg: #0f0f23;
+            --text: #eaeaea;
+            --text-muted: #a0a0b0;
+            --glass: rgba(255,255,255,0.06);
+            --glass-border: rgba(255,255,255,0.1);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --transition: all 0.35s cubic-bezier(.25,.46,.45,.94);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* === NAVBAR === */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+            height: 72px;
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .nav-categories {
+            display: flex;
+            gap: 0;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        .nav-cat-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 1.2rem;
+            cursor: pointer;
+        }
+
+        .nav-cat-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-cat-link svg {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s;
+        }
+
+        .nav-cat-item:hover .nav-cat-link {
+            color: var(--accent);
+        }
+
+        .nav-cat-item:hover .nav-cat-link svg {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(22,33,62,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            min-width: 220px;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-cat-item:hover .nav-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.65rem 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .nav-dropdown a:hover {
+            color: #fff;
+            background: var(--glass);
+            padding-left: 2rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-actions a {
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .nav-actions a:hover {
+            background: var(--glass);
+            color: var(--accent);
+        }
+
+        .nav-cart {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* === HERO SLIDER === */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            margin-top: 72px;
+            overflow: hidden;
+            background: var(--primary);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .slide.active { opacity: 1; z-index: 1; }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            z-index: 2;
+        }
+
+        .slide-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #fff;
+            letter-spacing: 2px;
+            line-height: 1;
+            text-shadow: 2px 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 2rem;
+            right: 4rem;
+            z-index: 10;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .slider-dot.active {
+            background: var(--accent);
+            width: 36px;
+            border-radius: 6px;
+        }
+
+        .slider-arrows {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .slider-arrow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            pointer-events: all;
+        }
+
+        .slider-arrow:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* No sliders fallback */
+        .hero-fallback {
+            height: 60vh;
+            margin-top: 72px;
+            background: linear-gradient(135deg, var(--primary-light), var(--surface));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-fallback h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 5rem;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* === CATEGORIES SECTION === */
+        .categories-section {
+            padding: 5rem 4rem;
+            background: var(--bg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(233,69,96,0.05), transparent);
+            transition: 0.6s;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        .category-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 40px rgba(233,69,96,0.15);
+        }
+
+        .category-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .category-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* === PRODUCTS SECTION === */
+        .products-section {
+            padding: 5rem 4rem;
+            background: var(--primary-light);
+        }
+
+        .products-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2.5rem;
+        }
+
+        /* FILTER SIDEBAR */
+        .filter-sidebar {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+        }
+
+        .filter-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 1.5rem;
+        }
+
+        .filter-group:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .filter-group-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.4rem 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .filter-option:hover { color: var(--accent); }
+
+        .filter-option input[type="radio"],
+        .filter-option input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .filter-option.child {
+            padding-left: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .filter-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233,69,96,0.4);
+        }
+
+        .filter-clear {
+            width: 100%;
+            padding: 0.7rem;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .filter-clear:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* PRODUCT GRID */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .product-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(233,69,96,0.3);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+        }
+
+        .product-img-wrap {
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-img-wrap img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .product-card:hover .product-img-wrap img {
+            transform: scale(1.08) translateY(-8px);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-info {
+            padding: 1.2rem 1.5rem;
+        }
+
+        .product-category-label {
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--accent-hover);
+        }
+
+        .no-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .no-products svg {
+            width: 64px;
+            height: 64px;
+            stroke: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Loading spinner */
+        .loading-overlay {
+            display: none;
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* === CONTENT SECTION === */
+        .content-section {
+            padding: 5rem 4rem;
+            background: var(--bg);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .content-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            border-color: rgba(233,69,96,0.3);
+        }
+
+        .content-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .content-card:hover .content-card-img {
+            transform: scale(1.05);
+        }
+
+        .content-card-img-wrap {
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .content-card-body {
+            padding: 1.5rem;
+        }
+
+        .content-type-badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 20px;
+            background: var(--accent);
+            color: #fff;
+            margin-bottom: 0.8rem;
+        }
+
+        .content-card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .content-card-excerpt {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* === CTA SECTION === */
+        .cta-section {
+            padding: 6rem 4rem;
+            background: linear-gradient(135deg, var(--surface), var(--primary-light));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(233,69,96,0.1) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            border-radius: 50%;
+        }
+
+        .cta-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 4rem;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .cta-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(233,69,96,0.4);
+        }
+
+        /* === FOOTER === */
+        .footer {
+            background: var(--primary);
+            border-top: 1px solid var(--glass-border);
+            padding: 3rem 4rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Teko', sans-serif;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* === FORMAT PRICE HELPER === */
+        /* === ANIMATIONS === */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 1024px) {
+            .products-layout { grid-template-columns: 1fr; }
+            .filter-sidebar { position: static; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0 1.5rem; }
+            .nav-categories { display: none; }
+            .hero-slider { height: 50vh; }
+            .slide-title { font-size: 2.5rem; }
+            .categories-section, .products-section, .content-section, .cta-section { padding: 3rem 1.5rem; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .product-img-wrap { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar" id="main-navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+
+        <div class="nav-categories">
+            <div class="nav-cat-item" th:each="cat : ${rootCategories}">
+                <a class="nav-cat-link" href="#products-section"
+                   th:text="${cat.name}"
+                   th:attr="data-cat-id=${cat.id}"
+                   onclick="filterByCategory(this.getAttribute('data-cat-id')); return false;">
+                    Category
+                </a>
+                <!-- Dropdown arrow if has children -->
+                <span th:if="${cat.children != null and !cat.children.isEmpty()}" style="margin-left: 2px;">
+                    <svg class="nav-cat-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+                <!-- Dropdown menu for children -->
+                <div class="nav-dropdown" th:if="${cat.children != null and !cat.children.isEmpty()}">
+                    <a th:each="child : ${cat.children}"
+                       th:if="${child.isActive}"
+                       href="#products-section"
+                       th:text="${child.name}"
+                       th:attr="data-cat-id=${child.id}"
+                       onclick="filterByCategory(this.getAttribute('data-cat-id')); return false;">
+                        SubCategory
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <!-- Logged-in as CUSTOMER -->
+            <th:block th:if="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/profile}" th:text="${#authentication.name.toUpperCase()}">USER</a>
+                <a th:href="@{/logout}">LOGOUT</a>
+            </th:block>
+            <th:block th:unless="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/login}">LOG IN</a>
+                <a th:href="@{/register}">SIGN UP</a>
+            </th:block>
+            <a href="/cart" class="nav-cart">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SLIDER ========== -->
+    <section class="hero-slider" th:if="${sliders != null and !sliders.isEmpty()}" id="hero-slider">
+        <a class="slide" th:each="slider, iterStat : ${sliders}" th:classappend="${iterStat.index == 0} ? ' active' : ''"
+           th:href="@{/slider/{id}(id=${slider.id})}" style="display:block;color:inherit;text-decoration:none;">
+            <img th:src="${slider.imageUrl}" th:alt="${slider.sliderTitle}" loading="lazy">
+            <div class="slide-overlay">
+                <div class="slide-title" th:text="${slider.sliderTitle}">Slider Title</div>
+            </div>
+        </a>
+
+        <!-- Arrows -->
+        <div class="slider-arrows">
+            <button class="slider-arrow" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="slider-arrow" onclick="changeSlide(1)">&#10095;</button>
+        </div>
+
+        <!-- Dots -->
+        <div class="slider-nav">
+            <button class="slider-dot" th:each="slider, iterStat : ${sliders}"
+                    th:classappend="${iterStat.index == 0} ? ' active' : ''"
+                    th:attr="data-index=${iterStat.index}"
+                    onclick="goToSlide(parseInt(this.getAttribute('data-index')))">
+            </button>
+        </div>
+    </section>
+
+    <!-- Fallback if no sliders -->
+    <section class="hero-fallback" th:if="${sliders == null or sliders.isEmpty()}">
+        <div>
+            <h1>Welcome to ShoesOnlineShop</h1>
+            <p style="color: var(--text-muted); margin-top: 1rem; font-size: 1.1rem;">Browse our latest collection of premium footwear</p>
+        </div>
+    </section>
+
+    <!-- Removed Categories Section -->
+
+    <!-- ========== FEATURED PRODUCTS ========== -->
+    <section class="products-section" id="products-section">
+        <div class="section-header">
+            <div>
+                <div class="section-title">Featured Products</div>
+                <div class="section-subtitle">Discover our latest arrivals</div>
+            </div>
+            <a th:href="@{/products}" style="color:var(--accent);font-weight:600;font-size:.9rem;text-transform:uppercase;letter-spacing:1px;transition:var(--transition);">View All &rarr;</a>
+        </div>
+
+        <div class="products-layout">
+            <!-- FILTER SIDEBAR -->
+            <aside class="filter-sidebar" id="filter-sidebar">
+                <div class="filter-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" stroke-linecap="round"/></svg>
+                    Filters
+                </div>
+
+                <!-- Price Filter -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Price Range</div>
+                    <label class="filter-option">
+                        <input type="radio" name="price" value="all" checked onchange="applyFilters()"> All Prices
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="price" value="0-500000" onchange="applyFilters()"> Under 500.000₫
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="price" value="500000-1000000" onchange="applyFilters()"> 500.000₫ — 1.000.000₫
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="price" value="1000000-2000000" onchange="applyFilters()"> 1.000.000₫ — 2.000.000₫
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="price" value="2000000-5000000" onchange="applyFilters()"> 2.000.000₫ — 5.000.000₫
+                    </label>
+                    <label class="filter-option">
+                        <input type="radio" name="price" value="5000000-999999999" onchange="applyFilters()"> Over 5.000.000₫
+                    </label>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="filter-group">
+                    <div class="filter-group-title">Categories</div>
+                    <label class="filter-option">
+                        <input type="radio" name="category" value="all" checked onchange="applyFilters()"> All Categories
+                    </label>
+                    <th:block th:each="cat : ${rootCategories}">
+                        <label class="filter-option">
+                            <input type="radio" name="category" th:value="${cat.id}" onchange="applyFilters()">
+                            <span th:text="${cat.name}">Parent</span>
+                        </label>
+                        <th:block th:if="${cat.children != null}">
+                            <label class="filter-option child" th:each="child : ${cat.children}" th:if="${child.isActive}">
+                                <input type="radio" name="category" th:value="${child.id}" onchange="applyFilters()">
+                                <span th:text="${child.name}">Child</span>
+                            </label>
+                        </th:block>
+                    </th:block>
+                </div>
+
+                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+                <button class="filter-clear" onclick="clearFilters()">Clear All</button>
+            </aside>
+
+            <!-- PRODUCT GRID -->
+            <div class="products-grid" id="products-grid">
+                <!-- Loading spinner -->
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 1rem; color: var(--text-muted);">Loading products...</p>
+                </div>
+
+                <!-- Initial server-rendered products -->
+                <a class="product-card" th:each="product : ${featuredProducts}"
+                   th:href="@{/product/{id}(id=${product.id})}" style="display:block;color:inherit;text-decoration:none;">
+                    <div class="product-img-wrap">
+                        <span class="product-badge">New</span>
+                        <img th:src="${product.imageUrl}" th:alt="${product.name}"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category-label" th:text="${product.category != null ? product.category.name : ''}">Category</div>
+                        <div class="product-name" th:text="${product.name}">Product Name</div>
+                        <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                    </div>
+                </a>
+
+                <!-- No products message -->
+                <div class="no-products" th:if="${featuredProducts == null or featuredProducts.isEmpty()}" id="no-products-msg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 12V22H4V12M22 7H2v5h20V7zM12 22V7"/></svg>
+                    <p>No products available at the moment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTENT / ARTICLES ========== -->
+    <section class="content-section" th:if="${contents != null and !contents.isEmpty()}" id="content-section">
+        <div class="section-header">
+            <div>
+                <div class="section-title">Latest Stories</div>
+                <div class="section-subtitle">News, tips, and inspiration</div>
+            </div>
+        </div>
+        <div class="content-grid">
+            <a th:href="@{/content/{id}(id=${content.id})}" class="content-card" th:each="content : ${contents}" style="display:block;text-decoration:none;color:inherit;">
+                <div class="content-card-img-wrap" th:if="${content.imageUrl != null and !content.imageUrl.isEmpty()}">
+                    <img class="content-card-img" th:src="${content.imageUrl != null and content.imageUrl.startsWith('/uploads') ? content.imageUrl : '/uploads/contents/' + content.imageUrl}" th:alt="${content.contentTitle}">
+                </div>
+                <div class="content-card-img-wrap" th:if="${content.imageUrl == null or content.imageUrl.isEmpty()}" style="background: linear-gradient(135deg, var(--surface), var(--primary-light)); display: flex; align-items: center; justify-content: center;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                </div>
+                <div class="content-card-body">
+                    <span class="content-type-badge" th:text="${content.contentType}">Blog</span>
+                    <div class="content-card-title" th:text="${content.contentTitle}">Content Title</div>
+                    <div class="content-card-excerpt" th:utext="${content.contentText}">Content excerpt...</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== CTA ========== -->
+    <section class="cta-section">
+        <h2 class="cta-title">Join The Club</h2>
+        <p class="cta-text">Sign up to get exclusive access to drops, sales, and members-only products. Be the first to know.</p>
+        <a th:href="@{/register}" class="btn-cta">Sign Up for Free &rarr;</a>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-logo">SHOESONLINESHOP</div>
+        <p>&copy; 2026 ShoesOnlineShop Group 1. All Rights Reserved.</p>
+        <p style="margin-top: 0.3rem;">Built for style. Driven by performance.</p>
+    </footer>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // ====================== SLIDER ======================
+        let currentSlide = 0;
+        let slideInterval;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function showSlide(index) {
+            if (slides.length === 0) return;
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+            if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+        }
+
+        function changeSlide(dir) {
+            showSlide(currentSlide + dir);
+            resetAutoSlide();
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            resetAutoSlide();
+        }
+
+        function startAutoSlide() {
+            if (slides.length > 1) {
+                slideInterval = setInterval(() => showSlide(currentSlide + 1), 5000);
+            }
+        }
+
+        function resetAutoSlide() {
+            clearInterval(slideInterval);
+            startAutoSlide();
+        }
+
+        startAutoSlide();
+
+        // ====================== FILTERS ======================
+        function applyFilters() {
+            const priceValue = document.querySelector('input[name="price"]:checked')?.value || 'all';
+            const categoryValue = document.querySelector('input[name="category"]:checked')?.value || 'all';
+
+            let url = '/api/home/products?';
+            const params = [];
+
+            if (categoryValue !== 'all') {
+                params.push('categoryId=' + categoryValue);
+            }
+
+            if (priceValue !== 'all') {
+                const [min, max] = priceValue.split('-');
+                params.push('minPrice=' + min);
+                params.push('maxPrice=' + max);
+            }
+
+            url += params.join('&');
+
+            // Show loading
+            const grid = document.getElementById('products-grid');
+            const loading = document.getElementById('loading-overlay');
+            loading.style.display = 'block';
+
+            // Remove existing product cards
+            grid.querySelectorAll('.product-card, .no-products').forEach(el => el.remove());
+
+            fetch(url)
+                .then(res => res.json())
+                .then(products => {
+                    loading.style.display = 'none';
+
+                    if (products.length === 0) {
+                        grid.innerHTML += `
+                            <div class="no-products">
+                                <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                <p>No products match your filter criteria.</p>
+                            </div>`;
+                        return;
+                    }
+
+                    products.forEach((p, i) => {
+                        const card = document.createElement('div');
+                        card.className = 'product-card animate-in';
+                        card.style.animationDelay = (i * 0.05) + 's';
+
+                        const formattedPrice = new Intl.NumberFormat('vi-VN').format(p.price) + ' ₫';
+                        const imgSrc = p.imageUrl || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect fill='%231a1a2e' width='200' height='200'/><text x='50%' y='50%' fill='%23666' text-anchor='middle' dy='.3em' font-family='sans-serif'>No Image</text></svg>";
+
+                        card.innerHTML = `
+                            <div class="product-img-wrap">
+                                <span class="product-badge">New</span>
+                                <img src="${imgSrc}" alt="${p.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category-label">${p.categoryName || ''}</div>
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-price">${formattedPrice}</div>
+                            </div>`;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    loading.style.display = 'none';
+                    console.error('Filter error:', err);
+                });
+
+            // Scroll to products section
+            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function filterByCategory(catId) {
+            // Set the radio button in the sidebar
+            const radio = document.querySelector(`input[name="category"][value="${catId}"]`);
+            if (radio) radio.checked = true;
+            applyFilters();
+        }
+
+        function clearFilters() {
+            document.querySelector('input[name="price"][value="all"]').checked = true;
+            document.querySelector('input[name="category"][value="all"]').checked = true;
+            applyFilters();
+        }
+
+        // ====================== SCROLL ANIMATIONS ======================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.category-card, .content-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+
+</body>
+</html>

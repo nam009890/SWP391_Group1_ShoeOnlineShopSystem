@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Registration - ShoesOnlineShop</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px;}
+        .register-container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        .register-header { text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .btn:hover { background-color: #0056b3; }
+        .error { color: red; text-align: center; margin-bottom: 10px; background: #fdf2f2; padding: 10px; border-radius: 4px; }
+        .login-link { display: block; text-align: center; margin-top: 15px; text-decoration: none; color: #6c757d; font-size: 14px; }
+        .login-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="register-header">
+        <h2>Create an Account</h2>
+        <p>Join ShoesOnlineShop</p>
+    </div>
+
+    <!-- Replace 'param.error' with flash attribute from redirect -->
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <div class="form-group">
+            <label for="userName">Username</label>
+            <input type="text" id="userName" name="userName" th:field="*{userName}" class="form-control" placeholder="Choose a username" required pattern="^\S+$" title="Username không được chứa khoảng trắng" autofocus>
+        </div>
+        <div class="form-group">
+            <label for="userEmail">Email Address</label>
+            <input type="email" id="userEmail" name="userEmail" th:field="*{userEmail}" class="form-control" placeholder="example@gmail.com" required pattern=".+@gmail\.com$" title="Phải là một địa chỉ @gmail.com">
+        </div>
+        <div class="form-group">
+            <label for="passwordHash">Password</label>
+            <input type="password" id="passwordHash" name="passwordHash" th:field="*{passwordHash}" class="form-control" placeholder="Create a password (min 6 chars)" required minlength="6">
+        </div>
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" th:field="*{fullName}" class="form-control" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" th:field="*{phone}" class="form-control" placeholder="Your phone number" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Delivery Address</label>
+            <textarea id="address" name="address" th:field="*{address}" class="form-control" placeholder="Your address" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn">Register</button>
+    </form>
+    
+    <a th:href="@{/login}" class="login-link">Already have an account? Login here</a>
+</div>
+
+</body>
+</html>

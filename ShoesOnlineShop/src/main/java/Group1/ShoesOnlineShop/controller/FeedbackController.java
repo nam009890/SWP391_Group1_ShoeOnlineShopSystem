@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import Group1.ShoesOnlineShop.entity.Feedback;
 @Controller
-@RequestMapping("/feedbacks")
+@RequestMapping("/internal/feedbacks")
 public class FeedbackController {
 
     @Autowired
@@ -19,13 +19,15 @@ public class FeedbackController {
             @RequestParam(defaultValue = "") String status,
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "feedbackId") String sort,
             Model model) {
 
-        Page<?> feedbacks = feedbackService.getAll(status, keyword, page);
+        Page<?> feedbacks = feedbackService.getAll(status, keyword, page, sort);
 
         model.addAttribute("feedbacks", feedbacks);
         model.addAttribute("currentStatus", status);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("sort", sort);
 
         return "feedback-list";
     }
@@ -33,13 +35,13 @@ public class FeedbackController {
     @PostMapping("/toggle")
     public String toggle(@RequestParam Long id) {
         feedbackService.toggleStatus(id);
-        return "redirect:/feedbacks";
+        return "redirect:/internal/feedbacks";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         feedbackService.delete(id);
-        return "redirect:/feedbacks";
+        return "redirect:/internal/feedbacks";
     }
     
     @GetMapping("/view/{id}")

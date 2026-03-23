@@ -25,6 +25,18 @@ public class ProfileController {
     private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            // Check if it's an OAuth2 user
+            if (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+                // Return by Provider ID (sub) first, then by email as fallback
+                return userRepository.findByProviderId(auth.getName())
+                        .or(() -> {
+                            org.springframework.security.oauth2.core.user.OAuth2User oauth2User = 
+                                (org.springframework.security.oauth2.core.user.OAuth2User) auth.getPrincipal();
+                            String email = oauth2User.getAttribute("email");
+                            return userRepository.findByUserEmail(email);
+                        }).orElse(null);
+            }
+            // Standard user
             return userRepository.findByUserName(auth.getName()).orElse(null);
         }
         return null;

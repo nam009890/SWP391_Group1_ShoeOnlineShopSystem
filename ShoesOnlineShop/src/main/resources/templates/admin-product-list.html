@@ -59,14 +59,14 @@
             <form action="/internal/admin/products" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
                 <div class="search-input">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by name…">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by name...">
                 </div>
                 <button type="submit" class="btn-search">Search</button>
 
                 <select name="categoryId" class="form-select" style="min-width:160px; height:38px; width:auto;" onchange="this.form.submit()">
                     <option value="">All Categories</option>
                     <th:block th:each="root : ${categories}">
-                        <optgroup th:if="${root.children != null and !root.children.isEmpty()}" th:label="${'â­ ' + root.name}">
+                        <optgroup th:if="${root.children != null and !root.children.isEmpty()}" th:label="${'&#11088; ' + root.name}">
                             <option th:each="child : ${root.children}" th:value="${child.id}" th:text="${child.name}" th:selected="${child.id == categoryId}"></option>
                         </optgroup>
                         <option th:if="${root.children == null or root.children.isEmpty()}" th:value="${root.id}" th:text="${root.name}" th:selected="${root.id == categoryId}"></option>

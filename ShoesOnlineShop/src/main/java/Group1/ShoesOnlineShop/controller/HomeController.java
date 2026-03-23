@@ -121,6 +121,8 @@ public class HomeController {
             map.put("id", p.getId());
             map.put("name", p.getName());
             map.put("price", p.getPrice());
+            map.put("salePrice", p.getSalePrice());
+            map.put("discountPercent", p.getDiscountPercent());
             map.put("imageUrl", p.getImageUrl());
             map.put("categoryName", p.getCategory() != null ? p.getCategory().getName() : "");
             return map;

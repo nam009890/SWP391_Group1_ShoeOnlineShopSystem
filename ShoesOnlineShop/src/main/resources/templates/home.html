@@ -1142,22 +1142,40 @@
                     }
 
                     products.forEach((p, i) => {
-                        const card = document.createElement('div');
+                        const card = document.createElement('a');
                         card.className = 'product-card animate-in';
                         card.style.animationDelay = (i * 0.05) + 's';
+                        card.href = '/product/' + p.id;
 
                         const formattedPrice = new Intl.NumberFormat('vi-VN').format(p.price) + ' ₫';
                         const imgSrc = p.imageUrl || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect fill='%231a1a2e' width='200' height='200'/><text x='50%' y='50%' fill='%23666' text-anchor='middle' dy='.3em' font-family='sans-serif'>No Image</text></svg>";
 
+                        let priceHtml = '';
+                        let badgeHtml = '';
+
+                        if (p.salePrice) {
+                            const formattedSalePrice = new Intl.NumberFormat('vi-VN').format(p.salePrice) + ' ₫';
+                            priceHtml = `
+                                <div class="price-box">
+                                    <span class="original-price">${formattedPrice}</span>
+                                    <span class="sale-price">${formattedSalePrice}</span>
+                                    <span class="discount-badge">-${p.discountPercent}%</span>
+                                </div>`;
+                            badgeHtml = `<span class="product-badge" style="position:absolute; top:1rem; left:1rem; background:var(--accent); color:#fff; font-size:.7rem; font-weight:700; padding:.3rem .8rem; border-radius:20px; text-transform:uppercase;">-${p.discountPercent}%</span>`;
+                        } else {
+                            priceHtml = `<div class="product-price">${formattedPrice}</div>`;
+                            badgeHtml = `<span class="product-badge">New</span>`;
+                        }
+
                         card.innerHTML = `
                             <div class="product-img-wrap">
-                                <span class="product-badge">New</span>
+                                ${badgeHtml}
                                 <img src="${imgSrc}" alt="${p.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
                             </div>
                             <div class="product-info">
                                 <div class="product-category-label">${p.categoryName || ''}</div>
                                 <div class="product-name">${p.name}</div>
-                                <div class="product-price">${formattedPrice}</div>
+                                ${priceHtml}
                             </div>`;
                         grid.appendChild(card);
                     });

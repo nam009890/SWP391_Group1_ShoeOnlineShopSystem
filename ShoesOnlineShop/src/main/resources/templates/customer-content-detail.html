@@ -57,7 +57,7 @@
         </div>
 
         <img th:if="${content.imageUrl != null and !content.imageUrl.isEmpty()}" 
-             th:src="${content.imageUrl}" 
+             th:src="${content.imageUrl != null and content.imageUrl.startsWith('/uploads') ? content.imageUrl : '/uploads/contents/' + content.imageUrl}" 
              th:alt="${content.contentTitle}" 
              class="content-hero-img"
              onerror="this.src='/images/placeholder.png'">

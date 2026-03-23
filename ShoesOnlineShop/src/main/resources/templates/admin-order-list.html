@@ -52,7 +52,7 @@
             <form action="/internal/admin/orders" method="get" class="search-wrap" style="flex-wrap:wrap; gap:10px;">
                 <div class="search-input">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search ID, Name, Phone…">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Search ID, Name, Phone...">
                 </div>
                 <button type="submit" class="btn-search">Search</button>
 
@@ -99,7 +99,7 @@
                         <span th:if="${order.shippingAddress != null and !order.shippingAddress.isEmpty()}" th:text="${order.shippingAddress}">Address</span>
                         <span th:if="${order.shippingAddress == null or order.shippingAddress.isEmpty()}" style="color:var(--text-light); font-size:12px; font-style:italic;">[Not updated]</span>
                     </td>
-                    <td style="font-weight:600;" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0 ₫</td>
+                    <td style="font-weight:600;" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</td>
                     <td><span class="status-pill" th:classappend="'status-' + ${order.orderStatus}" th:text="${order.orderStatus}">PENDING</span></td>
                     <td><span class="date-chip" th:text="${order.paymentStatus}">PENDING</span></td>
                     <td>

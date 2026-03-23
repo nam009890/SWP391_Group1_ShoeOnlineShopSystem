@@ -49,15 +49,15 @@ class SliderServiceTest {
 
     // 1. Test Successful Creation
     @Test
-    void testSaveSlider_Success() {
+    void testSaveSlider_Success() throws java.io.IOException {
         Slider slider = new Slider();
         slider.setSliderTitle("Exciting Summer");
         List<Long> couponIds = Arrays.asList(1L, 2L);
         List<Long> productIds = Arrays.asList(3L, 4L);
 
-        sliderService.saveSlider(slider, couponIds, productIds);
+        sliderService.processAndSaveSlider(slider, couponIds, productIds, Arrays.asList(0, 0), null);
 
-        verify(sliderRepository, times(1)).save(slider);
+        verify(sliderRepository, times(1)).save(any(Slider.class));
         verify(couponRepository, times(1)).findAllById(couponIds);
         verify(productRepository, times(1)).findAllById(productIds);
     }
@@ -70,7 +70,7 @@ class SliderServiceTest {
 
         when(sliderRepository.existsBySliderTitle("Summer")).thenReturn(true);
 
-        Map<String, String> errors = sliderService.validateSliderLogic(slider, Arrays.asList(1L), Arrays.asList(2L));
+        Map<String, String> errors = sliderService.validateSlider(slider, Arrays.asList(1L), Arrays.asList(2L), null);
 
         assertFalse(errors.isEmpty());
         assertEquals("This Slider title already exists, please choose another!", errors.get("sliderTitle"));
@@ -82,7 +82,7 @@ class SliderServiceTest {
         Slider slider = new Slider();
         slider.setSliderTitle("Winter");
 
-        Map<String, String> errors = sliderService.validateSliderLogic(slider, Arrays.asList(1L), Collections.emptyList());
+        Map<String, String> errors = sliderService.validateSlider(slider, Arrays.asList(1L), Collections.emptyList(), null);
 
         assertTrue(errors.containsKey("products"));
         assertEquals("Please select at least one product!", errors.get("products"));
@@ -94,7 +94,7 @@ class SliderServiceTest {
         Slider slider = new Slider();
         slider.setSliderTitle("Winter");
 
-        Map<String, String> errors = sliderService.validateSliderLogic(slider, null, Arrays.asList(1L));
+        Map<String, String> errors = sliderService.validateSlider(slider, null, Arrays.asList(1L), null);
 
         assertTrue(errors.containsKey("coupons"));
         assertEquals("Please select at least one coupon!", errors.get("coupons"));

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Update Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .img-preview { max-width:100%; max-height:200px; border-radius:8px; border:1px solid var(--border); margin-top:10px; }
+        .upload-zone { border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:all .2s; }
+        .upload-zone:hover { border-color:var(--accent); background:var(--accent-light); }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+    <a href="/internal/admin/home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a href="/internal/admin/products" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
+    <a href="/internal/admin/categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>Categories</a>
+    <a href="/internal/admin/users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+    <a href="/internal/admin/orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
+    <a href="/internal/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
+    <a href="/internal/logout" style="margin-top:auto; color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div>
+            <h4>Update Product</h4>
+            <p>Edit product information below</p>
+        </div>
+        <a href="/internal/admin/profile" style="text-decoration:none;">
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div>
+                <div class="user-name">Administrator</div>
+                <div class="user-role">Admin</div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="breadcrumb-bar">
+        <a href="/internal/admin/home">Dashboard</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="/internal/admin/products">Products</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Update</span>
+    </div>
+
+    <div class="card">
+        <div class="card-header-bar">
+            <h6>Edit Product: <span style="color:var(--accent);" th:text="${product.name}">Name</span></h6>
+            <span style="font-size:12px; color:var(--text-mid);">ID: <strong th:text="${product.id}">1</strong></span>
+        </div>
+
+        <div th:if="${errorMessage}" style="margin:16px 24px 0; padding:12px; background:#fee2e2; color:#991b1b; border-radius:8px; font-size:14px;">
+            <strong th:text="${errorMessage}"></strong>
+        </div>
+
+        <form action="/internal/admin/products/save" method="post" enctype="multipart/form-data" class="card-body-pad" th:object="${product}">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{imageUrl}">
+
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label class="form-label">Product Name <span style="color:var(--danger)">*</span></label>
+                        <input type="text" name="name" th:value="${product.name}" class="form-control"
+                               th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                               placeholder="Enter product name" maxlength="200">
+                        <div th:if="${#fields.hasErrors('name')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{name}">Error</div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+
+                            <label class="form-label">Price (VND) <span style="color:var(--danger)">*</span></label>
+
+                            <input type="number" name="price" th:value="${product.price}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('price')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. 1500000" min="0" step="1000">
+                            <div th:if="${#fields.hasErrors('price')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{price}">Error</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Stock Quantity</label>
+                            <input type="number" name="stockQuantity" th:value="${product.stockQuantity}" class="form-control" placeholder="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">Kích Cỡ (Size)</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:14px;">
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="36" id="s36"><label class="form-check-label" for="s36">36</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="37" id="s37"><label class="form-check-label" for="s37">37</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="38" id="s38"><label class="form-check-label" for="s38">38</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="39" id="s39"><label class="form-check-label" for="s39">39</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="40" id="s40"><label class="form-check-label" for="s40">40</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="41" id="s41"><label class="form-check-label" for="s41">41</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="42" id="s42"><label class="form-check-label" for="s42">42</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="43" id="s43"><label class="form-check-label" for="s43">43</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="44" id="s44"><label class="form-check-label" for="s44">44</label></div>
+                                <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="45" id="s45"><label class="form-check-label" for="s45">45</label></div>
+                            </div>
+                            <input type="text" id="sizeOther" class="form-control form-control-sm" placeholder="Nhập 1 cỡ khác" pattern="^\d+(\.\d+)?$" title="Vui lòng chỉ nhập số (VD: 40 hoặc 40.5)">
+                            <input type="hidden" name="size" id="hiddenSize" th:value="${product.size}">
+                            <div th:if="${#fields.hasErrors('size')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{size}">Error</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Màu sắc (Color)</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:14px;">
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Black" id="cDen"><label class="form-check-label" for="cDen">Black</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="White" id="cTrang"><label class="form-check-label" for="cTrang">White</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Red" id="cDo"><label class="form-check-label" for="cDo">Red</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Blue" id="cXanhD"><label class="form-check-label" for="cXanhD">Blue</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Green" id="cXanhL"><label class="form-check-label" for="cXanhL">Green</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Yellow" id="cVang"><label class="form-check-label" for="cVang">Yellow</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Grey" id="cXam"><label class="form-check-label" for="cXam">Grey</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Brown" id="cNau"><label class="form-check-label" for="cNau">Brown</label></div>
+                                <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Pink" id="cHong"><label class="form-check-label" for="cHong">Pink</label></div>
+                            </div>
+                            <input type="text" id="colorOther" class="form-control form-control-sm" placeholder="Nhập 1 màu khác" pattern="^[a-zA-Z\s]+$" title="Vui lòng chỉ nhập chữ cái (VD: Black, White)">
+                            <input type="hidden" name="color" id="hiddenColor" th:value="${product.color}">
+                            <div th:if="${#fields.hasErrors('color')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{color}">Error</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label">Category</label>
+                        <select name="categoryId" class="form-select" required>
+                            <option value="" disabled selected>-- Select Shoe Category (Required) --</option>
+                            <th:block th:each="root : ${categories}">
+                                <optgroup th:if="${root.children != null and !root.children.isEmpty()}" th:label="${'&#11088; ' + root.name}">
+                                    <option th:each="child : ${root.children}" th:value="${child.id}" th:text="${child.name}" th:selected="${product.category != null and product.category.id == child.id}"></option>
+                                </optgroup>
+                                <option th:if="${root.children == null or root.children.isEmpty()}" th:value="${root.id}" th:text="${root.name}" th:selected="${product.category != null and product.category.id == root.id}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label">Status</label>
+                        <select name="isActive" class="form-select">
+                            <option value="true" th:selected="${product.isActive}">Active</option>
+                            <option value="false" th:selected="${!product.isActive}">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Product Image</label>
+                    <div th:if="${product.imageUrl != null}" style="margin-bottom:10px;">
+                        <img th:src="${product.imageUrl}" class="img-preview" style="display:block;" alt="Current Image">
+
+                        <div style="font-size:11px; color:var(--text-mid); margin-top:4px;">Current image &mdash; upload new to replace</div>
+
+                    </div>
+                    <div class="upload-zone" onclick="document.getElementById('imageFile').click()">
+                        <svg width="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <div style="font-size:12px; color:var(--text-mid); margin-top:6px;">Requirements: Max 5MB, up to 2K (2560px). Click to replace</div>
+                    </div>
+                    <input type="file" id="imageFile" name="imageFile" accept="image/*" style="display:none;" onchange="previewNew(this)">
+                    <img id="newPreview" class="img-preview" style="display:none;" alt="New Preview">
+                    <div id="clientError" style="color:#d97706; font-size:12.5px; margin-top:8px; display:none; font-weight:600;"></div>
+                </div>
+            </div>
+
+            <div class="form-footer mt-4">
+                <a href="/internal/admin/products" class="btn-outline">Cancel</a>
+                <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function previewNew(input) {
+    const preview = document.getElementById('newPreview');
+    const errorDiv = document.getElementById('clientError');
+    const submitBtn = document.querySelector('button[type="submit"]');
+
+    if (errorDiv) errorDiv.style.display = 'none';
+    if (submitBtn) submitBtn.disabled = false;
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+
+        if (!file.type.startsWith('image/')) {
+            showError("Warning: Only image formats are allowed!");
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            showError("Warning: Uploaded file is too large! Please select a file up to 5MB.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = function() {
+                if (this.width > 2560 || this.height > 2560) {
+                    showError("Warning: Image dimensions are unsuitable! Please select an image with a maximum resolution of 2K (2560 pixels).");
+                } else {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+    }
+
+    function showError(msg) {
+        if (errorDiv) {
+            errorDiv.innerText = msg;
+            errorDiv.style.display = 'block';
+        }
+        if (submitBtn) submitBtn.disabled = true;
+        input.value = '';
+        preview.style.display = 'none';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Populate checkboxes from existing product data
+    let hiddenSize = document.getElementById('hiddenSize').value;
+    if (hiddenSize) {
+        let existingSizes = hiddenSize.split(',').map(s => s.trim()).filter(s => s);
+        let otherSizes = [];
+        existingSizes.forEach(s => {
+            let cb = document.querySelector(`.size-cb[value="${s}"]`);
+            if (cb) cb.checked = true;
+            else otherSizes.push(s);
+        });
+        document.getElementById('sizeOther').value = otherSizes.join(', ');
+    }
+
+    let hiddenColor = document.getElementById('hiddenColor').value;
+    if (hiddenColor) {
+        let existingColors = hiddenColor.split(',').map(c => c.trim()).filter(c => c);
+        let otherColors = [];
+        existingColors.forEach(c => {
+            let cb = document.querySelector(`.color-cb[value="${c}"]`);
+            if (cb) cb.checked = true;
+            else otherColors.push(c);
+        });
+        document.getElementById('colorOther').value = otherColors.join(', ');
+    }
+
+    // On Form Submit: Combine checkbox and custom inputs
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function() {
+            let sizes = [];
+            document.querySelectorAll('.size-cb:checked').forEach(cb => sizes.push(cb.value));
+            let otherSize = document.getElementById('sizeOther').value.trim();
+            if (otherSize) sizes.push(otherSize);
+            document.getElementById('hiddenSize').value = sizes.join(', ');
+
+            let colors = [];
+            document.querySelectorAll('.color-cb:checked').forEach(cb => colors.push(cb.value));
+            let otherColor = document.getElementById('colorOther').value.trim();
+            if (otherColor) colors.push(otherColor);
+            document.getElementById('hiddenColor').value = colors.join(', ');
+        });
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

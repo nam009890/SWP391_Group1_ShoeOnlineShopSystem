@@ -12,6 +12,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ContentRepository extends JpaRepository<Content, Long> ,JpaSpecificationExecutor<Content>{
-    // Hàm tìm kiếm theo tên bài viết
    Page<Content> findByContentTitleContainingIgnoreCase(String keyword, Pageable pageable);
+   
+   java.util.List<Content> findTop5ByOrderByCreatedAtDesc();
+   java.util.List<Content> findTop50ByOrderByCreatedAtDesc();
+
+    // Active content for home page
+    java.util.List<Content> findByIsActiveTrueOrderByCreatedAtDesc();
 }

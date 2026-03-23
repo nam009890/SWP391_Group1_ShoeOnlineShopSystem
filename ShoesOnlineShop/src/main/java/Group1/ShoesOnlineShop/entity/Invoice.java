@@ -48,6 +48,12 @@ public class Invoice {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+        @Column(name = "is_active", columnDefinition = "BIT DEFAULT 1")
+private Boolean isActive = true;
+
+    @Column(name = "status", length = 50)
+    private String status = "Active";
+    
     @PrePersist
     protected void onCreate() {
         generatedDate = LocalDateTime.now();

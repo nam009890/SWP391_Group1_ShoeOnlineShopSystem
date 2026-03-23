@@ -65,7 +65,7 @@ public class ContentService {
     // 2. HÀM XỬ LÝ LƯU FILE ẢNH VÀO Ổ CỨNG MÁY TÍNH
     public String saveImageFile(MultipartFile file) throws IOException {
         String fileName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
-        Path uploadPath = Paths.get("src/main/resources/static/uploads/contents/");
+        Path uploadPath = Group1.ShoesOnlineShop.config.WebMvcConfig.UPLOAD_DIR.resolve("contents");
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }

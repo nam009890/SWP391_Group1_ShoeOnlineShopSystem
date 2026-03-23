@@ -5,8 +5,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "products")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,15 +28,23 @@ public class Product {
     @Column(name = "product_price")
     private BigDecimal price;
     
-
+@Column(name = "product_description", length = 500)
+private String productDescription;
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
+
+    @Column(name = "size", length = 50)
+    private String size;
+
+    @Column(name = "color", length = 100)
+    private String color;
 
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
-    @Column(name = "category_name", length = 100)
-    private String categoryName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -61,13 +78,60 @@ public class Product {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    
+    public Long getProductId() { return id; }
+    public void setProductId(Long id) { this.id = id; }
 
-    // Getters và Setters
+    // Explicit Getters and Setters to resolve NetBeans IDE red errors (Lombok bypass)
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    
+    // Alias to support legacy templates using 'productName' instead of 'name'
+    public String getProductName() { return name; }
+
+    // Alias to support templates using 'productPrice' instead of 'price'
+    public BigDecimal getProductPrice() { return price; }
+
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
+
+    public String getProductDescription() { return productDescription; }
+    public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
+
+    public Integer getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
+
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public List<OrderDetail> getOrderDetails() { return orderDetails; }
+    public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
+
+    public List<Cart> getCarts() { return carts; }
+    public void setCarts(List<Cart> carts) { this.carts = carts; }
+
+    public List<Feedback> getFeedbacks() { return feedbacks; }
+    public void setFeedbacks(List<Feedback> feedbacks) { this.feedbacks = feedbacks; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
 }

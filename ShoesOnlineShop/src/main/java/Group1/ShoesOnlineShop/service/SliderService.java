@@ -1,5 +1,6 @@
 package Group1.ShoesOnlineShop.service;
 
+import Group1.ShoesOnlineShop.entity.Product;
 import Group1.ShoesOnlineShop.entity.Slider;
 import Group1.ShoesOnlineShop.repository.SliderRepository;
 import Group1.ShoesOnlineShop.repository.CouponRepository;
@@ -38,7 +39,7 @@ public class SliderService {
     // Đã thêm tham số isActive vào đây
     public Page<Slider> getSliders(String keyword, Boolean isActive, int page, int size) {
         Pageable paging = PageRequest.of(page - 1, size);
-        
+
         if (isActive != null) {
             if (keyword != null && !keyword.isEmpty()) {
                 return sliderRepository.findBySliderTitleContainingIgnoreCaseAndIsActive(keyword, isActive, paging);
@@ -59,15 +60,26 @@ public class SliderService {
         slider.setUpdatedAt(java.time.LocalDateTime.now());
 
         if (couponIds != null && !couponIds.isEmpty()) {
-            slider.setCoupons(couponRepository.findAllById(couponIds));
+            List<Group1.ShoesOnlineShop.entity.Coupon> coupons = new java.util.ArrayList<>();
+            for (int i = 0; i < couponIds.size(); i += 1000) {
+                java.util.List<Long> subList = couponIds.subList(i, Math.min(i + 1000, couponIds.size()));
+                coupons.addAll(couponRepository.findAllById(subList));
+            }
+            slider.setCoupons(coupons);
         } else {
             slider.setCoupons(new java.util.ArrayList<>());
         }
 
+        slider.getSliderProducts().clear();
         if (productIds != null && !productIds.isEmpty()) {
-            slider.setProducts(productRepository.findAllById(productIds));
-        } else {
-            slider.setProducts(new java.util.ArrayList<>());
+            List<Product> products = new java.util.ArrayList<>();
+            for (int i = 0; i < productIds.size(); i += 1000) {
+                java.util.List<Long> subList = productIds.subList(i, Math.min(i + 1000, productIds.size()));
+                products.addAll(productRepository.findAllById(subList));
+            }
+            for (Product p : products) {
+                slider.addProduct(p, 0); // Default discount 0 for tests/legacy logic
+            }
         }
 
         sliderRepository.save(slider);
@@ -102,12 +114,15 @@ public class SliderService {
         }
         return errors;
     }
-    public Map<String, String> validateSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds, MultipartFile imageFile) {
+
+    public Map<String, String> validateSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds,
+            MultipartFile imageFile) {
         Map<String, String> errors = new HashMap<>();
         boolean isUpdate = (sliderForm.getId() != null);
 
         // Validate Logic DB
-        if (sliderForm.getSliderTitle() != null && isSliderTitleExists(sliderForm.getSliderTitle(), sliderForm.getId())) {
+        if (sliderForm.getSliderTitle() != null
+                && isSliderTitleExists(sliderForm.getSliderTitle(), sliderForm.getId())) {
             errors.put("sliderTitle", "This Slider title already exists, please choose another!");
         }
         if (productIds == null || productIds.isEmpty()) {
@@ -124,13 +139,19 @@ public class SliderService {
             String contentType = imageFile.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
                 errors.put("imageUrl", "Only image files are allowed!");
-            } else if (imageFile.getSize() > 5 * 1024 * 1024) {
-                errors.put("imageUrl", "Image size must be less than 5MB!");
             } else {
                 try {
                     BufferedImage img = ImageIO.read(imageFile.getInputStream());
-                    if (img != null && img.getWidth() < 1000) {
-                        errors.put("imageUrl", "Image width must be at least 1000px for a standard slider!");
+                    if (img != null) {
+                        int width = img.getWidth();
+                        int height = img.getHeight();
+                        double ratio = (double) width / height;
+                        if (ratio < 1.5) {
+                            errors.put("imageUrl",
+                                    "Tỷ lệ khung ảnh không hợp lệ! Vui lòng chọn ảnh ngang (Landscape, tối thiểu 16:9).");
+                        }
+                    } else {
+                        errors.put("imageUrl", "Could not read the image file.");
                     }
                 } catch (Exception e) {
                     errors.put("imageUrl", "Corrupted image file.");
@@ -141,9 +162,10 @@ public class SliderService {
     }
 
     // 2. HÀM XỬ LÝ LƯU FILE VÀ GHI DATABASE
-    public void processAndSaveSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds, MultipartFile imageFile) throws IOException {
+    public void processAndSaveSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds,
+            List<Integer> productDiscounts, MultipartFile imageFile) throws IOException {
         Slider targetSlider;
-        
+
         // Lấy Slider cũ ra (nếu Update) hoặc tạo mới (nếu Create)
         if (sliderForm.getId() != null) {
             targetSlider = sliderRepository.findById(sliderForm.getId()).orElse(new Slider());
@@ -160,8 +182,9 @@ public class SliderService {
         // Xử lý lưu File Ảnh vào hệ thống
         if (imageFile != null && !imageFile.isEmpty()) {
             String fileName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(imageFile.getOriginalFilename());
-            Path uploadPath = Paths.get("src/main/resources/static/uploads/");
-            if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+            Path uploadPath = Group1.ShoesOnlineShop.config.WebMvcConfig.UPLOAD_DIR;
+            if (!Files.exists(uploadPath))
+                Files.createDirectories(uploadPath);
 
             try (InputStream inputStream = imageFile.getInputStream()) {
                 Files.copy(inputStream, uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
@@ -169,17 +192,35 @@ public class SliderService {
             }
         }
 
-        // Xử lý lưu Coupon và Product đính kèm
+        // Xử lý lưu Coupon với Batch Fetches để tránh lỗi quá 2100 parameters của SQL Server
         if (couponIds != null && !couponIds.isEmpty()) {
-            targetSlider.setCoupons(couponRepository.findAllById(couponIds));
+            List<Group1.ShoesOnlineShop.entity.Coupon> coupons = new java.util.ArrayList<>();
+            for (int i = 0; i < couponIds.size(); i += 1000) {
+                java.util.List<Long> subList = couponIds.subList(i, Math.min(i + 1000, couponIds.size()));
+                coupons.addAll(couponRepository.findAllById(subList));
+            }
+            targetSlider.setCoupons(coupons);
         } else {
             targetSlider.setCoupons(new java.util.ArrayList<>());
         }
 
+        targetSlider.getSliderProducts().clear();
+        // Xử lý Product tương tự, phân lô 1000 cái mỗi lần truy vấn
         if (productIds != null && !productIds.isEmpty()) {
-            targetSlider.setProducts(productRepository.findAllById(productIds));
-        } else {
-            targetSlider.setProducts(new java.util.ArrayList<>());
+            List<Product> products = new java.util.ArrayList<>();
+            for (int i = 0; i < productIds.size(); i += 1000) {
+                java.util.List<Long> subList = productIds.subList(i, Math.min(i + 1000, productIds.size()));
+                products.addAll(productRepository.findAllById(subList));
+            }
+            
+            for (int i = 0; i < productIds.size(); i++) {
+                Long pId = productIds.get(i);
+                Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
+                Product p = products.stream().filter(prod -> prod.getProductId().equals(pId)).findFirst().orElse(null);
+                if (p != null) {
+                    targetSlider.addProduct(p, discount);
+                }
+            }
         }
 
         // Lưu vào DB

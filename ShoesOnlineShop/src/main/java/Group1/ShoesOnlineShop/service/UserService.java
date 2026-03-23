@@ -58,8 +58,8 @@ public class UserService {
         if (user.getUserName().length() > 50) {
             throw new IllegalArgumentException("Username không được vượt quá 50 ký tự theo CSDL.");
         }
-        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 6) {
-            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 6 ký tự.");
+        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 4) {
+            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 4 ký tự.");
         }
         if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
             throw new IllegalArgumentException("Họ và tên không được để trống.");

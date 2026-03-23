@@ -1,6 +1,8 @@
 package Group1.ShoesOnlineShop.controller;
 
 import Group1.ShoesOnlineShop.entity.Cart;
+import Group1.ShoesOnlineShop.entity.User;
+import Group1.ShoesOnlineShop.repository.UserRepository;
 import Group1.ShoesOnlineShop.service.CartService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,9 +23,24 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private String getUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            // Check if it's an OAuth2 user
+            if (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+                return userRepository.findByProviderId(auth.getName())
+                        .or(() -> {
+                            org.springframework.security.oauth2.core.user.OAuth2User oauth2User = 
+                                (org.springframework.security.oauth2.core.user.OAuth2User) auth.getPrincipal();
+                            String email = oauth2User.getAttribute("email");
+                            return userRepository.findByUserEmail(email);
+                        })
+                        .map(User::getUserName)
+                        .orElse(null);
+            }
             return auth.getName();
         }
         return null;

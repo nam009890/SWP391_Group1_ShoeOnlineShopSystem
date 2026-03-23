@@ -10,11 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/MyOrder")
+@RequestMapping("/my-orders")
 public class CustomerOrderController {
 
     private final OrderService orderService;
@@ -33,10 +34,10 @@ public class CustomerOrderController {
         return null;
     }
 
-    @GetMapping("/list")
-    public String showOrderHistory(Model model) {
+    @GetMapping
+    public String listOrders(Model model) {
         User user = getAuthenticatedUser();
-        if (user == null || !user.getUserRole().equals("CUSTOMER")) {
+        if (user == null) {
             return "redirect:/login";
         }
 
@@ -47,21 +48,53 @@ public class CustomerOrderController {
         return "customer-order-list";
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public String showOrderDetail(@PathVariable("id") Long orderId, Model model) {
         User user = getAuthenticatedUser();
-        if (user == null || !user.getUserRole().equals("CUSTOMER")) {
+        if (user == null) {
             return "redirect:/login";
         }
 
         Order order = orderService.findById(orderId);
         if (order == null || !order.getUser().getUserId().equals(user.getUserId())) {
             // Prevent viewing someone else's order
-            return "redirect:/MyOrder/list";
+            return "redirect:/my-orders";
         }
 
+        List<Group1.ShoesOnlineShop.entity.OrderHistory> timeline = orderService.getTimeline(orderId);
+
         model.addAttribute("order", order);
+        model.addAttribute("timeline", timeline);
         model.addAttribute("user", user);
         return "customer-order-detail";
+    }
+
+    @PostMapping("/{id}/cancel")
+    public String cancelOrder(@PathVariable("id") Long orderId, org.springframework.web.servlet.mvc.support.RedirectAttributes ra) {
+        User user = getAuthenticatedUser();
+        if (user == null) return "redirect:/login";
+        
+        try {
+            orderService.cancelOrder(user.getUserId(), orderId);
+            ra.addFlashAttribute("successMessage", "Order cancelled successfully.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/my-orders/" + orderId;
+    }
+
+    @PostMapping("/{id}/reorder")
+    public String reorder(@PathVariable("id") Long orderId, jakarta.servlet.http.HttpSession session, org.springframework.web.servlet.mvc.support.RedirectAttributes ra) {
+        User user = getAuthenticatedUser();
+        if (user == null) return "redirect:/login";
+        
+        try {
+            orderService.reorder(user.getUserId(), orderId, session.getId());
+            ra.addFlashAttribute("successMessage", "Items from previous order added to your cart.");
+            return "redirect:/cart";
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/my-orders/" + orderId;
+        }
     }
 }

@@ -3,6 +3,9 @@ package Group1.ShoesOnlineShop.config;
 import Group1.ShoesOnlineShop.security.CustomerAuthenticationSuccessHandler;
 import Group1.ShoesOnlineShop.security.InternalAuthenticationSuccessHandler;
 import Group1.ShoesOnlineShop.security.CustomOAuth2UserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +28,9 @@ public class SecurityConfig {
 
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
+
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -75,7 +81,7 @@ public class SecurityConfig {
     public SecurityFilterChain customerSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**", "/uploads/**", "/", "/home").permitAll()
+                .requestMatchers("/login", "/register", "/forgot-password", "/verify-reset-code", "/reset-password", "/css/**", "/js/**", "/images/**", "/uploads/**", "/", "/home").permitAll()
                 .requestMatchers("/cart/**").permitAll()
                 .requestMatchers("/checkout/**", "/profile/**", "/MyOrder/**").hasRole("CUSTOMER")
                 .anyRequest().permitAll()
@@ -90,6 +96,9 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
+                .authorizationEndpoint(authorization -> authorization
+                    .authorizationRequestResolver(authorizationRequestResolver(clientRegistrationRepository))
+                )
                 .successHandler(customerSuccessHandler)
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(customOAuth2UserService::loadStandardUser) 
@@ -104,5 +113,15 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable());
 
         return http.build();
+    }
+
+    private OAuth2AuthorizationRequestResolver authorizationRequestResolver(
+            ClientRegistrationRepository clientRegistrationRepository) {
+        DefaultOAuth2AuthorizationRequestResolver authorizationRequestResolver =
+                new DefaultOAuth2AuthorizationRequestResolver(
+                        clientRegistrationRepository, "/oauth2/authorization");
+        authorizationRequestResolver.setAuthorizationRequestCustomizer(
+                customizer -> customizer.additionalParameters(params -> params.put("prompt", "select_account")));
+        return authorizationRequestResolver;
     }
 }

@@ -28,21 +28,25 @@ public class UserService {
         User existingUser = getUserById(updatedUser.getUserId());
         if (existingUser != null) {
             existingUser.setFullName(updatedUser.getFullName());
-            existingUser.setUserEmail(updatedUser.getUserEmail());
+            // Email is NOT updated — it is immutable
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setAddress(updatedUser.getAddress());
             userRepository.save(existingUser);
         }
     }
 
-    public boolean changePassword(Long userId, String currentPassword, String newPassword) {
+    public String changePassword(Long userId, String currentPassword, String newPassword) {
         User user = getUserById(userId);
-        if (user != null && passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
-            user.setPasswordHash(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            return true;
+        if (user == null) return "User not found!";
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            return "Incorrect current password!";
         }
-        return false;
+        if (newPassword == null || newPassword.length() < 6) {
+            return "New password must be at least 6 characters!";
+        }
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return null; // null = success
     }
 
     public void registerCustomer(User user) {

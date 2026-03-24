@@ -138,19 +138,22 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" th:field="*{fullName}" required>
+                        <input type="text" class="form-control" th:field="*{fullName}" required th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''">
+                        <div th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}" style="color:#e74c3c; font-size:0.85rem; margin-top:0.3rem;"></div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Email Address</label>
-                        <input type="email" class="form-control" th:field="*{userEmail}" required>
+                        <input type="email" class="form-control" th:field="*{userEmail}" readonly style="opacity:0.7; cursor:not-allowed">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" th:field="*{phone}" required pattern="^0\d{9}$">
+                        <input type="text" class="form-control" th:field="*{phone}" th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''">
+                        <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color:#e74c3c; font-size:0.85rem; margin-top:0.3rem;"></div>
                     </div>
                     <div class="form-group full">
                         <label class="form-label">Delivery Address</label>
-                        <textarea class="form-control" th:field="*{address}" rows="3" required></textarea>
+                        <textarea class="form-control" th:field="*{address}" rows="3" th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''"></textarea>
+                        <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" style="color:#e74c3c; font-size:0.85rem; margin-top:0.3rem;"></div>
                     </div>
                 </div>
 

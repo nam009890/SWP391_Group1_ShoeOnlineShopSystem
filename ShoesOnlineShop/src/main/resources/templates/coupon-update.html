@@ -192,7 +192,7 @@
                             </a>
 
                             <div style="display:flex; gap:10px">
-                                <button type="button" class="btn-outline" onclick="clearAllFields()">Reset Form</button>
+                                <button type="reset" class="btn-outline">Reset Form</button>
                                 <button type="submit" class="btn-dark-solid">Save Coupon</button>
                             </div>
                         </div>
@@ -212,26 +212,7 @@
                                         document.getElementById('couponCodeInput').value = code;
                                     }
 
-                                    // HÃ€M RESET Má»šI: QuÃ©t sáº¡ch toÃ n bá»™ Text, Date, vÃ  Select
-                                    function clearAllFields() {
-                                        // XÃ³a cÃ¡c Ã´ nháº­p chá»¯ vÃ  ngÃ y thÃ¡ng
-                                        const inputs = document.querySelectorAll('form input[type="text"], form input[type="date"]');
-                                        inputs.forEach(input => input.value = '');
 
-                // Trả dropdown giảm giá về dòng đầu tiên
-                                        const selects = document.querySelectorAll('form select');
-                                        selects.forEach(select => select.selectedIndex = 0);
-
-                                        // Bá» check cÃ¡c Ã´ tráº¡ng thÃ¡i
-                                        const checkboxes = document.querySelectorAll('form input[type="checkbox"]');
-                                        checkboxes.forEach(cb => cb.checked = false);
-
-                // Dọn luôn màu đỏ báo lỗi của Form (nếu có)
-                                        const invalidInputs = document.querySelectorAll('.is-invalid');
-                                        invalidInputs.forEach(el => el.classList.remove('is-invalid'));
-                                        const errorTexts = document.querySelectorAll('.invalid-feedback, .text-danger');
-                                        errorTexts.forEach(el => el.style.display = 'none');
-                                    }
         </script>
     </body>
 </html>

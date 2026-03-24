@@ -27,9 +27,15 @@ public class Product {
 
     @Column(name = "product_price")
     private BigDecimal price;
-    
-@Column(name = "product_description", length = 500)
-private String productDescription;
+
+    @Column(name = "product_description", length = 500)
+    private String productDescription;
+
+    @Transient
+    private BigDecimal salePrice;
+
+    @Transient
+    private Integer discountPercent;
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
@@ -97,6 +103,20 @@ private String productDescription;
 
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
+
+    public BigDecimal getSalePrice() { return salePrice; }
+    public void setSalePrice(BigDecimal salePrice) { this.salePrice = salePrice; }
+
+    public Integer getDiscountPercent() { return discountPercent; }
+    public void setDiscountPercent(Integer discountPercent) { this.discountPercent = discountPercent; }
+
+    public BigDecimal getPriceAfterDiscount() {
+        if (discountPercent != null && discountPercent > 0 && price != null) {
+            return price.multiply(BigDecimal.valueOf(100 - discountPercent))
+                        .divide(BigDecimal.valueOf(100), 0, java.math.RoundingMode.HALF_UP);
+        }
+        return price;
+    }
 
     public String getProductDescription() { return productDescription; }
     public void setProductDescription(String productDescription) { this.productDescription = productDescription; }

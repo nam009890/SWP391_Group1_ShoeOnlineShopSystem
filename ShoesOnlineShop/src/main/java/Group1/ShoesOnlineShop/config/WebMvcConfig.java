@@ -17,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new MultipartConfigElement("", 524288000L, 524288000L, 0);
     }
 
-    // Upload directory relative to the project root — using absolute path to avoid
+    // Upload directory — using absolute path to avoid
     // working-directory issues when running with mvnw or from IDE.
     public static final Path UPLOAD_DIR = Paths.get("d:/SWP_Project/New_Code/ShoesOnlineShop/uploads").toAbsolutePath().normalize();
 

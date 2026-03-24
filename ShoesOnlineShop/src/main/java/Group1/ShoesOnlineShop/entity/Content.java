@@ -6,6 +6,7 @@
 package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,15 +18,18 @@ public class Content {
     @Column(name = "content_id")
     private Long id;
 
+    @NotBlank(message = "Content title cannot be blank")
     @Column(name = "content_title", nullable = false, length = 200)
     private String contentTitle;
 
+    @NotBlank(message = "Content body cannot be blank")
     @Column(name = "content_text", columnDefinition = "NVARCHAR(MAX)")
     private String contentText;
 
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    @NotBlank(message = "Content type is required")
     @Column(name = "content_type", nullable = false, length = 20)
     private String contentType;
 

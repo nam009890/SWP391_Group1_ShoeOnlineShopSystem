@@ -114,11 +114,19 @@
                             <!-- Products Card -->
                             <div class="card">
                                 <div class="card-header-bar">
-                                    <h6>Products <span style="background:var(--bg);color:var(--text-mid);padding:2px 9px;border-radius:12px;font-size:12px;font-weight:500;margin-left:6px" id="product-count">0</span></h6>
-                                    <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#productModal">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                        Add Product
-                                    </button>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+                                        <h6>Products <span style="background:var(--bg);color:var(--text-mid);padding:2px 9px;border-radius:12px;font-size:12px;font-weight:500;margin-left:6px" id="product-count">0</span></h6>
+                                        <div>
+                                            <button type="button" class="btn-outline" style="padding: 0.4rem 1rem; margin-right: 0.5rem; color: #dc3545; border-color: #dc3545;" onclick="deleteAllProducts()">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; margin-right: 4px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                                Delete All
+                                            </button>
+                                            <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#productModal">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                Add Product
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div style="padding: 0 24px 24px">
                                     <div class="table-wrap">
@@ -156,11 +164,19 @@
                             <!-- Coupons Card -->
                             <div class="card">
                                 <div class="card-header-bar">
-                                    <h6>Coupon Codes <span style="background:var(--bg);color:var(--text-mid);padding:2px 9px;border-radius:12px;font-size:12px;font-weight:500;margin-left:6px" id="coupon-count">0</span></h6>
-                                    <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#couponModal">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                        Add Coupon
-                                    </button>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+                                        <h6>Coupon Codes <span style="background:var(--bg);color:var(--text-mid);padding:2px 9px;border-radius:12px;font-size:12px;font-weight:500;margin-left:6px" id="coupon-count">0</span></h6>
+                                        <div>
+                                            <button type="button" class="btn-outline" style="padding: 0.4rem 1rem; margin-right: 0.5rem; color: #dc3545; border-color: #dc3545;" onclick="deleteAllCoupons()">
+                                                <svg viewBox="0 0 24 24" fill="none" class="w-4 h-4" stroke="currentColor" stroke-width="2" style="width:16px; margin-right: 4px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                                Delete All
+                                            </button>
+                                            <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#couponModal">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                                Add Coupon
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div style="padding: 0 24px 24px">
                                     <div class="table-wrap">
@@ -208,7 +224,11 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="d-flex gap-2 mb-4">
-                                                <input type="text" id="searchProduct" class="form-control" placeholder="Search product…" onkeyup="filterModal('productModalTable', 'searchProduct')">
+
+
+                                                <input type="text" id="searchProduct" class="form-control" placeholder="Search product..." onkeyup="filterModal('productModalTable', 'searchProduct')">
+
+
                                             </div>
                                             <div class="table-wrap">
                                                 <table id="productModalTable">
@@ -245,7 +265,11 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="input-with-btn mb-4">
-                                                <input type="text" id="searchCoupon" class="form-control" placeholder="Search coupon code…" onkeyup="filterModal('couponModalTable', 'searchCoupon')">
+
+
+                                                <input type="text" id="searchCoupon" class="form-control" placeholder="Search coupon code..." onkeyup="filterModal('couponModalTable', 'searchCoupon')">
+
+
                                             </div>
                                             <div class="table-wrap">
                                                 <table id="couponModalTable">
@@ -281,6 +305,22 @@
                                                 function updateCount() {
                                                     document.getElementById('product-count').innerText = document.querySelectorAll('#productTable tbody tr').length;
                                                     document.getElementById('coupon-count').innerText = document.querySelectorAll('#couponTable tbody tr').length;
+                                                }
+
+                                                function deleteAllCoupons() {
+                                                    if (confirm("Are you sure you want to remove all coupons from this slider?")) {
+                                                        const tbody = document.querySelector('#couponTable tbody');
+                                                        tbody.innerHTML = '';
+                                                        updateCount();
+                                                    }
+                                                }
+
+                                                function deleteAllProducts() {
+                                                    if (confirm("Are you sure you want to remove all products from this slider?")) {
+                                                        const tbody = document.querySelector('#productTable tbody');
+                                                        tbody.innerHTML = '';
+                                                        updateCount();
+                                                    }
                                                 }
 
                                                 function addSelectedProducts() {

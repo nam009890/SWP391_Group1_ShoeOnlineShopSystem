@@ -96,19 +96,20 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" th:field="*{userEmail}" class="form-control" th:classappend="${#fields.hasErrors('userEmail')} ? 'is-invalid' : ''">
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></div>
+                                <label class="form-label text-muted">Email Address (Cannot be changed)</label>
+                                <input type="email" th:field="*{userEmail}" class="form-control" style="background:#f9fafb; cursor:not-allowed" readonly>
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Phone Number</label>
-                                <input type="text" th:field="*{phone}" class="form-control">
+                                <input type="text" th:field="*{phone}" class="form-control" th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Address</label>
-                                <input type="text" th:field="*{address}" class="form-control" placeholder="House number, street, city...">
+                                <input type="text" th:field="*{address}" class="form-control" placeholder="House number, street, city..." th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
                             </div>
                         </div>
 

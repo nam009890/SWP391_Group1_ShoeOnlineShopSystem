@@ -31,6 +31,11 @@ public class AdminProductService {
 
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/products/";
 
+    // === Regex Constants ===
+    private static final String PRODUCT_NAME_REGEX = "^[\\p{L}0-9\\s\\-]+$";
+    private static final String SIZE_REGEX = "^\\d+(,\\s*\\d+)*$";
+    private static final String COLOR_REGEX = "^[\\p{L}\\s,\\-/]+$";
+
     // === GET LIST WITH FILTER & PAGINATION ===
     public Page<Product> getProducts(String keyword, Long categoryId, Boolean isActive, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
@@ -120,25 +125,77 @@ public class AdminProductService {
     public Map<String, String> validateProduct(Product product) {
         Map<String, String> errors = new HashMap<>();
 
+        // --- Product Name ---
         if (product.getName() == null || product.getName().trim().isEmpty()) {
             errors.put("name", "Product name cannot be blank!");
         } else {
-            boolean nameDuplicate = (product.getId() == null)
-                    ? adminProductRepository.existsByName(product.getName().trim())
-                    : adminProductRepository.existsByNameAndIdNot(product.getName().trim(), product.getId());
-            if (nameDuplicate) {
-                errors.put("name", "This product name already exists!");
+            String trimmedName = product.getName().trim();
+            if (trimmedName.length() < 2 || trimmedName.length() > 200) {
+                errors.put("name", "Product name must be between 2 and 200 characters!");
+            } else if (!trimmedName.matches(PRODUCT_NAME_REGEX)) {
+                errors.put("name", "Product name can only contain letters, numbers, spaces, and hyphens!");
+            } else {
+                boolean nameDuplicate = (product.getId() == null)
+                        ? adminProductRepository.existsByName(trimmedName)
+                        : adminProductRepository.existsByNameAndIdNot(trimmedName, product.getId());
+                if (nameDuplicate) {
+                    errors.put("name", "This product name already exists!");
+                }
             }
         }
 
+        // --- Price ---
         if (product.getPrice() == null) {
             errors.put("price", "Price cannot be blank!");
         } else if (product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             errors.put("price", "Price must be greater than 0!");
+        } else if (product.getPrice().compareTo(new BigDecimal("999999999")) > 0) {
+            errors.put("price", "Price cannot exceed 999,999,999!");
         }
 
+        // --- Stock Quantity ---
         if (product.getStockQuantity() == null || product.getStockQuantity() < 0) {
             errors.put("stockQuantity", "Stock quantity must be 0 or greater!");
+        } else if (product.getStockQuantity() > 99999) {
+            errors.put("stockQuantity", "Stock quantity cannot exceed 99,999!");
+        }
+
+        // --- Size ---
+        if (product.getSize() != null && !product.getSize().trim().isEmpty()) {
+            String trimmedSize = product.getSize().trim();
+            if (!trimmedSize.matches(SIZE_REGEX)) {
+                errors.put("size", "Size must be numeric values (e.g., 38 or 38, 39, 40)!");
+            } else {
+                // Validate each size value is within valid range (15-50)
+                String[] sizeValues = trimmedSize.split(",");
+                for (String sizeVal : sizeValues) {
+                    try {
+                        int sizeNum = Integer.parseInt(sizeVal.trim());
+                        if (sizeNum < 15 || sizeNum > 50) {
+                            errors.put("size", "Each size value must be between 15 and 50!");
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        errors.put("size", "Size must contain only valid numbers!");
+                        break;
+                    }
+                }
+            }
+        }
+
+        // --- Color ---
+        if (product.getColor() != null && !product.getColor().trim().isEmpty()) {
+            String trimmedColor = product.getColor().trim();
+            if (trimmedColor.length() > 100) {
+                errors.put("color", "Color must not exceed 100 characters!");
+            } else if (!trimmedColor.matches(COLOR_REGEX)) {
+                errors.put("color", "Color can only contain letters, spaces, commas, slashes, and hyphens!");
+            }
+        }
+
+        // --- Description ---
+        if (product.getProductDescription() != null && product.getProductDescription().trim().length() > 500) {
+            errors.put("productDescription", "Description must not exceed 500 characters!");
         }
 
         return errors;

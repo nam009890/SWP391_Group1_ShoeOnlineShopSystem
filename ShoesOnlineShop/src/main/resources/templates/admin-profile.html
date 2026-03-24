@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin Profile</title>
@@ -88,7 +88,7 @@
             <div class="user-pill">
                 <div class="user-avatar">AD</div>
                 <div>
-                    <div class="user-name" th:text="${admin.fullName != null ? admin.fullName : 'Administrator'}">Administrator</div>
+                    <div class="user-name" th:text="${#authentication.principal.user.fullName}">Administrator</div>
                     <div class="user-role">Admin</div>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Email</label>
-                            <input type="email" name="userEmail" class="form-control" th:value="${admin.userEmail}" required>
+                            <input type="email" class="form-control" th:value="${admin.userEmail}" disabled style="background:#f3f4f6; cursor:not-allowed;">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Phone</label>

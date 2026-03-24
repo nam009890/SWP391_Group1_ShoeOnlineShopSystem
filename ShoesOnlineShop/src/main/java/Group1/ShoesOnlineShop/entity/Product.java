@@ -31,10 +31,10 @@ public class Product {
     @Column(name = "product_description", length = 500)
     private String productDescription;
 
-    @Column(name = "sale_price")
+    @Transient
     private BigDecimal salePrice;
 
-    @Column(name = "discount_percent")
+    @Transient
     private Integer discountPercent;
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;

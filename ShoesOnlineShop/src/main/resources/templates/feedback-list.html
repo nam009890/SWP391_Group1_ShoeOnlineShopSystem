@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -227,13 +227,13 @@
                 <!-- Prev arrow -->
                 <a class="page-btn"
                    th:classappend="${feedbacks.number == 0} ? ' disabled' : ''"
-                   th:href="@{/feedbacks(page=${feedbacks.number - 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
+                   th:href="@{/internal/feedbacks(page=${feedbacks.number - 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
                     &#8249;
                 </a>
 
                 <a class="page-btn"
                    th:each="i : ${#numbers.sequence(0, feedbacks.totalPages-1)}"
-                   th:href="@{/feedbacks(page=${i}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}"
+                   th:href="@{/internal/feedbacks(page=${i}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}"
                    th:text="${i+1}"
                    th:classappend="${i == feedbacks.number} ? ' active' : ''">
                 </a>
@@ -241,7 +241,7 @@
                 <!-- Next arrow -->
                 <a class="page-btn"
                    th:classappend="${feedbacks.number + 1 >= feedbacks.totalPages} ? ' disabled' : ''"
-                   th:href="@{/feedbacks(page=${feedbacks.number + 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
+                   th:href="@{/internal/feedbacks(page=${feedbacks.number + 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
                     &#8250;
                 </a>
             </div>

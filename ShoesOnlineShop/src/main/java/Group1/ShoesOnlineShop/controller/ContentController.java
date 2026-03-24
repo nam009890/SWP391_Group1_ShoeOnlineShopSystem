@@ -52,6 +52,11 @@ public class ContentController {
             Model model) {
 
         boolean isNew = (content.getId() == null);
+        
+        if (isNew && (imageFile == null || imageFile.isEmpty())) {
+            result.rejectValue("imageUrl", "error.content", "Please upload a thumbnail image!");
+        }
+
         if (result.hasErrors()) {
             return isNew ? "content-create" : "content-update";
         }

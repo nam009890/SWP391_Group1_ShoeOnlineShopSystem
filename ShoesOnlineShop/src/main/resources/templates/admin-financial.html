@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -54,7 +54,7 @@
         <a href="/internal/admin/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">AD</div>
-            <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
+            <div><div class="user-name" th:text="${#authentication.principal.user.fullName}">Administrator</div><div class="user-role">Admin</div></div>
         </div>
         </a>
     </div>
@@ -79,6 +79,7 @@
             <div style="font-size:13px; color:var(--text-mid); margin-left:auto; align-self:center;">
                 Showing: <strong th:text="${#temporals.format(startDate, 'dd/MM/yyyy')}">01/01/2025</strong>
                 &rarr; <strong th:text="${#temporals.format(endDate, 'dd/MM/yyyy')}">31/01/2025</strong>
+
             </div>
         </form>
     </div>
@@ -92,7 +93,9 @@
                 </div>
                 <div>
                     <div class="fin-label">Total Revenue</div>
+
                     <div class="fin-val" style="color:var(--success); font-size:20px;" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
+
                     <div class="fin-sub">from non-cancelled orders</div>
                 </div>
             </div>
@@ -104,7 +107,9 @@
                 </div>
                 <div>
                     <div class="fin-label">Estimated Cost</div>
+
                     <div class="fin-val" style="color:var(--danger); font-size:20px;" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
+
                     <div class="fin-sub">~70% of revenue (estimated)</div>
                 </div>
             </div>
@@ -119,6 +124,7 @@
                     <div class="fin-val" style="font-size:20px;"
                          th:classappend="${netProfit >= 0} ? 'profit-positive' : 'profit-negative'"
                          th:text="${#numbers.formatDecimal(netProfit, 0, 'COMMA', 0, 'POINT') + ' VND'}">0 VND</div>
+
                     <div class="fin-sub">Revenue minus estimated cost</div>
                 </div>
             </div>

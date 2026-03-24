@@ -98,6 +98,41 @@
         }
         .copy-btn:hover { background:var(--accent-hover); }
         .coupon-dates { font-size:.8rem; color:var(--text-muted); margin-top:.6rem; }
+        
+        .btn-save-coupon {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+        .btn-save-coupon:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        .btn-save-coupon:disabled {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+            cursor: not-allowed;
+        }
+
+        .coupon-card.saved {
+            opacity: 0.6;
+            border: 2px dashed #2ecc71;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .coupon-card.saved .coupon-discount {
+            background: #2ecc71;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
         /* PRODUCTS */
         .products-grid {
@@ -126,6 +161,11 @@
         .product-category-label { font-size:.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:.4rem; }
         .product-name { font-weight:600; font-size:1rem; color:#fff; margin-bottom:.5rem; }
         .product-price { font-weight:700; font-size:1.15rem; color:var(--accent-hover); }
+
+        .price-box { display: flex; align-items: center; gap: 8px; margin-top: 0.5rem; }
+        .original-price { text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem; }
+        .sale-price { color: var(--accent-hover); font-weight: 700; font-size: 1.15rem; }
+        .discount-badge { background: var(--accent); color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 
         .empty-state { text-align:center; padding:4rem 2rem; color:var(--text-muted); }
         .empty-state svg { width:64px; height:64px; stroke:var(--text-muted); margin-bottom:1rem; }
@@ -201,12 +241,18 @@
             </div>
             <div class="coupons-grid">
                 <div class="coupon-card animate-in" th:each="coupon, iterStat : ${slider.coupons}"
-                     th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'">
+                     th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'"
+                     th:classappend="${savedCouponIds != null and savedCouponIds.contains(coupon.id)} ? 'saved' : ''">
                     <div class="coupon-discount" th:text="${coupon.discountPercent} + '%'">20%</div>
                     <div class="coupon-name" th:text="${coupon.couponName}">Coupon Name</div>
                     <div class="coupon-code-wrap">
                         <div class="coupon-code" th:text="${coupon.couponCode}" th:id="'code-' + ${coupon.id}">CODE123</div>
-                        <button class="copy-btn" th:attr="data-code=${coupon.couponCode}" onclick="copyCode(this)">COPY</button>
+                        <button class="btn-save-coupon" 
+                                th:attr="onclick='saveCoupon(' + ${coupon.id} + ', this)'"
+                                th:disabled="${savedCouponIds != null and savedCouponIds.contains(coupon.id)}"
+                                th:text="${savedCouponIds != null and savedCouponIds.contains(coupon.id)} ? 'Saved ✓' : 'Save Coupon'">
+                            Save Coupon
+                        </button>
                     </div>
                     <div class="coupon-dates">
                         Valid: <span th:text="${coupon.createDate}">2026-01-01</span> — <span th:text="${coupon.endDate}">2026-12-31</span>
@@ -241,7 +287,22 @@
                     <div class="product-info">
                         <div class="product-category-label" th:text="${sp.product.category != null ? sp.product.category.name : ''}">Category</div>
                         <div class="product-name" th:text="${sp.product.name}">Product Name</div>
-                        <div class="product-price" th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                        <div class="price-box">
+                            <!-- Original Price (only if discount exists) -->
+                            <span class="original-price" th:if="${sp.discount != null and sp.discount > 0}">
+                                <span th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            </span>
+                            
+                            <!-- Sale Price -->
+                            <span class="sale-price" 
+                                  th:text="${#numbers.formatDecimal(sp.discount != null and sp.discount > 0 ? (sp.product.price - (sp.product.price * sp.discount / 100)) : sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                            </span>
+                            
+                            <!-- Discount Badge -->
+                            <span class="discount-badge" th:if="${sp.discount != null and sp.discount > 0}"
+                                  th:text="'-' + ${sp.discount} + '%'">
+                            </span>
+                        </div>
                     </div>
                 </a>
             </div>
@@ -260,15 +321,37 @@
     </footer>
 
     <script>
-        function copyCode(btn) {
-            const code = btn.getAttribute('data-code');
-            navigator.clipboard.writeText(code).then(() => {
-                btn.textContent = 'COPIED!';
-                btn.style.background = '#2ecc71';
-                setTimeout(() => {
-                    btn.textContent = 'COPY';
-                    btn.style.background = '';
-                }, 2000);
+        function saveCoupon(couponId, btn) {
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Saving...';
+
+            fetch('/save-coupon?couponId=' + couponId, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    btn.innerText = 'Saved ✓';
+                    btn.style.background = 'rgba(46, 204, 113, 0.2)';
+                    btn.style.color = '#2ecc71';
+                    btn.style.border = '1px solid #2ecc71';
+                    // Add saved class to the parent card
+                    btn.closest('.coupon-card').classList.add('saved');
+                } else if (data.message === 'Already saved') {
+                    btn.innerText = 'Saved ✓';
+                    btn.closest('.coupon-card').classList.add('saved');
+                } else {
+                    alert(data.message || 'Failed to save coupon');
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
+            })
+            .catch(err => {
+                console.error('Save coupon error:', err);
+                alert('An error occurred. Please try again.');
+                btn.disabled = false;
+                btn.innerText = originalText;
             });
         }
     </script>

@@ -19,6 +19,13 @@ public class AdminProfileController {
     @Autowired
     private UserService userService;
 
+    // === Regex Constants ===
+    private static final String FULL_NAME_REGEX = "^[\\p{L}\\s]+$";
+    private static final String PHONE_REGEX = "^0\\d{9}$";
+    private static final String ADDRESS_FORMAT_REGEX = "^[\\p{L}0-9\\s.,/\\-#]+$";
+    private static final String ADDRESS_CONTENT_REGEX = ".*[\\p{L}0-9].*";
+    private static final String PASSWORD_LETTER_REGEX = ".*[a-zA-Z].*";
+    private static final String PASSWORD_DIGIT_REGEX = ".*\\d.*";
 
     private Long getCurrentAdminId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -45,7 +52,6 @@ public class AdminProfileController {
     @PostMapping("/update")
     public String updateProfile(
             @RequestParam(name = "fullName") String fullName,
-            @RequestParam(name = "userEmail") String userEmail,
             @RequestParam(name = "phone", required = false) String phone,
             @RequestParam(name = "address", required = false) String address,
             RedirectAttributes redirectAttributes
@@ -56,26 +62,51 @@ public class AdminProfileController {
         User admin = userService.getUserById(currentAdminId);
         if (admin == null) return "redirect:/internal/admin/home";
 
-        // Validate
+        // === Validate Full Name ===
         if (fullName == null || fullName.trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Full Name cannot be blank!");
             return "redirect:/internal/admin/profile";
         }
-        if (userEmail == null || userEmail.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Email cannot be blank!");
+        String trimmedFullName = fullName.trim();
+        if (trimmedFullName.length() < 2 || trimmedFullName.length() > 100) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Full Name must be between 2 and 100 characters!");
+            return "redirect:/internal/admin/profile";
+        }
+        if (!trimmedFullName.matches(FULL_NAME_REGEX)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Full Name must contain only letters and spaces, no numbers or special characters!");
             return "redirect:/internal/admin/profile";
         }
 
-        // Check duplicate email
-        if (userService.isEmailExists(userEmail, currentAdminId)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "This email is already in use by another account!");
-            return "redirect:/internal/admin/profile";
+        // === Validate Phone Number ===
+        if (phone != null && !phone.trim().isEmpty()) {
+            String trimmedPhone = phone.trim();
+            if (!trimmedPhone.matches(PHONE_REGEX)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Phone number must be exactly 10 digits and start with 0!");
+                return "redirect:/internal/admin/profile";
+            }
         }
 
-        admin.setFullName(fullName.trim());
-        admin.setUserEmail(userEmail.trim());
-        admin.setPhone(phone != null ? phone.trim() : null);
-        admin.setAddress(address != null ? address.trim() : null);
+        // === Validate Address ===
+        if (address != null && !address.trim().isEmpty()) {
+            String trimmedAddress = address.trim();
+            if (trimmedAddress.length() < 10 || trimmedAddress.length() > 255) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Address must be between 10 and 255 characters!");
+                return "redirect:/internal/admin/profile";
+            }
+            if (!trimmedAddress.matches(ADDRESS_FORMAT_REGEX)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Address contains invalid special characters! Allowed characters: letters, numbers, spaces, commas, dots, slashes, hyphens, and hashes.");
+                return "redirect:/internal/admin/profile";
+            }
+            if (!trimmedAddress.matches(ADDRESS_CONTENT_REGEX)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Address must contain at least some letters or numbers, not only special characters!");
+                return "redirect:/internal/admin/profile";
+            }
+        }
+
+        // Email & Username: Không cho phép chỉnh sửa → giữ nguyên giá trị cũ
+        admin.setFullName(trimmedFullName);
+        admin.setPhone(phone != null && !phone.trim().isEmpty() ? phone.trim() : null);
+        admin.setAddress(address != null && !address.trim().isEmpty() ? address.trim() : null);
 
         try {
             userService.updateUserProfile(admin);
@@ -95,8 +126,17 @@ public class AdminProfileController {
             @RequestParam(name = "confirmPassword") String confirmPassword,
             RedirectAttributes redirectAttributes
     ) {
-        if (newPassword == null || newPassword.length() < 6) {
-            redirectAttributes.addFlashAttribute("errorMessage", "New password must be at least 6 characters!");
+        // === Validate New Password ===
+        if (newPassword == null || newPassword.length() < 8) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New password must be at least 8 characters!");
+            return "redirect:/internal/admin/profile";
+        }
+        if (!newPassword.matches(PASSWORD_LETTER_REGEX)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New password must contain at least one letter!");
+            return "redirect:/internal/admin/profile";
+        }
+        if (!newPassword.matches(PASSWORD_DIGIT_REGEX)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New password must contain at least one digit!");
             return "redirect:/internal/admin/profile";
         }
         if (!newPassword.equals(confirmPassword)) {

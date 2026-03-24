@@ -19,17 +19,14 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-
     // LIST INVOICE
     @GetMapping
     public String listInvoices(
-
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "invoiceId") String sort,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "sort", defaultValue = "invoiceId") String sort,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size,
             Model model) {
 
         Page<Invoice> invoices =
@@ -43,83 +40,51 @@ public class InvoiceController {
         return "invoice-list";
     }
 
-
     // VIEW DETAIL
-    @GetMapping("/view/{id}")
-    public String viewInvoice(@PathVariable Long id, Model model) {
-
+    @GetMapping("/detail/{id}")
+    public String invoiceDetail(@PathVariable(name = "id") Long id, Model model) {
         Invoice invoice = invoiceService.findById(id);
-
         model.addAttribute("invoice", invoice);
-
         return "invoice-detail";
     }
 
-
     // DELETE
     @GetMapping("/delete/{id}")
-    public String deleteInvoice(@PathVariable Long id) {
-
+    public String deleteInvoice(@PathVariable(name = "id") Long id) {
         invoiceService.deleteInvoice(id);
-
         return "redirect:/internal/invoices";
     }
 
-        // =========================
     // Create Page
-    // =========================
     @GetMapping("/create")
     public String createPage(Model model) {
-
         List<Order> orders = invoiceService.getConfirmOrders();
-
         model.addAttribute("orders", orders);
-
         return "invoice-create";
     }
 
-    // =========================
     // Load Order Info
-    // =========================
     @GetMapping("/create/{orderId}")
-    public String createFromOrder(@PathVariable Long orderId, Model model) {
-
+    public String createFromOrder(@PathVariable(name = "orderId") Long orderId, Model model) {
         Order order = invoiceService.getOrderById(orderId);
-
         List<Order> orders = invoiceService.getConfirmOrders();
-
         model.addAttribute("order", order);
         model.addAttribute("orders", orders);
-
         return "invoice-create";
     }
 
-    // =========================
     // Generate Invoice
-    // =========================
     @PostMapping("/create")
-    public String createInvoice(@RequestParam Long orderId) {
-
+    public String createInvoice(@RequestParam(name = "orderId") Long orderId) {
         invoiceService.generateInvoice(orderId);
-
         return "redirect:/internal/invoices";
     }
-    
-    // TOGGLE STATUS (inline dropdown)
+
+    // TOGGLE STATUS
     @PostMapping("/toggle")
-    public String toggleStatus(@RequestParam Long id,
-                               @RequestParam String status) {
+    public String toggleStatus(@RequestParam(name = "id") Long id,
+                               @RequestParam(name = "status") String status) {
         invoiceService.toggleStatus(id, status);
-        return "redirect:/invoices";
+        return "redirect:/internal/invoices";
     }
-
-    @GetMapping("/detail/{id}")
-public String invoiceDetail(@PathVariable Long id, Model model){
-
-    Invoice invoice = invoiceService.findById(id);
-
-    model.addAttribute("invoice", invoice);
-
-    return "invoice-detail";
-}
 }

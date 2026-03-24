@@ -34,10 +34,10 @@ public class OrderController {
 
     @GetMapping
     public String listOrders(
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "orderId") String sort,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "sort", defaultValue = "orderId") String sort,
             Model model) {
 
         Page<Order> orders = orderService.getOrders(status, keyword, page, sort);
@@ -68,12 +68,12 @@ public class OrderController {
 
     // ====== HANDLE CREATE ======
     @PostMapping("/create")
-    public String createOrder(@RequestParam Long userId,
-                              @RequestParam Long productId,
-                              @RequestParam Integer quantity,
-                              @RequestParam String phone,
-                              @RequestParam String address,
-                              @RequestParam String status,
+    public String createOrder(@RequestParam(name = "userId") Long userId,
+                              @RequestParam(name = "productId") Long productId,
+                              @RequestParam(name = "quantity") Integer quantity,
+                              @RequestParam(name = "phone") String phone,
+                              @RequestParam(name = "address") String address,
+                              @RequestParam(name = "status") String status,
                               RedirectAttributes redirectAttributes) {
         try {
             String message = orderService.createOrder(userId, productId, quantity, phone, address, status);
@@ -86,20 +86,20 @@ public class OrderController {
     }
 
     @PostMapping("/update-status")
-    public String updateStatus(@RequestParam Long id,
-                               @RequestParam String status) {
+    public String updateStatus(@RequestParam(name = "id") Long id,
+                               @RequestParam(name = "status") String status) {
         orderService.updateStatus(id, status);
         return "redirect:/internal/orders";
     }
 
   @GetMapping("/delete/{id}")
-public String delete(@PathVariable Long id) {
+public String delete(@PathVariable(name = "id") Long id) {
     orderService.deleteOrder(id);
     return "redirect:/internal/orders";
 }
-   // ====== SHOW EDIT PAGE ======
+    // ====== SHOW EDIT PAGE ======
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable(name = "id") Long id, Model model) {
 
         Order order = orderService.findById(id);
 
@@ -113,10 +113,10 @@ public String delete(@PathVariable Long id) {
 
     // ====== HANDLE UPDATE ======
   @PostMapping("/update")
-public String updateOrder(@RequestParam Long id,
-                          @RequestParam String phone,
-                          @RequestParam String address,
-                          @RequestParam String status,
+public String updateOrder(@RequestParam(name = "id") Long id,
+                          @RequestParam(name = "phone") String phone,
+                          @RequestParam(name = "address") String address,
+                          @RequestParam(name = "status") String status,
                           RedirectAttributes redirectAttributes) {
 
     try {
@@ -131,7 +131,7 @@ public String updateOrder(@RequestParam Long id,
     return "redirect:/internal/orders";
 }
 @GetMapping("/view/{id}")
-public String viewOrder(@PathVariable Long id, Model model) {
+public String viewOrder(@PathVariable(name = "id") Long id, Model model) {
 
     Order order = orderService.findById(id);
 

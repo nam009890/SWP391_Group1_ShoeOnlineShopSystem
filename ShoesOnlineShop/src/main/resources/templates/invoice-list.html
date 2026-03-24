@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
@@ -268,7 +268,7 @@ th:text="${i.order.user.fullName}">
 <td th:text="${#temporals.format(i.generatedDate,'dd/MM/yyyy')}"></td>
 
 <td>
-<form th:action="@{/invoices/toggle}" method="post">
+<form th:action="@{/internal/invoices/toggle}" method="post">
 <input type="hidden" name="id" th:value="${i.invoiceId}">
 <select name="status"
         class="form-select"
@@ -319,7 +319,7 @@ th:text="'Page ' + (${invoices.number}+1) + ' of ' + ${invoices.totalPages}">
 
 <a class="page-btn"
 th:classappend="${invoices.number == 0} ? ' disabled' : ''"
-th:href="@{/invoices(page=${invoices.number - 1},
+th:href="@{/internal/invoices(page=${invoices.number - 1},
 keyword=${keyword},
 status=${status},
 sort=${sort})}">
@@ -343,7 +343,7 @@ th:classappend="${i == invoices.number} ? ' active' : ''">
 
 <a class="page-btn"
 th:classappend="${invoices.number + 1 >= invoices.totalPages} ? ' disabled' : ''"
-th:href="@{/invoices(page=${invoices.number + 1},
+th:href="@{/internal/invoices(page=${invoices.number + 1},
 keyword=${keyword},
 status=${status},
 sort=${sort})}">

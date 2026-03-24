@@ -144,9 +144,13 @@
                             <div class="col-md-8">
                                 <select th:field="*{discountPercent}" class="form-select"
                                         th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
+<<<<<<< HEAD
 
                                     <option value="">&mdash; Select Discount &mdash;</option>
 
+=======
+                                    <option value="">— Select Discount —</option>
+>>>>>>> origin/dminh-lastone
                                     <option th:each="i : ${#numbers.sequence(5, 50, 5)}" th:value="${i}" th:text="${i + '%'}"></option>
                                 </select>
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('discountPercent')}" th:errors="*{discountPercent}"></div>

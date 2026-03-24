@@ -1,22 +1,20 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title>Admin - Order Management</title>
-        <link rel="stylesheet"
-              href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-        <link rel="stylesheet" th:href="@{/css/style.css}">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Order Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 
-    <body>
-        <div>
+<body>
+<div>
 
-            <!-- ================= SIDEBAR ================= -->
-            <aside class="sidebar">
-
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
 
         <div class="sidebar-brand">
             <div class="brand-icon">
@@ -36,7 +34,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
             Order Management
         </a>
@@ -50,23 +48,17 @@
             </svg>
             Feedback Management
         </a>
-        
-    <a th:href="@{/invoices}">
-    <!-- Invoice icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         fill="none"
-         viewBox="0 0 24 24"
-         stroke="currentColor"
-         stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 14l2 2 4-4"/>
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M7 3h10a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/>
-    </svg>
-    Invoice Management
-</a>
 
-        <div class="sidebar-logout">
+        <a th:href="@{/internal/invoices}">
+            <!-- Invoice icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/>
+            </svg>
+            Invoice Management
+        </a>
+
+        <div class="sidebar-logout" style="margin-top:auto;">
             <a th:href="@{/internal/logout}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
@@ -88,7 +80,6 @@
                 <h4>Order Management</h4>
                 <p>Manage and track all customer orders</p>
             </div>
-            <a href="/internal/admin/profile" style="text-decoration:none;">
             <div class="user-pill">
                 <div class="user-avatar">SS</div>
                 <div>
@@ -96,7 +87,6 @@
                     <div class="user-role">Administrator</div>
                 </div>
             </div>
-            </a>
         </div>
 
         <!-- BREADCRUMB -->
@@ -115,158 +105,30 @@
             <!-- TOOLBAR / FILTER -->
             <div class="toolbar" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
 
-                <!-- Left: search + filter -->
-                <form method="get" id="filterForm" style="display:flex; align-items:center; gap:10px;">
-                    <div class="search-input">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="2">
+                <form method="get" id="filterForm" th:action="@{/internal/orders}" style="display:flex; align-items:center; gap:10px; width:100%;">
+                    
+                    <div class="search-input" style="flex: 1; max-width: 300px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"/>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-
                         </svg>
-                    </div>
-                    <span class="brand-name">Sale Staff</span>
-                </div>
-
-                <span class="nav-label">Management</span>
-
-                <a th:href="@{/orders}" class="active">
-                    <!-- Orders icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                    </svg>
-                    Order Management
-                </a>
-
-                <a th:href="@{/feedbacks}">
-                    <!-- Feedback icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-                    </svg>
-                    Feedback Management
-                </a>
-
-                <a th:href="@{/invoices}" >
-                    Invoice Management
-                </a>
-
-                <div class="sidebar-logout">
-                    <a th:href="@{/logout}">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                        </svg>
-                        Logout
-                    </a>
-                </div>
-
-            </aside>
-
-            <!-- ================= MAIN ================= -->
-            <main class="main">
-
-                <!-- TOPBAR -->
-                <div class="topbar">
-                    <div>
-                        <h4>Order Management</h4>
-                        <p>Manage and track all customer orders</p>
-                    </div>
-                    <div class="user-pill">
-                        <div class="user-avatar">SS</div>
-                        <div>
-                            <div class="user-name">Sale Staff</div>
-                            <div class="user-role">Administrator</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BREADCRUMB -->
-                <div class="breadcrumb-bar">
-                    <a th:href="@{/}">Home</a>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                    </svg>
-                    <span>Order Management</span>
-                </div>
-
-                <!-- CARD -->
-                <div class="card">
-
-                    <!-- TOOLBAR / FILTER -->
-                    <div class="toolbar" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-
-                        <!-- Left: search + filter -->
-                        <form method="get" style="display:flex; align-items:center; gap:10px;">
-                            <div class="search-input">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"/>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                                </svg>
-                                <input type="text"
-                                       name="keyword"
-                                       th:value="${keyword}"
-                                       placeholder="Search by customer name"/>
-                            </div>
-
-                            <button type="submit" class="btn-search">Search</button>
-
-                            <select name="status" class="form-select" style="width:140px;">
-                                <option value="">All Status</option>
-                                <option th:each="s : ${statuses}"
-                                        th:value="${s}"
-                                        th:text="${s}"
-                                        th:selected="${s == currentStatus}">
-                                </option>
-                            </select>
-                        </form>
-
-                       
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by customer name" />
                     </div>
 
-                    <!-- TABLE -->
-                    <div class="table-wrap" style="border:none; border-radius:0;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>NO</th>
-                                    <th>CUSTOMER NAME</th>
-                                    <th>PHONE</th>
-                                    <th>ADDRESS</th>
-                                    <th>TOTAL</th>
-                                    <th>STATUS</th>
-                                    <th>ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <button type="submit" class="btn-search" style="padding: 0 20px; height: 40px; border-radius: 8px; font-weight: 600;">Search</button>
 
-
-                    <select name="status" id="statusFilter"
-                            class="form-select" style="width:140px;">
+                    <select name="status" id="statusFilter" class="form-select" style="width:140px; height: 40px; margin-left: auto;">
                         <option value="">All Status</option>
-                        <option th:each="s : ${statuses}"
-                                th:value="${s}"
-                                th:text="${s}"
-                                th:selected="${s == currentStatus}">
-                        </option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == currentStatus}"></option>
                     </select>
 
-                    <select name="sort" id="sortFilter"
-                            class="form-select" style="width:150px;">
+                    <select name="sort" id="sortFilter" class="form-select" style="width:150px; height: 40px;">
                         <option value="orderId" th:selected="${sort=='orderId'}">Sort by ID</option>
                         <option value="totalAmount" th:selected="${sort=='totalAmount'}">Sort by Total</option>
                     </select>
                 </form>
 
-                
             </div>
-
 
             <!-- TABLE -->
             <div class="table-wrap" style="border:none; border-radius:0;">
@@ -292,7 +154,7 @@
                     <tr th:each="o, stat : ${orders.content}">
                         <td th:text="${o.orderId}"></td>
                         <td>
-                            <div style="font-weight:600; color:var(--text-dark);" th:text="${o.user.fullName}"></div>
+                            <div style="font-weight:600; color:var(--text-dark);" th:text="${o.user != null ? o.user.fullName : ''}"></div>
                         </td>
                         <td th:text="${o.phone}"></td>
                         <td th:text="${o.shippingAddress}"></td>
@@ -307,6 +169,9 @@
                         <td>
                             <form th:action="@{/internal/orders/update-status}" method="post">
                                 <input type="hidden" name="id" th:value="${o.orderId}">
+                                <input type="hidden" name="keyword" th:value="${keyword}">
+                                <input type="hidden" name="sort" th:value="${sort}">
+                                <input type="hidden" name="page" th:value="${orders.number}">
                                 <select name="status"
                                         class="form-select"
                                         style="min-width:140px; font-size:12.5px; padding:5px 10px;"
@@ -321,48 +186,33 @@
                         </td>
 
                         <td>
-                            <div class="action-btns">
-                                <a th:href="@{/internal/orders/view/{id}(id=${o.orderId})}"
-           class="btn-outline"
-           style="padding:5px 14px; font-size:12.5px;">
-            Detail
-        </a>
-
-
-                                <a th:href="@{/internal/orders/edit/{id}(id=${o.orderId})}"
-                                   class="btn-upd">Update</a>
-
-                                <a th:href="@{/internal/orders/delete/{id}(id=${o.orderId})}"
-                                   class="btn-del"
-                                   onclick="return confirm('Are you sure to delete this order?')">
-                                    Delete
-                                </a>
+                            <div class="action-btns" style="display: flex; gap: 8px;">
+                                <a th:href="@{/internal/orders/view/{id}(id=${o.orderId})}" class="btn-outline" style="padding:5px 14px; font-size:12.5px;">Detail</a>
+                                <a th:href="@{/internal/orders/edit/{id}(id=${o.orderId})}" class="btn-upd" style="padding:5px 14px; font-size:12.5px;">Update</a>
+                                <a th:href="@{/internal/orders/delete/{id}(id=${o.orderId})}" class="btn-del" style="padding:5px 14px; font-size:12.5px;" onclick="return confirm('Are you sure to delete this order?')">Delete</a>
                             </div>
                         </td>
                     </tr>
 
+                    </tbody>
+                </table>
+            </div>
 
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- PAGINATION -->
-                    <div class="pagination-bar">
-                        <span class="page-info"
-                              th:text="'Page ' + (${orders.number}+1) + ' of ' + ${orders.totalPages}">
-                        </span>
+            <!-- PAGINATION -->
+            <div class="pagination-bar" th:if="${orders.totalPages > 0}">
+                <span class="page-info" th:text="'Page ' + (${orders.number}+1) + ' of ' + ${orders.totalPages}"></span>
 
                 <div class="page-btns">
                     <!-- Prev arrow -->
                     <a class="page-btn"
                        th:classappend="${orders.number == 0} ? ' disabled' : ''"
-                       th:href="@{/orders(page=${orders.number - 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
+                       th:href="@{/internal/orders(page=${orders.number - 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
                         &#8249;
                     </a>
 
                     <a class="page-btn"
                        th:each="i : ${#numbers.sequence(0, orders.totalPages-1)}"
-                       th:href="@{/orders(page=${i}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}"
+                       th:href="@{/internal/orders(page=${i}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}"
                        th:text="${i+1}"
                        th:classappend="${i == orders.number} ? ' active' : ''">
                     </a>
@@ -370,17 +220,13 @@
                     <!-- Next arrow -->
                     <a class="page-btn"
                        th:classappend="${orders.number + 1 >= orders.totalPages} ? ' disabled' : ''"
-                       th:href="@{/orders(page=${orders.number + 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
+                       th:href="@{/internal/orders(page=${orders.number + 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
                         &#8250;
                     </a>
-
                 </div>
-                <!-- /card -->
+            </div>
 
-            </main>
-        </div>
-
-
+        </div> <!-- /card -->
     </main>
 </div>
 
@@ -388,10 +234,11 @@
 
 <script>
 const form = document.getElementById("filterForm");
-document.getElementById("statusFilter").addEventListener("change", () => form.submit());
-document.getElementById("sortFilter").addEventListener("change", () => form.submit());
+const statusFilter = document.getElementById("statusFilter");
+const sortFilter = document.getElementById("sortFilter");
+if(statusFilter) statusFilter.addEventListener("change", () => form.submit());
+if(sortFilter) sortFilter.addEventListener("change", () => form.submit());
 </script>
 
 </body>
 </html>
-

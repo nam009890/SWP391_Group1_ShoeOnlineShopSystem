@@ -176,13 +176,28 @@ public class AdminUserController {
             return "redirect:/internal/admin/users/create";
         }
 
+        // === Validate Password (before encoding) ===
+        String rawPassword = user.getPasswordHash();
+        if (rawPassword == null || rawPassword.length() < 8) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: Password must be at least 8 characters!");
+            return "redirect:/internal/admin/users/create";
+        }
+        if (!rawPassword.matches(".*[a-zA-Z].*")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: Password must contain at least one letter!");
+            return "redirect:/internal/admin/users/create";
+        }
+        if (!rawPassword.matches(".*\\d.*")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: Password must contain at least one digit!");
+            return "redirect:/internal/admin/users/create";
+        }
+
         Map<String, String> errors = adminUserService.validateUser(user);
         if (!errors.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Validation failed: " + errors.values().iterator().next());
             return "redirect:/internal/admin/users/create";
         }
 
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        user.setPasswordHash(passwordEncoder.encode(rawPassword));
 
         try {
             adminUserService.saveUser(user);

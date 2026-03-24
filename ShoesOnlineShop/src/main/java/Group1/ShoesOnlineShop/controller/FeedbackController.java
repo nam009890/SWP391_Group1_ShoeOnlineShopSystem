@@ -39,13 +39,13 @@ public class FeedbackController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable(name = "id") Long id) {
         feedbackService.delete(id);
         return "redirect:/internal/feedbacks";
     }
     
     @GetMapping("/view/{id}")
-public String viewDetail(@PathVariable Long id, Model model) {
+public String viewDetail(@PathVariable(name = "id") Long id, Model model) {
 
     Feedback feedback = feedbackService.getById(id);
 

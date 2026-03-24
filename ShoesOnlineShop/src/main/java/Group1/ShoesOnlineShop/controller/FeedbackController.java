@@ -16,10 +16,10 @@ public class FeedbackController {
 
     @GetMapping
     public String list(
-            @RequestParam(defaultValue = "") String status,
-            @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "feedbackId") String sort,
+            @RequestParam(name = "status", defaultValue = "") String status,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "sort", defaultValue = "feedbackId") String sort,
             Model model) {
 
         Page<?> feedbacks = feedbackService.getAll(status, keyword, page, sort);
@@ -33,7 +33,7 @@ public class FeedbackController {
     }
 
     @PostMapping("/toggle")
-    public String toggle(@RequestParam Long id) {
+    public String toggle(@RequestParam(name = "id") Long id) {
         feedbackService.toggleStatus(id);
         return "redirect:/internal/feedbacks";
     }

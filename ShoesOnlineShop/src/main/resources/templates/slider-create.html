@@ -105,10 +105,16 @@
                 </div> <div class="card mb-4">
                     <div class="card-header-bar" style="display:flex;justify-content:space-between;align-items:center">
                         <h6 style="margin:0">Coupon Codes</h6>
-                        <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#modalCoupon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            Add Coupon
-                        </button>
+                        <div>
+                            <button type="button" class="btn-outline" style="padding: 0.4rem 1rem; margin-right: 0.5rem; color: #dc3545; border-color: #dc3545;" onclick="deleteAllCoupons()">
+                                <svg viewBox="0 0 24 24" fill="none" class="w-4 h-4" stroke="currentColor" stroke-width="2" style="width:16px; margin-right: 4px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                Delete All
+                            </button>
+                            <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#modalCoupon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Add Coupon
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body-pad" style="padding-top:0">
                         <div class="text-danger mb-2" th:if="${#fields.hasErrors('coupons')}" th:errors="*{coupons}" style="font-size:13px;font-weight:600"></div>
@@ -135,10 +141,16 @@
                 <div class="card mb-4">
                     <div class="card-header-bar" style="display:flex;justify-content:space-between;align-items:center">
                         <h6 style="margin:0">Products</h6>
-                        <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#modalProduct">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            Add Product
-                        </button>
+                        <div>
+                            <button type="button" class="btn-outline" style="padding: 0.4rem 1rem; margin-right: 0.5rem; color: #dc3545; border-color: #dc3545;" onclick="deleteAllProducts()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; margin-right: 4px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                                Delete All
+                            </button>
+                            <button type="button" class="btn-accent" data-bs-toggle="modal" data-bs-target="#modalProduct">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Add Product
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body-pad" style="padding-top:0">
                         <div class="text-danger mb-2" th:if="${#fields.hasErrors('sliderProducts')}" th:errors="*{sliderProducts}" style="font-size:13px;font-weight:600"></div>
@@ -261,6 +273,28 @@
                                 const empty = document.querySelector(`#${tableId} .empty-row`);
                                 if (empty)
                                     empty.remove();
+                            }
+
+                            function deleteAllCoupons() {
+                                if (confirm("Are you sure you want to remove all selected coupons?")) {
+                                    document.querySelectorAll('.added-coupon-tr').forEach(row => row.remove());
+                                    const tbody = document.querySelector('#couponTable tbody');
+                                    if (tbody.children.length === 0) {
+                                        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No coupon codes added yet</td></tr>';
+                                    }
+                                    updateHiddenInputs();
+                                }
+                            }
+
+                            function deleteAllProducts() {
+                                if (confirm("Are you sure you want to remove all selected products?")) {
+                                    document.querySelectorAll('.added-product-tr').forEach(row => row.remove());
+                                    const tbody = document.querySelector('#productTable tbody');
+                                    if (tbody.children.length === 0) {
+                                        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No products added yet</td></tr>';
+                                    }
+                                    updateHiddenInputs();
+                                }
                             }
 
                              function addSelectedCoupons() {

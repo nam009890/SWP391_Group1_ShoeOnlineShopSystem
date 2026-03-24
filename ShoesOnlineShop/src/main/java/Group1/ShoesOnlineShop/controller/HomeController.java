@@ -43,6 +43,21 @@ public class HomeController {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
+    private Map<Long, Integer> getActiveProductDiscounts() {
+        List<Slider> activeSliders = sliderRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+        Map<Long, Integer> productDiscounts = new HashMap<>();
+        for (Slider s : activeSliders) {
+            for (Group1.ShoesOnlineShop.entity.SliderProduct sp : s.getSliderProducts()) {
+                Long pid = sp.getProduct().getId();
+                int currentDis = productDiscounts.getOrDefault(pid, 0);
+                if (sp.getDiscount() > currentDis) {
+                    productDiscounts.put(pid, sp.getDiscount());
+                }
+            }
+        }
+        return productDiscounts;
+    }
+
     // ===================== HOME PAGE =====================
     @GetMapping({"/", "/home"})
     public String showHomePage(Model model) {
@@ -62,6 +77,7 @@ public class HomeController {
         model.addAttribute("sliders", sliders);
         model.addAttribute("featuredProducts", featuredProducts);
         model.addAttribute("contents", contents);
+        model.addAttribute("productDiscounts", getActiveProductDiscounts());
         return "home";
     }
 
@@ -105,11 +121,23 @@ public class HomeController {
             products = products.subList(0, 12);
         }
 
+        Map<Long, Integer> discounts = getActiveProductDiscounts();
+
         return products.stream().map(p -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", p.getId());
             map.put("name", p.getName());
-            map.put("price", p.getPrice());
+            
+            int discount = discounts.getOrDefault(p.getId(), 0);
+            if (discount > 0) {
+                BigDecimal finalPrice = p.getPrice().subtract(p.getPrice().multiply(new BigDecimal(discount)).divide(new BigDecimal(100)));
+                map.put("originalPrice", p.getPrice());
+                map.put("discount", discount);
+                map.put("price", finalPrice);
+            } else {
+                map.put("price", p.getPrice());
+            }
+
             map.put("imageUrl", p.getImageUrl());
             map.put("categoryName", p.getCategory() != null ? p.getCategory().getName() : "");
             return map;
@@ -173,6 +201,7 @@ public class HomeController {
         model.addAttribute("selectedMinPrice", minPrice);
         model.addAttribute("selectedMaxPrice", maxPrice);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("productDiscounts", getActiveProductDiscounts());
         return "customer-product-list";
     }
 
@@ -216,6 +245,7 @@ public class HomeController {
         model.addAttribute("relatedProducts", relatedProducts);
         model.addAttribute("avgRating", avgRating);
         model.addAttribute("feedbackCount", feedbacks.size());
+        model.addAttribute("productDiscounts", getActiveProductDiscounts());
         return "customer-product-detail";
     }
 

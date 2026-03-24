@@ -66,19 +66,19 @@ public class ProfileController {
         User currentUser = getAuthenticatedUser();
         if (currentUser == null) return "redirect:/login";
 
+        // Address is optional: if blank/null, skip @Size validation
+        if (user.getAddress() != null && user.getAddress().trim().isEmpty()) {
+            user.setAddress(null);
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "Please fix the invalid fields!");
             return "customer-profile";
         }
 
-        if (userService.isEmailExists(user.getUserEmail(), currentUser.getUserId())) {
-            result.rejectValue("userEmail", "error.user", "This email is already in use by another account!");
-            model.addAttribute("errorMessage", "Email validation failed.");
-            return "customer-profile";
-        }
-
         try {
             user.setUserId(currentUser.getUserId()); 
+            user.setUserEmail(currentUser.getUserEmail()); // Lock email modification
             userService.updateUserProfile(user);
             redirectAttributes.addFlashAttribute("successMessage", "Your profile has been updated successfully!");
         } catch (Exception e) {
@@ -106,16 +106,21 @@ public class ProfileController {
         User currentUser = getAuthenticatedUser();
         if (currentUser == null) return "redirect:/login";
 
+        if (newPassword.length() < 6) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New password must be at least 6 characters!");
+            return "redirect:/profile/change-password";
+        }
+
         if (!newPassword.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("errorMessage", "New passwords do not match!");
             return "redirect:/profile/change-password";
         }
 
-        boolean success = userService.changePassword(currentUser.getUserId(), currentPassword, newPassword);
-        if (success) {
+        String error = userService.changePassword(currentUser.getUserId(), currentPassword, newPassword);
+        if (error == null) {
             redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Incorrect current password!");
+            redirectAttributes.addFlashAttribute("errorMessage", error);
         }
 
         return "redirect:/profile/change-password";
@@ -145,19 +150,19 @@ public class ProfileController {
         User currentUser = getAuthenticatedUser();
         if (currentUser == null) return "redirect:/internal/login";
 
+        // Address is optional: if blank/null, skip @Size validation
+        if (user.getAddress() != null && user.getAddress().trim().isEmpty()) {
+            user.setAddress(null);
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "Please fix the invalid fields!");
             return "marketing-profile";
         }
 
-        if (userService.isEmailExists(user.getUserEmail(), currentUser.getUserId())) {
-            result.rejectValue("userEmail", "error.user", "This email is already in use by another account!");
-            model.addAttribute("errorMessage", "Email validation failed.");
-            return "marketing-profile";
-        }
-
         try {
             user.setUserId(currentUser.getUserId()); 
+            user.setUserEmail(currentUser.getUserEmail()); // Lock email modification
             userService.updateUserProfile(user);
             redirectAttributes.addFlashAttribute("successMessage", "Your profile has been updated successfully!");
         } catch (Exception e) {
@@ -185,16 +190,21 @@ public class ProfileController {
         User currentUser = getAuthenticatedUser();
         if (currentUser == null) return "redirect:/internal/login";
 
+        if (newPassword.length() < 6) {
+            redirectAttributes.addFlashAttribute("errorMessage", "New password must be at least 6 characters!");
+            return "redirect:/internal/profile/change-password";
+        }
+
         if (!newPassword.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("errorMessage", "New passwords do not match!");
             return "redirect:/internal/profile/change-password";
         }
 
-        boolean success = userService.changePassword(currentUser.getUserId(), currentPassword, newPassword);
-        if (success) {
+        String error = userService.changePassword(currentUser.getUserId(), currentPassword, newPassword);
+        if (error == null) {
             redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Incorrect current password!");
+            redirectAttributes.addFlashAttribute("errorMessage", error);
         }
 
         return "redirect:/internal/profile/change-password";

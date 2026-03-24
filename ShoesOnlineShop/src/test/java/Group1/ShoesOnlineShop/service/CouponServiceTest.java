@@ -1,6 +1,7 @@
 package Group1.ShoesOnlineShop.service;
 
 import Group1.ShoesOnlineShop.entity.Coupon;
+import Group1.ShoesOnlineShop.service.CouponService;
 import Group1.ShoesOnlineShop.repository.CouponRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

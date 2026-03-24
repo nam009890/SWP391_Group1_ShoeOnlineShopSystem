@@ -44,7 +44,15 @@ public class HomeController {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
-<<<<<<< HEAD
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private UserCouponService userCouponService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     private Map<Long, Integer> getActiveProductDiscounts() {
         List<Slider> activeSliders = sliderRepository.findByIsActiveTrueOrderByCreatedAtDesc();
         Map<Long, Integer> productDiscounts = new HashMap<>();
@@ -59,16 +67,6 @@ public class HomeController {
         }
         return productDiscounts;
     }
-=======
-    @Autowired
-    private CouponService couponService;
-
-    @Autowired
-    private UserCouponService userCouponService;
-
-    @Autowired
-    private UserRepository userRepository;
->>>>>>> origin/dminh-lastone
 
     // ===================== HOME PAGE =====================
     @GetMapping({"/", "/home"})
@@ -89,11 +87,7 @@ public class HomeController {
         model.addAttribute("sliders", sliders);
         model.addAttribute("featuredProducts", featuredProducts);
         model.addAttribute("contents", contents);
-<<<<<<< HEAD
         model.addAttribute("productDiscounts", getActiveProductDiscounts());
-=======
-
->>>>>>> origin/dminh-lastone
         return "home";
     }
 
@@ -143,7 +137,6 @@ public class HomeController {
             Map<String, Object> map = new HashMap<>();
             map.put("id", p.getId());
             map.put("name", p.getName());
-<<<<<<< HEAD
             
             int discount = discounts.getOrDefault(p.getId(), 0);
             if (discount > 0) {
@@ -155,11 +148,6 @@ public class HomeController {
                 map.put("price", p.getPrice());
             }
 
-=======
-            map.put("price", p.getPrice());
-            map.put("salePrice", p.getSalePrice());
-            map.put("discountPercent", p.getDiscountPercent());
->>>>>>> origin/dminh-lastone
             map.put("imageUrl", p.getImageUrl());
             map.put("categoryName", p.getCategory() != null ? p.getCategory().getName() : "");
             return map;

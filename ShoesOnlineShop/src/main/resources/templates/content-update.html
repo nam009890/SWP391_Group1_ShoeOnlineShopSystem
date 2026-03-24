@@ -84,13 +84,11 @@
             <div class="card" style="max-width: 860px;">
                 <div class="card-header-bar">
                     <h6>Edit Content</h6>
-<<<<<<< HEAD
+
 
                     <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${content.id}" style="font-weight:600; color:var(--text-mid)">&mdash;</span></span>
 
-=======
-                    <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${content.id}" style="font-weight:600; color:var(--text-mid)">—</span></span>
->>>>>>> origin/dminh-lastone
+
                 </div>
                 <div class="card-body-pad">
                     <form th:action="@{/internal/contents/save}" th:object="${content}" method="post" enctype="multipart/form-data">
@@ -104,13 +102,11 @@
                             <div class="col-md-9">
                                 <input type="text" th:field="*{contentTitle}" class="form-control"
                                        th:classappend="${#fields.hasErrors('contentTitle')} ? 'is-invalid' : ''"
-<<<<<<< HEAD
+
 
                                        placeholder="Enter content title..." required>
 
-=======
-                                       placeholder="Enter content title…" required>
->>>>>>> origin/dminh-lastone
+
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('contentTitle')}" th:errors="*{contentTitle}"></div>
                             </div>
                         </div>
@@ -177,12 +173,10 @@
         <script>
             $(document).ready(function () {
                 $('#summernote').summernote({
-<<<<<<< HEAD
+
                     placeholder: 'Write your content here. You can drag & drop images or use the toolbar above...',
 
-=======
-                    placeholder: 'Write your content here. You can drag & drop images or use the toolbar above…',
->>>>>>> origin/dminh-lastone
+
                     tabsize: 2,
                     height: 420,
                     toolbar: [

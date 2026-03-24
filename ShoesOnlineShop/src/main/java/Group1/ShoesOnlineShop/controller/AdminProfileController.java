@@ -107,11 +107,11 @@ public class AdminProfileController {
         Long currentAdminId = getCurrentAdminId();
         if (currentAdminId == null) return "redirect:/login";
 
-        boolean success = userService.changePassword(currentAdminId, currentPassword, newPassword);
-        if (success) {
+        String error = userService.changePassword(currentAdminId, currentPassword, newPassword);
+        if (error == null) {
             redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully!");
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Incorrect current password!");
+            redirectAttributes.addFlashAttribute("errorMessage", error);
         }
 
         return "redirect:/internal/admin/profile";

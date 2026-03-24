@@ -107,7 +107,7 @@ public class SliderService {
             errors.put("sliderTitle", "This Slider title already exists, please choose another!");
         }
         if (productIds == null || productIds.isEmpty()) {
-            errors.put("products", "Please select at least one product!");
+            errors.put("sliderProducts", "Please select at least one product!");
         }
         if (couponIds == null || couponIds.isEmpty()) {
             errors.put("coupons", "Please select at least one coupon!");

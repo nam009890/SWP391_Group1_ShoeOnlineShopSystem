@@ -19,4 +19,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     // Approved feedbacks for a product (customer-facing)
     java.util.List<Feedback> findByProduct_IdAndIsApprovedTrueOrderByCreatedAtDesc(Long productId);
+
+    boolean existsByUser_UserIdAndProduct_Id(Long userId, Long productId);
 }

@@ -37,7 +37,7 @@ public class CartService {
         return cartRepository.findBySessionId(sessionId);
     }
 
-    public void addToCart(Long productId, Integer quantity, String username, String sessionId) {
+    public void addToCart(Long productId, Integer quantity, String size, String color, String username, String sessionId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -51,10 +51,10 @@ public class CartService {
         if (username != null) {
             user = userRepository.findByUserName(username).orElse(null);
             if (user != null) {
-                cartItem = cartRepository.findByUser_UserIdAndProduct_Id(user.getUserId(), productId);
+                cartItem = cartRepository.findByUser_UserIdAndProduct_IdAndSizeAndColor(user.getUserId(), productId, size, color);
             }
         } else {
-            cartItem = cartRepository.findBySessionIdAndProduct_Id(sessionId, productId);
+            cartItem = cartRepository.findBySessionIdAndProduct_IdAndSizeAndColor(sessionId, productId, size, color);
         }
 
         if (cartItem != null) {
@@ -67,6 +67,8 @@ public class CartService {
             cartItem = new Cart();
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
+            cartItem.setSize(size);
+            cartItem.setColor(color);
             if (user != null) {
                 cartItem.setUser(user);
             } else {
@@ -114,11 +116,17 @@ public class CartService {
         List<Cart> sessionCarts = cartRepository.findBySessionId(sessionId);
         if (sessionCarts != null && !sessionCarts.isEmpty()) {
             for (Cart sessionCart : sessionCarts) {
-                Cart userCart = cartRepository.findByUser_UserIdAndProduct_Id(user.getUserId(), sessionCart.getProduct().getId());
+                Cart userCart = cartRepository.findByUser_UserIdAndProduct_IdAndSizeAndColor(
+                    user.getUserId(), 
+                    sessionCart.getProduct().getId(), 
+                    sessionCart.getSize(), 
+                    sessionCart.getColor()
+                );
                 if (userCart != null) {
                     // Update quantity
                     userCart.setQuantity(userCart.getQuantity() + sessionCart.getQuantity());
                     cartRepository.save(userCart);
+                    cartRepository.delete(sessionCart); // Remove merged session item
                 } else {
                     // Re-assign to user
                     sessionCart.setSessionId(null);

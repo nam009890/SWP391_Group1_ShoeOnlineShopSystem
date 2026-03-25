@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -56,7 +56,7 @@
         <div class="user-pill">
             <div class="user-avatar">AD</div>
             <div>
-                <div class="user-name">Administrator</div>
+                <div class="user-name" th:text="${#authentication.principal.user.fullName}">Administrator</div>
                 <div class="user-role">Admin</div>
             </div>
         </div>
@@ -94,6 +94,7 @@
                                 <input type="text" name="name" th:value="${category.name}"
                                        th:class="${errors?.containsKey('name')} ? 'form-control is-invalid' : 'form-control'"
                                        placeholder="Ex: Running Shoes, T-Shirts..." maxlength="100">
+
                                 <div th:if="${errors?.containsKey('name')}" class="error-text" th:text="${errors['name']}"></div>
                             </div>
 

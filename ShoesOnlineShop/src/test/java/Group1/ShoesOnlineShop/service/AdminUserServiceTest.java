@@ -308,7 +308,7 @@ class AdminUserServiceTest {
         user.setFullName("Nguyen Van B");
         user.setUserEmail("vanb@example.com");
         user.setUserName("vanbuser");
-        user.setUserRole("STAFF");
+        user.setUserRole("SALE_STAFF");
         user.setPhone("0987654321");
 
         when(adminUserRepository.existsByUserEmail("vanb@example.com")).thenReturn(false);
@@ -328,9 +328,9 @@ class AdminUserServiceTest {
 
         when(adminUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        adminUserService.updateUserRole(1L, "STAFF");
+        adminUserService.updateUserRole(1L, "SALE_STAFF");
 
-        assertEquals("STAFF", user.getUserRole());
+        assertEquals("SALE_STAFF", user.getUserRole());
         verify(adminUserRepository, times(1)).save(user);
     }
 

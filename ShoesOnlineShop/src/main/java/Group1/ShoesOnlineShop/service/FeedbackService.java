@@ -11,6 +11,9 @@ public class FeedbackService {
 
     @Autowired
     private FeedbackRepository feedbackRepository;
+    
+    @Autowired
+    private Group1.ShoesOnlineShop.repository.OrderRepository orderRepository;
 
     public Page<Feedback> getAll(String status, String keyword, int page, String sort) {
 
@@ -51,7 +54,33 @@ public class FeedbackService {
     }
     
     public Feedback getById(Long id) {
-    return feedbackRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Feedback not found"));
-}
+        return feedbackRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Feedback not found"));
+    }
+
+    public void saveFeedback(Group1.ShoesOnlineShop.entity.User user, Group1.ShoesOnlineShop.entity.Product product, Integer rating, String comment) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5");
+        }
+        
+        // Check if user has purchased the product
+        boolean hasPurchased = orderRepository.hasPurchasedProduct(user.getUserId(), product.getId());
+        if (!hasPurchased) {
+            throw new IllegalArgumentException("You can only review products you have purchased.");
+        }
+        
+        // Prevent duplicate feedback
+        boolean alreadyReviewed = feedbackRepository.existsByUser_UserIdAndProduct_Id(user.getUserId(), product.getId());
+        if (alreadyReviewed) {
+            throw new IllegalArgumentException("You have already reviewed this product.");
+        }
+
+        Feedback feedback = new Feedback();
+        feedback.setUser(user);
+        feedback.setProduct(product);
+        feedback.setRating(rating);
+        feedback.setComment(comment);
+        feedback.setIsApproved(true);
+        feedbackRepository.save(feedback);
+    }
 }

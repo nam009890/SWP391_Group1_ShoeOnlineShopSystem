@@ -39,10 +39,13 @@
         .cart-item-price { font-size: 1rem; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
         
         .cart-item-actions { display: flex; align-items: center; justify-content: space-between; }
-        .quantity-form { display: flex; align-items: center; gap: 0.5rem; }
-        .quantity-input { width: 60px; padding: 0.4rem; background: var(--bg); border: 1px solid var(--glass-border); color: #fff; border-radius: 6px; text-align: center; }
-        .btn-update { background: transparent; color: var(--text); border: 1px solid var(--glass-border); padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; transition: var(--transition); font-size: 0.8rem; text-transform: uppercase; }
-        .btn-update:hover { background: var(--glass); color: #fff; border-color: rgba(255,255,255,0.3); }
+        .quantity-form { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; height: 40px; }
+        .quantity-btn { background: transparent; color: #fff; border: none; width: 32px; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); font-size: 1.2rem; }
+        .quantity-btn:hover { background: var(--glass); color: var(--accent); }
+        .quantity-input { width: 45px; height: 100%; border: none; border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); background: transparent; color: #fff; text-align: center; font-weight: 600; font-family: inherit; -moz-appearance: textfield; }
+        .quantity-input::-webkit-outer-spin-button, .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        .btn-update { display: none; } /* Hidden as updates are now AJAX */
         
         .btn-remove { position: absolute; top: 1.5rem; right: 0; background: transparent; color: var(--text-muted); border: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: color 0.3s; }
         .btn-remove:hover { color: var(--accent); }
@@ -99,13 +102,18 @@
                     </div>
                     <div class="cart-item-details">
                         <div class="cart-item-title" th:text="${item.product.name}">Product Name</div>
+                        <div class="cart-item-variant" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem;">
+                            Size: <span th:text="${item.size}">38</span> | Color: <span th:text="${item.color}">Black</span>
+                        </div>
                         <div class="cart-item-price" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
                         <div class="cart-item-actions">
-                            <form th:action="@{/cart/update}" method="post" class="quantity-form">
-                                <input type="hidden" name="cartId" th:value="${item.cartId}">
-                                <input type="number" name="quantity" class="quantity-input" th:value="${item.quantity}" min="1" th:max="${item.product.stockQuantity}">
-                                <button type="submit" class="btn-update">Update</button>
-                            </form>
+                            <div class="quantity-form">
+                                <button type="button" class="quantity-btn minus" th:onclick="'changeQuantity(' + ${item.cartId} + ', -1)'">−</button>
+                                <input type="number" class="quantity-input" th:id="'qty-' + ${item.cartId}" 
+                                       th:value="${item.quantity}" min="0" th:max="${item.product.stockQuantity}"
+                                       th:onchange="'manualUpdate(' + ${item.cartId} + ', this.value)'">
+                                <button type="button" class="quantity-btn plus" th:onclick="'changeQuantity(' + ${item.cartId} + ', 1)'">+</button>
+                            </div>
                         </div>
                         <form th:action="@{/cart/remove}" method="post">
                             <input type="hidden" name="cartId" th:value="${item.cartId}">
@@ -140,5 +148,64 @@
             <a th:href="@{/checkout}" class="btn-checkout">Proceed to Checkout</a>
         </div>
     </div>
+    <script th:inline="javascript">
+        function changeQuantity(cartId, delta) {
+            const input = document.getElementById('qty-' + cartId);
+            let newQty = parseInt(input.value) + delta;
+            
+            if (newQty < 0) newQty = 0;
+            const max = parseInt(input.getAttribute('max'));
+            if (newQty > max) {
+                alert("Only " + max + " items available in stock.");
+                newQty = max;
+            }
+            
+            updateCart(cartId, newQty);
+        }
+
+        function manualUpdate(cartId, value) {
+            let newQty = parseInt(value);
+            if (isNaN(newQty) || newQty < 0) newQty = 0;
+            
+            const input = document.getElementById('qty-' + cartId);
+            const max = parseInt(input.getAttribute('max'));
+            if (newQty > max) {
+                alert("Only " + max + " items available in stock.");
+                newQty = max;
+                input.value = max;
+            }
+            
+            updateCart(cartId, newQty);
+        }
+
+        function updateCart(cartId, quantity) {
+            const formData = new URLSearchParams();
+            formData.append('cartId', cartId);
+            formData.append('quantity', quantity);
+
+            fetch('/cart/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // For simplicity, reload page to reflect changes in subtotal/total
+                    // In a more advanced version, we could update DOM elements directly
+                    location.reload();
+                } else {
+                    alert(data.message || "Failed to update cart");
+                    location.reload();
+                }
+            })
+            .catch(err => {
+                console.error('Update cart error:', err);
+                alert("An error occurred while updating the cart");
+            });
+        }
+    </script>
 </body>
 </html>

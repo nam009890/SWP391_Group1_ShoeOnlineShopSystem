@@ -69,6 +69,15 @@ public class CouponService {
         return couponRepository.findAll(spec, paging);
     }
 
+    public List<Coupon> getActiveAndValidCoupons() {
+        LocalDate today = LocalDate.now();
+        return couponRepository.findAll().stream()
+                .filter(c -> Boolean.TRUE.equals(c.getIsActive()))
+                .filter(c -> !c.getCreateDate().isAfter(today))
+                .filter(c -> !c.getEndDate().isBefore(today))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     // Save Coupon (Used for both Create and Update)
     public void saveCoupon(Coupon coupon) {
         couponRepository.save(coupon);

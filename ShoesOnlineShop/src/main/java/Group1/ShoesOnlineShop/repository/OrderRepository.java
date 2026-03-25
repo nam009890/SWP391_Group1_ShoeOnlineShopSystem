@@ -40,4 +40,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
         WHERE o.orderId = :id
     """)
     Optional<Order> findByIdWithDetails(@Param("id") Long id);
+    
+    @Query("""
+        SELECT COUNT(o) > 0 FROM Order o 
+        JOIN o.orderDetails od 
+        WHERE o.user.userId = :userId 
+        AND od.product.id = :productId 
+        AND (o.orderStatus = 'DELIVERED' OR o.paymentStatus = 'PAID')
+    """)
+     boolean hasPurchasedProduct(@Param("userId") Long userId, @Param("productId") Long productId);
 }

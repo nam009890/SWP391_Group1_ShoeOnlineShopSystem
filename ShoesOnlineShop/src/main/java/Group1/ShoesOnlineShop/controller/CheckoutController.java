@@ -1,14 +1,10 @@
 package Group1.ShoesOnlineShop.controller;
 
-import Group1.ShoesOnlineShop.entity.Cart;
-import Group1.ShoesOnlineShop.entity.Order;
-import Group1.ShoesOnlineShop.entity.Payment;
-import Group1.ShoesOnlineShop.entity.User;
+import Group1.ShoesOnlineShop.entity.*;
+import Group1.ShoesOnlineShop.repository.CouponRepository;
 import Group1.ShoesOnlineShop.repository.OrderRepository;
 import Group1.ShoesOnlineShop.repository.UserRepository;
-import Group1.ShoesOnlineShop.service.CartService;
-import Group1.ShoesOnlineShop.service.OrderService;
-import Group1.ShoesOnlineShop.service.VNPayService;
+import Group1.ShoesOnlineShop.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +35,25 @@ public class CheckoutController {
     @Autowired
     private VNPayService vnPayService;
 
+    @Autowired
+    private UserCouponService userCouponService;
+
+    @Autowired
+    private CouponRepository couponRepository;
+
     private User getAuthenticatedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            // Check if it's an OAuth2 user
+            if (auth.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
+                return userRepository.findByProviderId(auth.getName())
+                        .or(() -> {
+                            org.springframework.security.oauth2.core.user.OAuth2User oauth2User = 
+                                (org.springframework.security.oauth2.core.user.OAuth2User) auth.getPrincipal();
+                            String email = oauth2User.getAttribute("email");
+                            return userRepository.findByUserEmail(email);
+                        }).orElse(null);
+            }
             return userRepository.findByUserName(auth.getName()).orElse(null);
         }
         return null;
@@ -68,6 +80,7 @@ public class CheckoutController {
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalAmount", total);
         model.addAttribute("user", user); // Pass user to pre-fill standard shipping info
+        model.addAttribute("coupons", userCouponService.getAvailableCoupons(user.getUserId()));
         return "customer-checkout";
     }
 
@@ -75,6 +88,7 @@ public class CheckoutController {
     public String processCheckout(@RequestParam("paymentMethod") String paymentMethod,
                                   @RequestParam("phone") String phone,
                                   @RequestParam("address") String address,
+                                  @RequestParam(value = "couponId", required = false) Long couponId,
                                   HttpSession session,
                                   HttpServletRequest request,
                                   RedirectAttributes redirectAttributes) {
@@ -89,7 +103,12 @@ public class CheckoutController {
         }
 
         try {
-            Order order = orderService.createOrderFromCart(user, cartItems, phone, address, paymentMethod);
+            Coupon coupon = null;
+            if (couponId != null) {
+                coupon = couponRepository.findById(couponId).orElse(null);
+            }
+
+            Order order = orderService.createOrderFromCart(user, cartItems, phone, address, paymentMethod, coupon);
             
             if ("VNPAY".equalsIgnoreCase(paymentMethod)) {
                 String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -98,6 +117,12 @@ public class CheckoutController {
             } else {
                 // Cash on delivery
                 cartService.clearCart(user.getUserName(), session.getId());
+                
+                // Mark coupon as used if applied
+                if (order.getCoupon() != null) {
+                    userCouponService.markAsUsed(user.getUserId(), order.getCoupon().getId());
+                }
+
                 redirectAttributes.addFlashAttribute("successMessage", "Order created successfully (COD).");
                 return "redirect:/payment-result?status=success&orderId=" + order.getOrderId();
             }
@@ -140,6 +165,11 @@ public class CheckoutController {
                 User user = order.getUser();
                 if (user != null) {
                     cartService.clearCart(user.getUserName(), session.getId());
+                    
+                    // Mark coupon as used if applied
+                    if (order.getCoupon() != null) {
+                        userCouponService.markAsUsed(user.getUserId(), order.getCoupon().getId());
+                    }
                 }
             }
             return "redirect:/payment-result?status=success&orderId=" + orderId;

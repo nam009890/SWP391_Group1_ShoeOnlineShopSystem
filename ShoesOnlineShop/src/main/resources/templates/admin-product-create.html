@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -39,7 +39,7 @@
         <div class="user-pill">
             <div class="user-avatar">AD</div>
             <div>
-                <div class="user-name">Administrator</div>
+                <div class="user-name" th:text="${#authentication.principal.user.fullName}">Administrator</div>
                 <div class="user-role">Admin</div>
             </div>
         </div>
@@ -80,6 +80,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Price (VND) <span style="color:var(--danger)">*</span></label>
+
                             <input type="number" name="price" th:value="${product.price}" class="form-control"
                                    th:classappend="${#fields.hasErrors('price')} ? 'is-invalid' : ''"
                                    placeholder="e.g. 1500000" min="0" step="1000">

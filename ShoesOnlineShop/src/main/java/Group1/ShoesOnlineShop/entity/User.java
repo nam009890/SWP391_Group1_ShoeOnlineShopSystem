@@ -1,8 +1,7 @@
 package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,17 +28,29 @@ public class User {
     @Column(name = "user_email", unique = true, nullable = false, length = 100)
     private String userEmail;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash", nullable = true, length = 255)
     private String passwordHash;
+
+    // OAuth2 Support
+    @Column(name = "auth_provider", length = 20)
+    private String authProvider; // e.g., "LOCAL", "GOOGLE"
+
+    @Column(name = "provider_id", length = 50)
+    private String providerId;
 
     // THÊM VALIDATE TÊN
     @NotBlank(message = "Full Name cannot be blank")
+    @Size(min = 5, max = 255, message = "Full Name must be between 5 and 255 characters")
+    @Pattern(regexp = "^(?!\\s*$)[a-zA-ZÀ-ỹ\\s']+$", message = "Name must not be only spaces and cannot contain numbers or special characters")
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
+    @Pattern(regexp = "^$|^[0-9]+$", message = "Phone number must contain only numbers, no letters or special characters")
     @Column(name = "phone", length = 20)
     private String phone;
 
+    @Size(min = 5, max = 255, message = "Address must be between 5 and 255 characters")
+    @Pattern(regexp = "^(?!\\s*$).+", message = "Address cannot be only spaces")
     @Column(name = "address", columnDefinition = "NVARCHAR(MAX)")
     private String address;
 
@@ -48,6 +59,12 @@ public class User {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    @Column(name = "reset_token", length = 100)
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
 
     // Quan hệ với các bảng khác
 

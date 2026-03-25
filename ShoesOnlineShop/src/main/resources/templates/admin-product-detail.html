@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -33,7 +33,7 @@
         <a href="/internal/admin/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">AD</div>
-            <div><div class="user-name">Administrator</div><div class="user-role">Admin</div></div>
+            <div><div class="user-name" th:text="${#authentication.principal.user.fullName}">Administrator</div><div class="user-role">Admin</div></div>
         </div>
         </a>
     </div>
@@ -101,7 +101,9 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Category</div>
+
                         <div class="detail-value" th:text="${product.category != null ? product.category.name : '&mdash;'}">Category</div>
+
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Status</div>
@@ -112,11 +114,13 @@
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Created At</div>
+
                         <div class="detail-value" th:text="${product.createdAt != null ? #temporals.format(product.createdAt, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
                     </div>
                     <div class="detail-row">
                         <div class="detail-label">Updated At</div>
                         <div class="detail-value" th:text="${product.updatedAt != null ? #temporals.format(product.updatedAt, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
+
                     </div>
                 </div>
             </div>

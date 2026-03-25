@@ -21,6 +21,8 @@ public class AdminCategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    // === Regex Constants ===
+    private static final String CATEGORY_NAME_REGEX = "^[\\p{L}0-9\\s\\-&]+$";
 
     // === GET LIST WITH FILTER & PAGINATION ===
     public Page<Category> getCategories(String keyword, Boolean isActive, int page, int size) {
@@ -103,25 +105,35 @@ public class AdminCategoryService {
     public Map<String, String> validateCategory(Category category) {
         Map<String, String> errors = new HashMap<>();
 
+        // --- Category Name ---
         if (category.getName() == null || category.getName().trim().isEmpty()) {
             errors.put("name", "Category name must not be empty!");
         } else {
-            boolean nameDuplicate = (category.getId() == null)
-                    ? categoryRepository.existsByName(category.getName().trim())
-                    : categoryRepository.existsByNameAndIdNot(category.getName().trim(), category.getId());
-            if (nameDuplicate) {
-                errors.put("name", "This category name already exists!");
+            String trimmedName = category.getName().trim();
+            if (trimmedName.length() < 2 || trimmedName.length() > 100) {
+                errors.put("name", "Category name must be between 2 and 100 characters!");
+            } else if (!trimmedName.matches(CATEGORY_NAME_REGEX)) {
+                errors.put("name", "Category name can only contain letters, numbers, spaces, hyphens, and '&'!");
+            } else {
+                boolean nameDuplicate = (category.getId() == null)
+                        ? categoryRepository.existsByName(trimmedName)
+                        : categoryRepository.existsByNameAndIdNot(trimmedName, category.getId());
+                if (nameDuplicate) {
+                    errors.put("name", "This category name already exists!");
+                }
             }
         }
 
+        // --- Parent Self-Reference ---
         if (category.getParent() != null && category.getId() != null) {
             if (category.getParent().getId().equals(category.getId())) {
                 errors.put("parent", "A category cannot be its own parent!");
             }
         }
 
+        // --- Display Order ---
         if (category.getDisplayOrder() != null && category.getDisplayOrder() < 0) {
-            errors.put("displayOrder", "Thứ tự hiển thị phải >= 0!");
+            errors.put("displayOrder", "Display order must be 0 or greater!");
         }
 
         return errors;

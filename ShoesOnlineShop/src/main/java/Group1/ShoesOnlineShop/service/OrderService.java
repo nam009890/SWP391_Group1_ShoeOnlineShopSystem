@@ -4,6 +4,7 @@
  */
 
 package Group1.ShoesOnlineShop.service;
+import Group1.ShoesOnlineShop.entity.Coupon;
 import Group1.ShoesOnlineShop.entity.Order;
 import Group1.ShoesOnlineShop.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,26 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    
+    @Autowired
+    private Group1.ShoesOnlineShop.repository.OrderHistoryRepository orderHistoryRepository;
+    
+    @Autowired
+    private CartService cartService;
 
     public OrderService(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+    }
+
+    private void saveOrderHistory(Order order, String status, String note) {
+        Group1.ShoesOnlineShop.entity.OrderHistory history = new Group1.ShoesOnlineShop.entity.OrderHistory();
+        history.setOrder(order);
+        history.setStatus(status);
+        history.setNote(note);
+        history.setTimestamp(java.time.LocalDateTime.now());
+        orderHistoryRepository.save(history);
     }
 
   public Page<Order> getOrders(String status,
@@ -57,15 +73,58 @@ public class OrderService {
        return orderRepository.findByUser_UserIdOrderByCreatedAtDesc(userId);
    }
 
-   public void updateStatus(Long id, String status) {
+    public void updateStatus(Long id, String status) {
 
     Order order = orderRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Order not found"));
 
     order.setOrderStatus(status);
-
     orderRepository.save(order);
+    
+    saveOrderHistory(order, status, "Order status updated to " + status);
 }
+
+    public void cancelOrder(Long userId, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        if (!order.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized to cancel this order");
+        }
+        
+        if (!"PENDING".equalsIgnoreCase(order.getOrderStatus())) {
+            throw new RuntimeException("Only PENDING orders can be cancelled");
+        }
+        
+        order.setOrderStatus("CANCELLED");
+        orderRepository.save(order);
+        saveOrderHistory(order, "CANCELLED", "Order cancelled by customer");
+    }
+
+    public void reorder(Long userId, Long orderId, String sessionId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        if (!order.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+        
+        User user = order.getUser();
+        for (OrderDetail detail : order.getOrderDetails()) {
+            cartService.addToCart(
+                detail.getProduct().getId(), 
+                detail.getQuantity(), 
+                detail.getProduct().getSize(), // Use original size if stored in detail, but here it's likely fixed or we use product's default
+                detail.getProduct().getColor(), // Using product properties as fallback if detail doesn't house variant info
+                user.getUserName(), 
+                sessionId
+            );
+        }
+    }
+
+    public List<Group1.ShoesOnlineShop.entity.OrderHistory> getTimeline(Long orderId) {
+        return orderHistoryRepository.findByOrder_OrderIdOrderByTimestampAsc(orderId);
+    }
 
     public void deleteOrder(Long id) {
 
@@ -170,7 +229,7 @@ public String createOrder(Long userId, Long productId, Integer quantity, String 
 }
 
 @Transactional
-public Order createOrderFromCart(User user, java.util.List<Group1.ShoesOnlineShop.entity.Cart> cartItems, String phone, String address, String paymentMethod) {
+public Order createOrderFromCart(User user, java.util.List<Group1.ShoesOnlineShop.entity.Cart> cartItems, String phone, String address, String paymentMethod, Coupon coupon) {
     if (phone == null || phone.trim().isEmpty() || !phone.matches("^0\\d{9}$")) {
         throw new IllegalArgumentException("Invalid phone number");
     }
@@ -212,6 +271,15 @@ public Order createOrderFromCart(User user, java.util.List<Group1.ShoesOnlineSho
     }
 
     order.setTotalAmount(totalAmount);
+    
+    // Apply Coupon Discount
+    if (coupon != null) {
+        order.setCoupon(coupon);
+        BigDecimal discount = totalAmount.multiply(BigDecimal.valueOf(coupon.getDiscountPercent())).divide(BigDecimal.valueOf(100));
+        totalAmount = totalAmount.subtract(discount);
+        order.setTotalAmount(totalAmount);
+    }
+    
     order.setOrderDetails(details);
 
     // Initial Payment Record
@@ -222,7 +290,9 @@ public Order createOrderFromCart(User user, java.util.List<Group1.ShoesOnlineSho
     defaultPayment.setPaymentStatus("PENDING");
     order.setPayments(java.util.Collections.singletonList(defaultPayment));
 
-    return orderRepository.save(order);
+    Order savedOrder = orderRepository.save(order);
+    saveOrderHistory(savedOrder, "PENDING", "Order placed successfully");
+    return savedOrder;
 }
 
 }

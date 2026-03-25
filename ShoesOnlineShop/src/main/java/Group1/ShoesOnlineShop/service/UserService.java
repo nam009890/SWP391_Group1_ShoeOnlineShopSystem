@@ -24,25 +24,29 @@ public class UserService {
     }
 
     public void updateUserProfile(User updatedUser) {
-        // Lấy dữ liệu cũ từ DB lên để không ghi đè mất Password hay Role
+        // Lấy dữ liệu cũ từ DB lên để không ghi đè mất Password, Role, email hay username
         User existingUser = getUserById(updatedUser.getUserId());
         if (existingUser != null) {
             existingUser.setFullName(updatedUser.getFullName());
-            existingUser.setUserEmail(updatedUser.getUserEmail());
+
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setAddress(updatedUser.getAddress());
             userRepository.save(existingUser);
         }
     }
 
-    public boolean changePassword(Long userId, String currentPassword, String newPassword) {
+    public String changePassword(Long userId, String currentPassword, String newPassword) {
         User user = getUserById(userId);
-        if (user != null && passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
-            user.setPasswordHash(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            return true;
+        if (user == null) return "User not found!";
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            return "Incorrect current password!";
         }
-        return false;
+        if (newPassword == null || newPassword.length() < 6) {
+            return "New password must be at least 6 characters!";
+        }
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return null; // null = success
     }
 
     public void registerCustomer(User user) {
@@ -58,8 +62,8 @@ public class UserService {
         if (user.getUserName().length() > 50) {
             throw new IllegalArgumentException("Username không được vượt quá 50 ký tự theo CSDL.");
         }
-        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 6) {
-            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 6 ký tự.");
+        if (user.getPasswordHash() == null || user.getPasswordHash().length() < 4) {
+            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 4 ký tự.");
         }
         if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
             throw new IllegalArgumentException("Họ và tên không được để trống.");

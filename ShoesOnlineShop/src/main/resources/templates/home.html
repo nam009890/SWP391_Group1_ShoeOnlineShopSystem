@@ -607,6 +607,10 @@
             font-size: 1.15rem;
             color: var(--accent-hover);
         }
+        .price-box { display: flex; align-items: center; gap: 8px; margin-top: 0.5rem; }
+        .original-price { text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem; }
+        .sale-price { color: var(--accent-hover); font-weight: 700; font-size: 1.15rem; }
+        .discount-badge { background: var(--accent); color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 
         .no-products {
             grid-column: 1 / -1;
@@ -641,7 +645,7 @@
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-
+        
         /* === CONTENT SECTION === */
         .content-section {
             padding: 5rem 4rem;
@@ -877,6 +881,7 @@
 
     <!-- ========== HERO SLIDER ========== -->
     <section class="hero-slider" th:if="${sliders != null and !sliders.isEmpty()}" id="hero-slider">
+        <!-- Sliders -->
         <a class="slide" th:each="slider, iterStat : ${sliders}" th:classappend="${iterStat.index == 0} ? ' active' : ''"
            th:href="@{/slider/{id}(id=${slider.id})}" style="display:block;color:inherit;text-decoration:none;">
             <img th:src="${slider.imageUrl}" th:alt="${slider.sliderTitle}" loading="lazy">
@@ -1133,9 +1138,10 @@
                     }
 
                     products.forEach((p, i) => {
-                        const card = document.createElement('div');
+                        const card = document.createElement('a');
                         card.className = 'product-card animate-in';
                         card.style.animationDelay = (i * 0.05) + 's';
+                        card.href = '/product/' + p.id;
 
                         const finalPrice = new Intl.NumberFormat('vi-VN').format(p.price) + ' ₫';
                         const imgSrc = p.imageUrl || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect fill='%231a1a2e' width='200' height='200'/><text x='50%' y='50%' fill='%23666' text-anchor='middle' dy='.3em' font-family='sans-serif'>No Image</text></svg>";
@@ -1150,6 +1156,8 @@
                         }
                         
                         let badgeHtml = isDiscounted ? `<span class="product-badge" style="position: absolute; top: 1rem; left: 1rem; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px; z-index:10;">-${p.discount}%</span>` : `<span class="product-badge">New</span>`;
+
+
 
                         card.innerHTML = `
                             <div class="product-img-wrap">

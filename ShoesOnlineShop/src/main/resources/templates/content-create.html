@@ -97,7 +97,9 @@
                             <div class="col-md-9">
                                 <input type="text" th:field="*{contentTitle}" class="form-control"
                                        th:classappend="${#fields.hasErrors('contentTitle')} ? 'is-invalid' : ''"
+
                                        placeholder="Enter content title...">
+
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('contentTitle')}" th:errors="*{contentTitle}"></div>
                             </div>
                         </div>
@@ -167,7 +169,9 @@
             $(document).ready(function () {
                 $('#summernote').summernote({
 
+
                     placeholder: 'Write your content here. You can drag & drop images or use the toolbar above...',
+
 
                     tabsize: 2,
                     height: 420,

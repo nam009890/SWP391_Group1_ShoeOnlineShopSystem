@@ -205,11 +205,16 @@
             </div>
 
             <div class="price-box">
-                <span class="original-price" th:if="${product.discountPercent != null and product.discountPercent > 0}">
-                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
-                </span>
-                <span class="sale-price" th:text="${#numbers.formatDecimal(product.priceAfterDiscount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
-                <span class="discount-badge" th:if="${product.discountPercent != null and product.discountPercent > 0}" th:text="'-' + ${product.discountPercent} + '%'"></span>
+                <th:block th:if="${productDiscounts != null and productDiscounts.containsKey(product.id)}">
+                    <span class="original-price">
+                        <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                    </span>
+                    <span class="sale-price" th:text="${#numbers.formatDecimal(product.price - (product.price * productDiscounts.get(product.id) / 100), 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                    <span class="discount-badge" th:text="'-' + ${productDiscounts.get(product.id)} + '%'"></span>
+                </th:block>
+                <th:block th:unless="${productDiscounts != null and productDiscounts.containsKey(product.id)}">
+                    <span class="sale-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                </th:block>
             </div>
 
             <div class="product-description" th:if="${product.productDescription != null and !product.productDescription.isEmpty()}"
@@ -372,9 +377,9 @@
                class="product-card fade-in"
                th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'">
                 <div class="product-card-img">
-                    <span class="product-badge" th:if="${rp.discountPercent != null and rp.discountPercent > 0}" 
-                          style="position:absolute; top:0.8rem; left:0.8rem; background:var(--accent); color:#fff; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:20px; text-transform:uppercase;"
-                          th:text="'-' + ${rp.discountPercent} + '%'">-10%</span>
+                    <div th:if="${productDiscounts != null and productDiscounts.containsKey(rp.id)}" class="product-badge" 
+                          style="position:absolute; top:0.8rem; left:0.8rem; background:var(--accent); color:#fff; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:20px; text-transform:uppercase; z-index:10;"
+                          th:text="'-' + ${productDiscounts.get(rp.id)} + '%'">-10%</div>
                     <img th:src="${rp.imageUrl}" th:alt="${rp.name}"
                          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
                 </div>
@@ -382,13 +387,19 @@
                     <div class="product-card-cat" th:text="${rp.category != null ? rp.category.name : ''}">Category</div>
                     <div class="product-card-name" th:text="${rp.name}">Product Name</div>
                     <div class="price-box">
-                        <span class="original-price" th:if="${rp.discountPercent != null and rp.discountPercent > 0}" style="font-size: 0.85rem;">
-                            <span th:text="${#numbers.formatDecimal(rp.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
-                        </span>
-                        <span class="sale-price" style="font-size: 1.1rem;"
-                              th:text="${#numbers.formatDecimal(rp.priceAfterDiscount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
-                        <span class="discount-badge" th:if="${rp.discountPercent != null and rp.discountPercent > 0}" style="font-size: 0.65rem;"
-                              th:text="'-' + ${rp.discountPercent} + '%'"></span>
+                        <th:block th:if="${productDiscounts != null and productDiscounts.containsKey(rp.id)}">
+                            <span class="original-price" style="font-size: 0.85rem;">
+                                <span th:text="${#numbers.formatDecimal(rp.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            </span>
+                            <span class="sale-price" style="font-size: 1.1rem;"
+                                  th:text="${#numbers.formatDecimal(rp.price - (rp.price * productDiscounts.get(rp.id) / 100), 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            <span class="discount-badge" style="font-size: 0.65rem;"
+                                  th:text="'-' + ${productDiscounts.get(rp.id)} + '%'"></span>
+                        </th:block>
+                        <th:block th:unless="${productDiscounts != null and productDiscounts.containsKey(rp.id)}">
+                            <span class="sale-price" style="font-size: 1.1rem;"
+                                  th:text="${#numbers.formatDecimal(rp.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </th:block>
                     </div>
                 </div>
             </a>

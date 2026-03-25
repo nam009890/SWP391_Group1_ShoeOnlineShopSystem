@@ -85,7 +85,9 @@
                 <div class="card-header-bar">
                     <h6>Edit Content</h6>
 
+
                     <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${content.id}" style="font-weight:600; color:var(--text-mid)">&mdash;</span></span>
+
 
                 </div>
                 <div class="card-body-pad">
@@ -100,7 +102,10 @@
                             <div class="col-md-9">
                                 <input type="text" th:field="*{contentTitle}" class="form-control"
                                        th:classappend="${#fields.hasErrors('contentTitle')} ? 'is-invalid' : ''"
+
                                        placeholder="Enter content title...">
+
+
 
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('contentTitle')}" th:errors="*{contentTitle}"></div>
                             </div>
@@ -168,7 +173,9 @@
         <script>
             $(document).ready(function () {
                 $('#summernote').summernote({
+
                     placeholder: 'Write your content here. You can drag & drop images or use the toolbar above...',
+
 
                     tabsize: 2,
                     height: 420,

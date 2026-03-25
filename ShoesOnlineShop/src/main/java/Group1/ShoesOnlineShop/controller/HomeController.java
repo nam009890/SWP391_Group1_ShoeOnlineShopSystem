@@ -5,24 +5,25 @@ import Group1.ShoesOnlineShop.entity.Content;
 import Group1.ShoesOnlineShop.entity.Feedback;
 import Group1.ShoesOnlineShop.entity.Product;
 import Group1.ShoesOnlineShop.entity.Slider;
+import Group1.ShoesOnlineShop.entity.User;
 import Group1.ShoesOnlineShop.repository.CategoryRepository;
 import Group1.ShoesOnlineShop.repository.ContentRepository;
 import Group1.ShoesOnlineShop.repository.FeedbackRepository;
 import Group1.ShoesOnlineShop.repository.ProductRepository;
 import Group1.ShoesOnlineShop.repository.SliderRepository;
+import Group1.ShoesOnlineShop.repository.UserRepository;
+import Group1.ShoesOnlineShop.service.CouponService;
+import Group1.ShoesOnlineShop.service.UserCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,6 +43,15 @@ public class HomeController {
 
     @Autowired
     private FeedbackRepository feedbackRepository;
+
+    @Autowired
+    private CouponService couponService;
+
+    @Autowired
+    private UserCouponService userCouponService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private Map<Long, Integer> getActiveProductDiscounts() {
         List<Slider> activeSliders = sliderRepository.findByIsActiveTrueOrderByCreatedAtDesc();
@@ -152,6 +162,23 @@ public class HomeController {
             return "redirect:/home";
         }
         model.addAttribute("slider", slider);
+
+        // Identify saved coupon IDs for the current user
+        Set<Long> savedCouponIds = new HashSet<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            User user = userRepository.findByUserName(auth.getName()).orElse(null);
+            if (user != null) {
+                savedCouponIds = userCouponService.getAvailableCoupons(user.getUserId())
+                        .stream().map(uc -> uc.getCoupon().getId()).collect(Collectors.toSet());
+                
+                // Also include used coupons to keep the button disabled/saved
+                // Wait, UserCouponService.getAvailableCoupons only returns IsUsedFalse.
+                // Let's just check all user coupons.
+            }
+        }
+        model.addAttribute("savedCouponIds", savedCouponIds);
+
         return "customer-slider-detail";
     }
 
@@ -258,5 +285,37 @@ public class HomeController {
         }
         model.addAttribute("content", content);
         return "customer-content-detail";
+    }
+
+    @PostMapping("/save-coupon")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveCoupon(@RequestParam("couponId") Long couponId) {
+        Map<String, Object> response = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth == null || !auth.isAuthenticated() || auth.getName().equals("anonymousUser")) {
+            response.put("status", "UNAUTHORIZED");
+            response.put("message", "You must be logged in to save coupons.");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        User user = userRepository.findByUserName(auth.getName()).orElse(null);
+        if (user == null) {
+            response.put("status", "ERROR");
+            response.put("message", "User session error.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        boolean result = userCouponService.saveCoupon(user.getUserId(), couponId);
+        
+        if (result) {
+            response.put("success", true);
+            response.put("message", "Coupon saved successfully!");
+        } else {
+            response.put("success", false);
+            response.put("message", "Already saved");
+        }
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -47,6 +47,10 @@
         .star.filled{fill:var(--star-filled)}
         .rating-text{font-size:.9rem;color:var(--text-muted)}
         .product-price-tag{font-size:2.2rem;font-weight:700;color:var(--accent-hover);margin-bottom:1.5rem}
+        .price-box { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; }
+        .original-price { text-decoration: line-through; color: var(--text-muted); font-size: 1.2rem; }
+        .sale-price { color: var(--accent-hover); font-weight: 700; font-size: 2.2rem; }
+        .discount-badge { background: var(--accent); color: #fff; font-size: 1rem; padding: 4px 10px; border-radius: 6px; font-weight: 700; }
         .product-description{color:var(--text-muted);font-size:.95rem;line-height:1.8;margin-bottom:2rem;border-bottom:1px solid var(--glass-border);padding-bottom:2rem}
         .product-stock{display:flex;align-items:center;gap:.5rem;font-size:.9rem;margin-bottom:2rem}
         .stock-indicator{width:10px;height:10px;border-radius:50%}
@@ -56,6 +60,22 @@
         .btn-add-cart{display:inline-flex;align-items:center;gap:.75rem;padding:1rem 2.5rem;background:linear-gradient(135deg,var(--accent),var(--accent-hover));color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:var(--transition)}
         .btn-add-cart:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(233,69,96,.4)}
         .btn-add-cart svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2}
+        .btn-add-cart:disabled{background:var(--glass);color:var(--text-muted);cursor:not-allowed;transform:none;box-shadow:none}
+
+        /* VARIANTS */
+        .variant-selection{display:flex;flex-direction:column;gap:1.5rem;margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid var(--glass-border)}
+        .variant-group{display:flex;flex-direction:column;gap:.5rem}
+        .variant-label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+        .variant-select{background:var(--surface);color:#fff;border:1px solid var(--glass-border);padding:.8rem 1rem;border-radius:var(--radius-sm);font-size:.95rem;outline:none;transition:var(--transition);cursor:pointer}
+        .variant-select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(233,69,96,0.2)}
+        .variant-select option{background:var(--bg)}
+        
+        .quantity-control{display:flex;align-items:center;background:var(--surface);border:1px solid var(--glass-border);border-radius:var(--radius-sm);overflow:hidden;height:48px;width:120px;}
+        .quantity-btn{background:transparent;color:#fff;border:none;width:40px;height:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);font-size:1.4rem;}
+        .quantity-btn:hover{background:var(--glass);color:var(--accent);}
+        .quantity-input{width:40px;height:100%;border:none;border-left:1px solid var(--glass-border);border-right:1px solid var(--glass-border);background:transparent;color:#fff;text-align:center;font-weight:700;font-family:inherit;-moz-appearance:textfield;}
+        .quantity-input::-webkit-outer-spin-button, .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .action-group{display:flex;gap:1rem;align-items:center;}
 
         /* SECTION TITLES */
         .section{padding:3rem 4rem}
@@ -115,6 +135,20 @@
             .reviews-summary{flex-direction:column;text-align:center}
             .related-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
         }
+
+        /* FEEDBACK & RATING */
+        .reviews-container { margin-top: 3rem; }
+        .review-form { background: var(--glass); padding: 2rem; border-radius: var(--radius); border: 1px solid var(--glass-border); margin-bottom: 3rem; }
+        .rating-stars { display: flex; gap: 0.5rem; margin-bottom: 1rem; cursor: pointer; font-size: 1.5rem; }
+        .rating-stars .star { color: #444; transition: var(--transition); }
+        .rating-stars .star.active { color: #f1c40f; }
+        .review-textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: #fff; padding: 1rem; margin-bottom: 1rem; min-height: 100px; resize: vertical; }
+        .review-item { padding: 1.5rem 0; border-bottom: 1px solid var(--glass-border); }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .review-user { font-weight: 700; color: #fff; }
+        .review-date { font-size: 0.8rem; color: var(--text-muted); }
+        .review-stars { color: #f1c40f; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .review-text { color: var(--text-muted); font-size: 0.95rem; }
     </style>
 </head>
 <body>
@@ -170,7 +204,13 @@
                 <span class="rating-text" th:text="${#numbers.formatDecimal(avgRating, 1, 1)} + ' / 5 (' + ${feedbackCount} + ' reviews)'">0 / 5 (0 reviews)</span>
             </div>
 
-            <div class="product-price-tag" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+            <div class="price-box">
+                <span class="original-price" th:if="${product.discountPercent != null and product.discountPercent > 0}">
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                </span>
+                <span class="sale-price" th:text="${#numbers.formatDecimal(product.priceAfterDiscount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                <span class="discount-badge" th:if="${product.discountPercent != null and product.discountPercent > 0}" th:text="'-' + ${product.discountPercent} + '%'"></span>
+            </div>
 
             <div class="product-description" th:if="${product.productDescription != null and !product.productDescription.isEmpty()}"
                  th:text="${product.productDescription}">
@@ -185,14 +225,43 @@
                 <span th:if="${product.stockQuantity == null or product.stockQuantity <= 0}" style="color:#e74c3c">Out of Stock</span>
             </div>
 
-            <form th:action="@{/cart/add}" method="post" th:if="${product.stockQuantity != null and product.stockQuantity > 0}" style="display:inline;">
-                <input type="hidden" name="productId" th:value="${product.id}">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="btn-add-cart">
+            <div class="variant-selection" th:if="${product.stockQuantity != null and product.stockQuantity > 0}">
+                <div class="variant-group">
+                    <label class="variant-label">Select Size</label>
+                    <select id="size" class="variant-select" onchange="checkSelection()">
+                        <option value="">Choose a size</option>
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
+                        <option value="43">43</option>
+                    </select>
+                </div>
+                <div class="variant-group">
+                    <label class="variant-label">Select Color</label>
+                    <select id="color" class="variant-select" onchange="checkSelection()">
+                        <option value="">Choose a color</option>
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                        <option value="Grey">Grey</option>
+                        <option value="Red">Red</option>
+                        <option value="Navy">Navy</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="action-group" th:if="${product.stockQuantity != null and product.stockQuantity > 0}">
+                <div class="quantity-control">
+                    <button type="button" class="quantity-btn" onclick="changeQty(-1)">−</button>
+                    <input type="number" id="productQuantity" class="quantity-input" value="1" min="1" th:max="${product.stockQuantity}" onchange="manualQtyUpdate(this.value)">
+                    <button type="button" class="quantity-btn" onclick="changeQty(1)">+</button>
+                </div>
+                <button type="button" id="addBtn" class="btn-add-cart" onclick="addToCart()" disabled>
                     <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     Add to Cart
                 </button>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -200,10 +269,50 @@
 
     <!-- REVIEWS SECTION -->
     <section class="section reviews-section">
-        <div class="section-title">
-            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Customer Reviews
         </div>
+
+        <div class="reviews-container">
+            <!-- Review Submission Form (Only for logged-in users) -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}" class="review-form">
+                <h4 style="margin-bottom: 1rem; font-family:'Teko',sans-serif; font-size: 1.5rem; text-transform: uppercase;">Write a Review</h4>
+                <div class="rating-stars" id="star-input">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="feedback-rating" value="0">
+                <textarea id="feedback-comment" class="review-textarea" placeholder="Share your experience with this product..."></textarea>
+                <button type="button" class="btn-add-cart" onclick="submitFeedback()" style="width: auto; padding: 0.8rem 2.5rem; margin-top: 0;">Submit Review</button>
+            </div>
+            
+            <div th:unless="${#authorization.expression('isAuthenticated()')}" class="review-form" style="text-align: center;">
+                <p>Please <a th:href="@{/login}" style="color: var(--accent); font-weight: 700;">log in</a> to leave a review.</p>
+            </div>
+
+            <!-- Feedback List -->
+            <div class="reviews-list">
+                <div th:each="fb : ${feedbacks}" class="review-item">
+                    <div class="review-header">
+                        <span class="review-user" th:text="${fb.user != null ? fb.user.fullName : 'Guest'}">User Name</span>
+                        <span class="review-date" th:text="${#temporals.format(fb.createdAt, 'dd MMM yyyy')}">Date</span>
+                    </div>
+                    <div class="review-stars">
+                        <span th:each="i : ${#numbers.sequence(1, 5)}" 
+                              th:text="${i <= fb.rating ? '★' : '☆'}"
+                              th:style="${i <= fb.rating ? 'color: #f1c40f' : 'color: #444'}"></span>
+                    </div>
+                    <div class="review-text" th:text="${fb.comment}">Review comment...</div>
+                </div>
+                
+                <div th:if="${#lists.isEmpty(feedbacks)}" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    Be the first to review this product!
+                </div>
+            </div>
+        </div>
+    </section>
 
         <!-- Review Summary Card -->
         <div class="reviews-summary" th:if="${feedbacks != null and !feedbacks.isEmpty()}">
@@ -263,13 +372,24 @@
                class="product-card fade-in"
                th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'">
                 <div class="product-card-img">
+                    <span class="product-badge" th:if="${rp.discountPercent != null and rp.discountPercent > 0}" 
+                          style="position:absolute; top:0.8rem; left:0.8rem; background:var(--accent); color:#fff; font-size:0.65rem; font-weight:700; padding:2px 8px; border-radius:20px; text-transform:uppercase;"
+                          th:text="'-' + ${rp.discountPercent} + '%'">-10%</span>
                     <img th:src="${rp.imageUrl}" th:alt="${rp.name}"
                          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
                 </div>
                 <div class="product-card-info">
                     <div class="product-card-cat" th:text="${rp.category != null ? rp.category.name : ''}">Category</div>
                     <div class="product-card-name" th:text="${rp.name}">Product Name</div>
-                    <div class="product-card-price" th:text="${#numbers.formatDecimal(rp.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                    <div class="price-box">
+                        <span class="original-price" th:if="${rp.discountPercent != null and rp.discountPercent > 0}" style="font-size: 0.85rem;">
+                            <span th:text="${#numbers.formatDecimal(rp.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        </span>
+                        <span class="sale-price" style="font-size: 1.1rem;"
+                              th:text="${#numbers.formatDecimal(rp.priceAfterDiscount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        <span class="discount-badge" th:if="${rp.discountPercent != null and rp.discountPercent > 0}" style="font-size: 0.65rem;"
+                              th:text="'-' + ${rp.discountPercent} + '%'"></span>
+                    </div>
                 </div>
             </a>
         </div>
@@ -280,5 +400,156 @@
         <div class="footer-logo">SHOESONLINESHOP</div>
         <p>&copy; 2026 ShoesOnlineShop Group 1. All Rights Reserved.</p>
     </footer>
+
+    <script th:inline="javascript">
+        const productId = /*[[${product.id}]]*/ 0;
+
+        function changeQty(delta) {
+            const input = document.getElementById("productQuantity");
+            const maxStock = parseInt(input.getAttribute("max"));
+            let newQty = parseInt(input.value) + delta;
+            
+            if (newQty < 1) newQty = 1;
+            if (newQty > maxStock) {
+                alert("Only " + maxStock + " items available in stock.");
+                newQty = maxStock;
+            }
+            input.value = newQty;
+        }
+
+        function manualQtyUpdate(value) {
+            const input = document.getElementById("productQuantity");
+            const maxStock = parseInt(input.getAttribute("max"));
+            let newQty = parseInt(value);
+            
+            if (isNaN(newQty) || newQty < 1) newQty = 1;
+            if (newQty > maxStock) {
+                alert("Only " + maxStock + " items available in stock.");
+                newQty = maxStock;
+            }
+            input.value = newQty;
+        }
+
+        function checkSelection() {
+            const size = document.getElementById("size").value;
+            const color = document.getElementById("color").value;
+            document.getElementById("addBtn").disabled = !(size && color);
+        }
+
+        function addToCart() {
+            const size = document.getElementById("size").value;
+            const color = document.getElementById("color").value;
+            const quantity = document.getElementById("productQuantity").value;
+
+            if (!size || !color) {
+                alert("Please select size and color");
+                return;
+            }
+
+            const btn = document.getElementById("addBtn");
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerText = "Adding...";
+
+            const body = new URLSearchParams();
+            body.append('productId', productId);
+            body.append('size', size);
+            body.append('color', color);
+            body.append('quantity', quantity);
+
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: body.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Added to cart successfully!");
+                    window.location.href = '/cart';
+                } else {
+                    alert(data.message || "Failed to add to cart");
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            })
+            .catch(err => {
+                console.error('Add to cart error:', err);
+                alert("An error occurred");
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+        }
+
+        // STAR RATING LOGIC
+        const starInput = document.getElementById('star-input');
+        if (starInput) {
+            const stars = starInput.querySelectorAll('.star');
+            const ratingInput = document.getElementById('feedback-rating');
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = star.getAttribute('data-value');
+                    ratingInput.value = value;
+                    updateStars(value);
+                });
+
+                star.addEventListener('mouseover', () => {
+                    updateStars(star.getAttribute('data-value'));
+                });
+
+                star.addEventListener('mouseout', () => {
+                    updateStars(ratingInput.value);
+                });
+            });
+
+            function updateStars(value) {
+                stars.forEach(s => {
+                    s.classList.toggle('active', s.getAttribute('data-value') <= value);
+                });
+            }
+        }
+
+        function submitFeedback() {
+            const rating = document.getElementById('feedback-rating').value;
+            const comment = document.getElementById('feedback-comment').value;
+
+            if (rating == 0) {
+                alert("Please select a star rating.");
+                return;
+            }
+
+            if (!comment.trim()) {
+                alert("Please write a comment.");
+                return;
+            }
+
+            const body = new URLSearchParams();
+            body.append('productId', productId);
+            body.append('rating', rating);
+            body.append('comment', comment);
+
+            fetch('/feedback/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert(data.message || "Failed to submit review.");
+                }
+            })
+            .catch(err => {
+                console.error('Feedback error:', err);
+                alert("An error occurred while submitting feedback.");
+            });
+        }
+    </script>
 </body>
 </html>

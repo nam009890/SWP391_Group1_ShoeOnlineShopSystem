@@ -36,6 +36,12 @@ public class Cart {
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
 
+    @Column(name = "size", length = 50)
+    private String size;
+
+    @Column(name = "color", length = 50)
+    private String color;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

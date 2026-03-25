@@ -87,7 +87,9 @@
                 <div class="card-header-bar">
                     <h6>Edit Coupon Information</h6>
 
+
                     <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${coupon.id}" style="font-weight:600; color:var(--text-mid)">&mdash;</span></span>
+
 
                 </div>
                 <div class="card-body-pad">
@@ -147,7 +149,9 @@
                                 <select th:field="*{discountPercent}" class="form-select"
                                         th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
 
+
                                     <option value="">&mdash; Select Discount &mdash;</option>
+
 
                                     <option value="5">5%</option>
                                     <option value="10">10%</option>

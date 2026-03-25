@@ -24,11 +24,11 @@ public class UserService {
     }
 
     public void updateUserProfile(User updatedUser) {
-        // Lấy dữ liệu cũ từ DB lên để không ghi đè mất Password hay Role
+        // Lấy dữ liệu cũ từ DB lên để không ghi đè mất Password, Role, email hay username
         User existingUser = getUserById(updatedUser.getUserId());
         if (existingUser != null) {
             existingUser.setFullName(updatedUser.getFullName());
-            // Email is NOT updated — it is immutable
+
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setAddress(updatedUser.getAddress());
             userRepository.save(existingUser);

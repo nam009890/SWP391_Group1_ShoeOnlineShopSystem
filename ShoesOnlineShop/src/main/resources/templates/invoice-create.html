@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
@@ -10,9 +10,9 @@
         <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
     <body>
-
+        <div style="display: flex; min-height: 100vh;">
        <!-- ================= SIDEBAR ================= -->
-    <aside class="sidebar">
+     <aside class="sidebar">
 
         <div class="sidebar-brand">
             <div class="brand-icon">
@@ -27,17 +27,17 @@
 
         <span class="nav-label">Management</span>
 
-        <a th:href="@{/orders}" class="active">
+        <a th:href="@{/internal/orders}" >
             <!-- Orders icon -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
             Order Management
         </a>
 
-        <a th:href="@{/feedbacks}">
+        <a th:href="@{/internal/feedbacks}">
             <!-- Feedback icon -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
@@ -46,24 +46,18 @@
             </svg>
             Feedback Management
         </a>
-        
-    <a th:href="@{/invoices}">
-    <!-- Invoice icon -->
-    <svg xmlns="http://www.w3.org/2000/svg"
-         fill="none"
-         viewBox="0 0 24 24"
-         stroke="currentColor"
-         stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 14l2 2 4-4"/>
-        <path stroke-linecap="round" stroke-linejoin="round"
-              d="M7 3h10a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/>
-    </svg>
-    Invoice Management
-</a>
 
-        <div class="sidebar-logout">
-            <a th:href="@{/logout}">
+        <a th:href="@{/internal/invoices}">
+            <!-- Invoice icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/>
+            </svg>
+            Invoice Management
+        </a>
+
+        <div class="sidebar-logout" style="margin-top:auto;">
+            <a th:href="@{/internal/logout}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -76,42 +70,44 @@
     </aside>
 
         <!-- ================= MAIN ================= -->
-        <div class="main">
+        <div class="main" style="flex: 1; padding: 20px;">
 
             <!-- TOPBAR -->
-            <div class="topbar">
+            <div class="topbar" style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <h4>Create Invoice</h4>
                     <p>Generate a new invoice from an order</p>
                 </div>
-                <div class="user-pill">
-                    <div class="user-avatar">SS</div>
-                    <div>
-                        <div class="user-name">Sale Staff</div>
-                        <div class="user-role">Administrator</div>
+                <a href="/internal/admin/profile" style="text-decoration:none;">
+                    <div class="user-pill" style="display:flex; align-items:center; gap:10px;">
+                        <div class="user-avatar" style="width:40px; height:40px; background:#ccc; border-radius:50%; display:flex; justify-content:center; align-items:center;">SS</div>
+                        <div>
+                            <div class="user-name" style="font-weight:bold;">Sale Staff</div>
+                            <div class="user-role" style="font-size:12px; color:#666;">Administrator</div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- BREADCRUMB -->
-            <div class="breadcrumb-bar">
-                <a th:href="@{/invoices}">Invoice Management</a>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                <span>Create</span>
+            <div class="breadcrumb-bar" style="margin:20px 0; display:flex; align-items:center; gap:10px;">
+                <a th:href="@{/internal/invoices}" style="text-decoration:none; color:#333;">Invoice Management</a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="9 18 15 12 9 6"/></svg>
+                <span style="color:#666;">Create</span>
             </div>
 
             <!-- Select Order Card -->
-            <div class="card mb-4">
-                <div class="card-header-bar">
-                    <h6>Select Order</h6>
+            <div class="card mb-4" style="padding:20px; background:#fff; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                <div class="card-header-bar" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h6 style="margin:0;">Select Order</h6>
                 </div>
                 <div class="card-body-pad">
                     <label class="form-label"
-                           style="color:var(--text-mid); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.06em">
+                           style="color:var(--text-mid); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom: 8px; display: block;">
                         Choose a confirmed order to generate invoice
                     </label>
                     <select class="form-select" style="max-width:400px"
-                            onchange="if(this.value) window.location.href='/invoices/create/' + this.value">
+                            onchange="if(this.value) window.location.href='/internal/invoices/create/' + this.value">
                         <option value="">-- Select Order --</option>
                         <option th:each="o : ${orders}"
                                 th:value="${o.orderId}"
@@ -125,34 +121,34 @@
             <!-- Order Info (only shown when order is selected) -->
             <div th:if="${order != null}">
 
-                <form th:action="@{/invoices/create}" method="post">
+                <form th:action="@{/internal/invoices/create}" method="post">
                     <input type="hidden" name="orderId" th:value="${order.orderId}">
 
                     <!-- Customer Info Card -->
-                    <div class="card mb-4">
-                        <div class="card-header-bar">
-                            <h6>Customer Information</h6>
+                    <div class="card mb-4" style="padding:20px; background:#fff; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                        <div class="card-header-bar" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
+                            <h6 style="margin:0;">Customer Information</h6>
                         </div>
                         <div class="card-body-pad">
                             <div class="row g-4">
                                 <div class="col-md-6">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Customer Name</span>
+                                    <div class="detail-row" style="display:flex; justify-content:space-between; margin-bottom: 10px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px;">
+                                        <span class="detail-label" style="color:#666;">Customer Name</span>
                                         <span class="detail-value" style="font-weight:600"
                                               th:text="${order.user.fullName}"></span>
                                     </div>
-                                    <div class="detail-row" style="border-bottom:none">
-                                        <span class="detail-label">Phone</span>
+                                    <div class="detail-row" style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+                                        <span class="detail-label" style="color:#666;">Phone</span>
                                         <span class="detail-value" th:text="${order.phone}"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="detail-row">
-                                        <span class="detail-label">Order ID</span>
+                                    <div class="detail-row" style="display:flex; justify-content:space-between; margin-bottom: 10px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px;">
+                                        <span class="detail-label" style="color:#666;">Order ID</span>
                                         <span class="detail-value" th:text="'#' + ${order.orderId}"></span>
                                     </div>
-                                    <div class="detail-row" style="border-bottom:none">
-                                        <span class="detail-label">Address</span>
+                                    <div class="detail-row" style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+                                        <span class="detail-label" style="color:#666;">Address</span>
                                         <span class="detail-value" th:text="${order.shippingAddress}"></span>
                                     </div>
                                 </div>
@@ -161,15 +157,15 @@
                     </div>
 
                     <!-- Product Table Card -->
-                    <div class="card mb-4">
-                        <div class="card-header-bar">
-                            <h6>Order Items</h6>
-                            <span style="background:var(--bg); color:var(--text-mid); padding:2px 10px; border-radius:12px; font-size:12px; font-weight:500"
+                    <div class="card mb-4" style="padding:20px; background:#fff; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                        <div class="card-header-bar" style="display:flex; justify-content:space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
+                            <h6 style="margin:0;">Order Items</h6>
+                            <span style="background:#f5f5f5; color:#666; padding:4px 12px; border-radius:12px; font-size:12px; font-weight:500"
                                   th:text="${#lists.size(order.orderDetails)} + ' items'">0 items</span>
                         </div>
                         <div class="table-wrap">
-                            <table>
-                                <thead>
+                            <table class="table table-hover">
+                                <thead class="table-light">
                                     <tr>
                                         <th style="width:60px">No</th>
                                         <th>Product Name</th>
@@ -180,16 +176,16 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="d, stat : ${order.orderDetails}">
-                                        <td style="color:var(--text-mid); font-weight:600" th:text="${stat.count}"></td>
+                                        <td style="color:#666; font-weight:600" th:text="${stat.count}"></td>
                                         <td th:text="${d.product.productName}"></td>
                                         <td th:text="${d.quantity}"></td>
                                         <td>
-                                            <span th:text="${d.unitPrice}"></span>
+                                            <span th:text="${#numbers.formatDecimal(d.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
                                         </td>
-                                        <td style="font-weight:700; color:var(--accent)" th:text="${d.subtotal}"></td>
+                                        <td style="font-weight:700; color:#e94560" th:text="${#numbers.formatDecimal(d.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
                                     </tr>
                                     <tr th:if="${#lists.isEmpty(order.orderDetails)}" class="empty-row">
-                                        <td colspan="5">No order items found</td>
+                                        <td colspan="5" class="text-center py-4">No order items found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -197,36 +193,35 @@
                     </div>
 
                     <!-- Total Card -->
-                    <div class="card mb-4">
-                        <div class="card-header-bar">
-                            <h6>Payment Summary</h6>
+                    <div class="card mb-4" style="padding:20px; background:#fff; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                        <div class="card-header-bar" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
+                            <h6 style="margin:0;">Payment Summary</h6>
                         </div>
                         <div class="card-body-pad">
                             <div th:with="rawSubtotal=${#aggregates.sum(order.orderDetails.![subtotal])}">
-                                <div class="detail-row">
-                                    <span class="detail-label">Items Subtotal</span>
-                                    <span class="detail-value" style="font-weight:600; text-align:right; display:block;"
+                                <div class="detail-row" style="display:flex; justify-content:space-between; margin-bottom: 10px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px;">
+                                    <span class="detail-label" style="color:#666;">Items Subtotal</span>
+                                    <span class="detail-value" style="font-weight:600; text-align:right;"
                                           th:text="${#numbers.formatDecimal(rawSubtotal != null ? rawSubtotal : 0, 0, 'COMMA', 0, 'POINT')} + ' đ'">
                                     </span>
                                 </div>
 
-                                <div class="detail-row" th:if="${order.coupon != null}">
-                                    <span class="detail-label">
+                                <div class="detail-row" th:if="${order.coupon != null}" style="display:flex; justify-content:space-between; margin-bottom: 10px; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px;">
+                                    <span class="detail-label" style="color:#666; display: flex; align-items: center; gap: 10px;">
                                         Coupon Applied 
-                                        <span class="badge-coupon" style="margin-left:6px;" th:text="${order.coupon.couponCode}"></span>
+                                        <span class="badge-coupon" style="background: #e94560; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;" th:text="${order.coupon.couponCode}"></span>
                                     </span>
-                                    <span class="detail-value" style="color:var(--danger); font-weight:600; text-align:right; display:block;">
+                                    <span class="detail-value" style="color:#e94560; font-weight:600; text-align:right; display:flex; flex-direction: column;">
                                         <span th:text="'- ' + ${order.coupon.discountPercent} + '%'"></span>
-                                        <br>
-                                        <small style="color:var(--text-mid);">
+                                        <small style="color:#666;">
                                             (<span th:text="'- ' + ${#numbers.formatDecimal(rawSubtotal * order.coupon.discountPercent / 100, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>)
                                         </small>
                                     </span>
                                 </div>
 
-                                <div class="detail-row" style="border-bottom:none">
-                                    <span class="detail-label">Total Amount</span>
-                                    <span class="detail-value" style="font-weight:800; font-size:18px; color:var(--danger); text-align:right; display:block;"
+                                <div class="detail-row" style="display:flex; justify-content:space-between; margin-top: 15px;">
+                                    <span class="detail-label" style="font-weight: bold; font-size: 16px;">Total Amount</span>
+                                    <span class="detail-value" style="font-weight:800; font-size:18px; color:#e94560; text-align:right;"
                                           th:text="${order.coupon != null ? 
                                              #numbers.formatDecimal(rawSubtotal - (rawSubtotal * order.coupon.discountPercent / 100), 0, 'COMMA', 0, 'POINT') : 
                                              #numbers.formatDecimal(rawSubtotal != null ? rawSubtotal : 0, 0, 'COMMA', 0, 'POINT')} + ' đ'">
@@ -238,13 +233,13 @@
 
                     <!-- Footer -->
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
-                        <a th:href="@{/invoices}" class="btn-outline">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                        <a th:href="@{/internal/invoices}" class="btn btn-outline-secondary" style="display:flex; align-items:center; gap:8px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px; height:14px;"><polyline points="15 18 9 12 15 6"/></svg>
                             Back to List
                         </a>
-                        <button type="submit" class="btn-save"
-                                style="padding:9px 28px; font-size:13.5px; display:inline-flex; align-items:center; gap:6px; border:none; cursor:pointer">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        <button type="submit" class="btn btn-primary"
+                                style="padding:9px 28px; font-weight: bold; display:inline-flex; align-items:center; gap:8px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                             Generate Invoice
                         </button>
                     </div>
@@ -253,6 +248,7 @@
 
             </div>
 
+        </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -65,7 +65,35 @@ class AdminProductServiceTest {
         assertTrue(errors.containsKey("name"));
     }
 
-    // 4. VALIDATION - Giá sản phẩm <= 0
+    // 4. VALIDATION - Tên sản phẩm quá ngắn
+    @Test
+    void testValidateProduct_NameTooShort() {
+        Product product = new Product();
+        product.setName("A");
+        product.setPrice(new BigDecimal("100000"));
+        product.setStockQuantity(5);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertTrue(errors.containsKey("name"));
+        assertEquals("Product name must be between 2 and 200 characters!", errors.get("name"));
+    }
+
+    // 5. VALIDATION - Tên chứa ký tự đặc biệt
+    @Test
+    void testValidateProduct_NameWithSpecialChars() {
+        Product product = new Product();
+        product.setName("Nike @#$ Shoe!");
+        product.setPrice(new BigDecimal("100000"));
+        product.setStockQuantity(5);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertTrue(errors.containsKey("name"));
+        assertEquals("Product name can only contain letters, numbers, spaces, and hyphens!", errors.get("name"));
+    }
+
+    // 6. VALIDATION - Giá sản phẩm <= 0
     @Test
     void testValidateProduct_NegativePrice() {
         Product product = new Product();
@@ -82,7 +110,7 @@ class AdminProductServiceTest {
         assertEquals("Price must be greater than 0!", errors.get("price"));
     }
 
-    // 5. VALIDATION - Giá bằng 0
+    // 7. VALIDATION - Giá bằng 0
     @Test
     void testValidateProduct_ZeroPrice() {
         Product product = new Product();
@@ -97,7 +125,7 @@ class AdminProductServiceTest {
         assertTrue(errors.containsKey("price"));
     }
 
-    // 6. VALIDATION - Giá là null
+    // 8. VALIDATION - Giá là null
     @Test
     void testValidateProduct_NullPrice() {
         Product product = new Product();
@@ -113,7 +141,23 @@ class AdminProductServiceTest {
         assertEquals("Price cannot be blank!", errors.get("price"));
     }
 
-    // 7. VALIDATION - Số lượng tồn kho âm
+    // 9. VALIDATION - Giá vượt quá giới hạn
+    @Test
+    void testValidateProduct_PriceExceedsMax() {
+        Product product = new Product();
+        product.setName("Test Shoe");
+        product.setPrice(new BigDecimal("9999999999"));
+        product.setStockQuantity(5);
+
+        when(adminProductRepository.existsByName("Test Shoe")).thenReturn(false);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertTrue(errors.containsKey("price"));
+        assertEquals("Price cannot exceed 999,999,999!", errors.get("price"));
+    }
+
+    // 10. VALIDATION - Số lượng tồn kho âm
     @Test
     void testValidateProduct_NegativeStock() {
         Product product = new Product();
@@ -129,7 +173,7 @@ class AdminProductServiceTest {
         assertEquals("Stock quantity must be 0 or greater!", errors.get("stockQuantity"));
     }
 
-    // 8. VALIDATION - Tên sản phẩm đã tồn tại (tạo mới)
+    // 11. VALIDATION - Tên sản phẩm đã tồn tại (tạo mới)
     @Test
     void testValidateProduct_DuplicateName_CreateNew() {
         Product product = new Product();
@@ -145,7 +189,90 @@ class AdminProductServiceTest {
         assertEquals("This product name already exists!", errors.get("name"));
     }
 
-    // 9. VALIDATION - Sản phẩm hợp lệ hoàn toàn (không có lỗi)
+    // 12. VALIDATION - Size chứa ký tự chữ
+    @Test
+    void testValidateProduct_SizeWithLetters() {
+        Product product = new Product();
+        product.setName("Test Shoe");
+        product.setPrice(new BigDecimal("500000"));
+        product.setStockQuantity(5);
+        product.setSize("abc");
+
+        when(adminProductRepository.existsByName("Test Shoe")).thenReturn(false);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertTrue(errors.containsKey("size"));
+        assertEquals("Size must be numeric values (e.g., 38 or 38, 39, 40)!", errors.get("size"));
+    }
+
+    // 13. VALIDATION - Size ngoài khoảng cho phép
+    @Test
+    void testValidateProduct_SizeOutOfRange() {
+        Product product = new Product();
+        product.setName("Test Shoe");
+        product.setPrice(new BigDecimal("500000"));
+        product.setStockQuantity(5);
+        product.setSize("60");
+
+        when(adminProductRepository.existsByName("Test Shoe")).thenReturn(false);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertTrue(errors.containsKey("size"));
+        assertEquals("Each size value must be between 15 and 50!", errors.get("size"));
+    }
+
+    // 14. VALIDATION - Size hợp lệ (nhiều giá trị)
+    @Test
+    void testValidateProduct_SizeValid() {
+        Product product = new Product();
+        product.setName("Test Shoe");
+        product.setPrice(new BigDecimal("500000"));
+        product.setStockQuantity(5);
+        product.setSize("38, 39, 40");
+
+        when(adminProductRepository.existsByName("Test Shoe")).thenReturn(false);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertFalse(errors.containsKey("size"));
+    }
+
+    // 15. VALIDATION - Color chứa ký tự đặc biệt
+    @Test
+    void testValidateProduct_ColorWithSpecialChars() {
+        Product product = new Product();
+        product.setName("Test Shoe");
+        product.setPrice(new BigDecimal("500000"));
+        product.setStockQuantity(5);
+        product.setColor("Red@#$");
+
+        when(adminProductRepository.existsByName("Test Shoe")).thenReturn(false);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertTrue(errors.containsKey("color"));
+        assertEquals("Color can only contain letters, spaces, commas, slashes, and hyphens!", errors.get("color"));
+    }
+
+    // 16. VALIDATION - Color hợp lệ
+    @Test
+    void testValidateProduct_ColorValid() {
+        Product product = new Product();
+        product.setName("Test Shoe");
+        product.setPrice(new BigDecimal("500000"));
+        product.setStockQuantity(5);
+        product.setColor("Red, Blue, Black/White");
+
+        when(adminProductRepository.existsByName("Test Shoe")).thenReturn(false);
+
+        Map<String, String> errors = adminProductService.validateProduct(product);
+
+        assertFalse(errors.containsKey("color"));
+    }
+
+    // 17. VALIDATION - Sản phẩm hợp lệ hoàn toàn (không có lỗi)
     @Test
     void testValidateProduct_ValidProduct_NoErrors() {
         Product product = new Product();
@@ -160,7 +287,7 @@ class AdminProductServiceTest {
         assertTrue(errors.isEmpty());
     }
 
-    // 10. DELETE - Xóa sản phẩm
+    // 18. DELETE - Xóa sản phẩm
     @Test
     void testDeleteProduct_Success() {
         Long productId = 1L;
@@ -168,7 +295,7 @@ class AdminProductServiceTest {
         verify(adminProductRepository, times(1)).deleteById(productId);
     }
 
-    // 11. GET BY ID - Sản phẩm không tìm thấy
+    // 19. GET BY ID - Sản phẩm không tìm thấy
     @Test
     void testGetProductById_NotFound() {
         when(adminProductRepository.findById(999L)).thenReturn(Optional.empty());
@@ -176,7 +303,7 @@ class AdminProductServiceTest {
         assertNull(result);
     }
 
-    // 12. GET BY ID - Tìm thấy sản phẩm
+    // 20. GET BY ID - Tìm thấy sản phẩm
     @Test
     void testGetProductById_Found() {
         Product product = new Product();

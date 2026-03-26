@@ -87,14 +87,17 @@ public class OrderController {
 
     @PostMapping("/update-status")
     public String updateStatus(@RequestParam(name = "id") Long id,
-                               @RequestParam(name = "status") String status) {
+                               @RequestParam(name = "status") String status,
+                               RedirectAttributes redirectAttributes) {
         orderService.updateStatus(id, status);
+        redirectAttributes.addFlashAttribute("successMessage", "Update order successfully!");
         return "redirect:/internal/orders";
     }
 
   @GetMapping("/delete/{id}")
-public String delete(@PathVariable(name = "id") Long id) {
+public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
     orderService.deleteOrder(id);
+    redirectAttributes.addFlashAttribute("successMessage", "Delete order successfully!");
     return "redirect:/internal/orders";
 }
     // ====== SHOW EDIT PAGE ======

@@ -27,6 +27,11 @@
 
         <span class="nav-label">Management</span>
 
+        <a th:href="@{/internal/sales/dashboard}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Dashboard
+        </a>
+
         <a th:href="@{/internal/orders}" >
             <!-- Orders icon -->
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -78,7 +83,7 @@
                     <h4>Create Invoice</h4>
                     <p>Generate a new invoice from an order</p>
                 </div>
-                <a href="/internal/admin/profile" style="text-decoration:none;">
+                <a href="/internal/profile" style="text-decoration:none;">
                     <div class="user-pill" style="display:flex; align-items:center; gap:10px;">
                         <div class="user-avatar" style="width:40px; height:40px; background:#ccc; border-radius:50%; display:flex; justify-content:center; align-items:center;">SS</div>
                         <div>

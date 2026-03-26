@@ -137,6 +137,12 @@ public class ProfileController {
             return "redirect:/internal/login";
         }
         model.addAttribute("user", user);
+        
+        if ("SALE_STAFF".equalsIgnoreCase(user.getUserRole())) {
+            return "sale-profile";
+        } else if ("ADMIN".equalsIgnoreCase(user.getUserRole())) {
+            return "admin-profile";
+        }
         return "marketing-profile";
     }
 
@@ -157,6 +163,11 @@ public class ProfileController {
 
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "Please fix the invalid fields!");
+            if ("SALE_STAFF".equalsIgnoreCase(currentUser.getUserRole())) {
+                return "sale-profile";
+            } else if ("ADMIN".equalsIgnoreCase(currentUser.getUserRole())) {
+                return "admin-profile";
+            }
             return "marketing-profile";
         }
 
@@ -177,6 +188,12 @@ public class ProfileController {
         User user = getAuthenticatedUser();
         if (user == null) return "redirect:/internal/login";
         model.addAttribute("user", user);
+        
+        if ("SALE_STAFF".equalsIgnoreCase(user.getUserRole())) {
+            return "sale-change-password";
+        } else if ("ADMIN".equalsIgnoreCase(user.getUserRole())) {
+            return "admin-change-password";
+        }
         return "marketing-change-password";
     }
 

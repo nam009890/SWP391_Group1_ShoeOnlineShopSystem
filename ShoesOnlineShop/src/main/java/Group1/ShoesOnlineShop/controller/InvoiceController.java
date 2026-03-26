@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/internal/invoices")
 public class InvoiceController {
@@ -50,8 +52,9 @@ public class InvoiceController {
 
     // DELETE
     @GetMapping("/delete/{id}")
-    public String deleteInvoice(@PathVariable(name = "id") Long id) {
+    public String deleteInvoice(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         invoiceService.deleteInvoice(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Delete invoice successfully!");
         return "redirect:/internal/invoices";
     }
 
@@ -75,16 +78,19 @@ public class InvoiceController {
 
     // Generate Invoice
     @PostMapping("/create")
-    public String createInvoice(@RequestParam(name = "orderId") Long orderId) {
+    public String createInvoice(@RequestParam(name = "orderId") Long orderId, RedirectAttributes redirectAttributes) {
         invoiceService.generateInvoice(orderId);
+        redirectAttributes.addFlashAttribute("successMessage", "Create invoic successfully!");
         return "redirect:/internal/invoices";
     }
 
     // TOGGLE STATUS
     @PostMapping("/toggle")
     public String toggleStatus(@RequestParam(name = "id") Long id,
-                               @RequestParam(name = "status") String status) {
+                               @RequestParam(name = "status") String status,
+                               RedirectAttributes redirectAttributes) {
         invoiceService.toggleStatus(id, status);
+        redirectAttributes.addFlashAttribute("successMessage", "Update invoice successfully!");
         return "redirect:/internal/invoices";
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import Group1.ShoesOnlineShop.entity.Feedback;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 @RequestMapping("/internal/feedbacks")
 public class FeedbackController {
@@ -33,14 +35,16 @@ public class FeedbackController {
     }
 
     @PostMapping("/toggle")
-    public String toggle(@RequestParam(name = "id") Long id) {
+    public String toggle(@RequestParam(name = "id") Long id, RedirectAttributes redirectAttributes) {
         feedbackService.toggleStatus(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Update feedback successfully!");
         return "redirect:/internal/feedbacks";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable(name = "id") Long id) {
+    public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
         feedbackService.delete(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Delete feedback successfully!");
         return "redirect:/internal/feedbacks";
     }
     

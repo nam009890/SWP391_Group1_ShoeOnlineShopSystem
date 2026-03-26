@@ -62,6 +62,13 @@ public class ContentService {
         contentRepository.deleteById(id);
     }
 
+    public boolean isContentTitleExists(String title, Long id) {
+        if (id == null) {
+            return contentRepository.existsByContentTitle(title);
+        }
+        return contentRepository.existsByContentTitleAndIdNot(title, id);
+    }
+
     // 2. HÀM XỬ LÝ LƯU FILE ẢNH VÀO Ổ CỨNG MÁY TÍNH
     public String saveImageFile(MultipartFile file) throws IOException {
         String fileName = System.currentTimeMillis() + "_" + StringUtils.cleanPath(file.getOriginalFilename());

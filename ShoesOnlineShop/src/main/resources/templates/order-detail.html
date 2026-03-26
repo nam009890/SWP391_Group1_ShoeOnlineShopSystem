@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -26,6 +26,11 @@
         </div>
 
         <span class="nav-label">Management</span>
+
+        <a th:href="@{/internal/sales/dashboard}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Dashboard
+        </a>
 
         <a th:href="@{/internal/orders}" >
             <!-- Orders icon -->
@@ -75,6 +80,7 @@
             <h4>Order Detail</h4>
             <p>View complete order information</p>
         </div>
+        <a href="/internal/profile" style="text-decoration:none;">
         <div class="user-pill">
             <div class="user-avatar">SS</div>
             <div>
@@ -199,7 +205,7 @@
                         <span th:text="'- ' + ${order.coupon.discountPercent} + '%'"></span>
                         <br>
                         <small style="color:var(--text-mid);">
-                            (<span th:text="'- ' + ${#numbers.formatDecimal(rawSubtotal * order.coupon.discountPercent / 100, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>)
+                            (<span th:text="'- ' + ${#numbers.formatDecimal((rawSubtotal != null ? rawSubtotal : 0) * order.coupon.discountPercent / 100, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>)
                         </small>
                     </span>
                 </div>
@@ -209,7 +215,7 @@
                     <span class="detail-label">Total Amount</span>
                     <span class="detail-value" style="font-weight:800; font-size:18px; color:var(--danger); text-align:right; display:block;"
                           th:text="${order.coupon != null ? 
-                             #numbers.formatDecimal(rawSubtotal - (rawSubtotal * order.coupon.discountPercent / 100), 0, 'COMMA', 0, 'POINT') : 
+                             #numbers.formatDecimal((rawSubtotal != null ? rawSubtotal : 0) - ((rawSubtotal != null ? rawSubtotal : 0) * order.coupon.discountPercent / 100), 0, 'COMMA', 0, 'POINT') : 
                              #numbers.formatDecimal(rawSubtotal != null ? rawSubtotal : 0, 0, 'COMMA', 0, 'POINT')} + ' đ'">
                     </span>
                 </div>

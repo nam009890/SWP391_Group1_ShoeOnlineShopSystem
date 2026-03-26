@@ -45,7 +45,8 @@ public class User {
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
-    @Pattern(regexp = "^$|^[0-9]+$", message = "Phone number must contain only numbers, no letters or special characters")
+    @NotBlank(message = "Phone number cannot be empty")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits, no letters or special characters")
     @Column(name = "phone", length = 20)
     private String phone;
 

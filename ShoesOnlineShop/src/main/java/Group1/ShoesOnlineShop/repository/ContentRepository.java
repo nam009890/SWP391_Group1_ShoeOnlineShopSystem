@@ -19,4 +19,8 @@ public interface ContentRepository extends JpaRepository<Content, Long> ,JpaSpec
 
     // Active content for home page
     java.util.List<Content> findByIsActiveTrueOrderByCreatedAtDesc();
+
+    // Duplicate title check
+    boolean existsByContentTitle(String contentTitle);
+    boolean existsByContentTitleAndIdNot(String contentTitle, Long id);
 }

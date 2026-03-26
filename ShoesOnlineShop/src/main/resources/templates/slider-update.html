@@ -97,6 +97,7 @@
                             <div class="col-md-6">
                                 <label class="form-label">Slider Title</label>
                                 <input type="text" th:field="*{sliderTitle}" class="form-control" th:classappend="${#fields.hasErrors('sliderTitle')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('sliderTitle')}" th:errors="*{sliderTitle}"></div>
                                 <div class="form-check form-switch mt-3">
                                     <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="statusSwitch">
                                     <label class="form-check-label fw-bold" for="statusSwitch">Active Status</label>

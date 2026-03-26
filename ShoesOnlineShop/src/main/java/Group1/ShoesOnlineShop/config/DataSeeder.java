@@ -31,10 +31,10 @@ public class DataSeeder implements CommandLineRunner {
 
         // =============== SALE STAFF ===============
         List<User> mockSales = Arrays.asList(
-            createUser("sale3", "sale3@shoeweb.com", "Pham Van Sale4", "0911111114", "101 Le Loi, Quan 1, TP HCM", "123456", "SALE_STAFF"),
-            createUser("sale4", "sale4@shoeweb.com", "Vo Thi Seller3", "0912222227", "201 Tran Hung Dao, Ha Noi", "123456", "SALE_STAFF"),
-            createUser("sale5", "sale5@shoeweb.com", "Nguyen Van Sale5", "0913333333", "202 Le Duan, Da Nang", "123456", "SALE_STAFF"),
-            createUser("sale6", "sale6@shoeweb.com", "Tran Thi Sale6", "0914444444", "203 Nguyen Trai, Ha Noi", "123456", "SALE_STAFF")
+            createUser("sale3", "sale3@shoeweb.com", "Pham Van Hung", "0911111114", "101 Le Loi, Quan 1, TP HCM", "123456", "SALE_STAFF"),
+            createUser("sale4", "sale4@shoeweb.com", "Vo Thi Lan", "0912222227", "201 Tran Hung Dao, Ha Noi", "123456", "SALE_STAFF"),
+            createUser("sale5", "sale5@shoeweb.com", "Nguyen Van Minh", "0913333333", "202 Le Duan, Da Nang", "123456", "SALE_STAFF"),
+            createUser("sale6", "sale6@shoeweb.com", "Tran Thi Hoa", "0914444444", "203 Nguyen Trai, Ha Noi", "123456", "SALE_STAFF")
         );
 
         // =============== MARKETING STAFF ===============

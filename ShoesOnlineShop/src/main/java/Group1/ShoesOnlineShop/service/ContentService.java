@@ -21,6 +21,8 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class ContentService {
@@ -67,6 +69,26 @@ public class ContentService {
             return contentRepository.existsByContentTitle(title);
         }
         return contentRepository.existsByContentTitleAndIdNot(title, id);
+    }
+
+    public Map<String, String> validateContent(Content content, MultipartFile imageFile) {
+        Map<String, String> errors = new HashMap<>();
+        boolean isNew = (content.getId() == null);
+        
+        if (isNew && (imageFile == null || imageFile.isEmpty())) {
+            errors.put("imageUrl", "Please upload a thumbnail image!");
+        }
+
+        if (content.getContentText() == null || content.getContentText().replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim().isEmpty()) {
+            errors.put("contentText", "Content body cannot be empty!");
+        }
+
+        if (content.getContentTitle() != null && !content.getContentTitle().trim().isEmpty()
+                && isContentTitleExists(content.getContentTitle().trim(), content.getId())) {
+            errors.put("contentTitle", "This content title already exists, please choose another!");
+        }
+        
+        return errors;
     }
 
     // 2. HÀM XỬ LÝ LƯU FILE ẢNH VÀO Ổ CỨNG MÁY TÍNH

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.StringUtils;
 
@@ -107,7 +108,7 @@ public class SliderService {
             errors.put("sliderTitle", "This Slider title already exists, please choose another!");
         }
         if (productIds == null || productIds.isEmpty()) {
-            errors.put("sliderProducts", "Please select at least one product!");
+            errors.put("products", "Please select at least one product!"); // Changed from sliderProducts to products to match the view bindings
         }
         if (couponIds == null || couponIds.isEmpty()) {
             errors.put("coupons", "Please select at least one coupon!");
@@ -117,20 +118,9 @@ public class SliderService {
 
     public Map<String, String> validateSlider(Slider sliderForm, List<Long> couponIds, List<Long> productIds,
             MultipartFile imageFile) {
-        Map<String, String> errors = new HashMap<>();
+        
+        Map<String, String> errors = validateSliderLogic(sliderForm, couponIds, productIds);
         boolean isUpdate = (sliderForm.getId() != null);
-
-        // Validate Logic DB
-        if (sliderForm.getSliderTitle() != null
-                && isSliderTitleExists(sliderForm.getSliderTitle(), sliderForm.getId())) {
-            errors.put("sliderTitle", "This Slider title already exists, please choose another!");
-        }
-        if (productIds == null || productIds.isEmpty()) {
-            errors.put("products", "Please select at least one product!");
-        }
-        if (couponIds == null || couponIds.isEmpty()) {
-            errors.put("coupons", "Please select at least one coupon!");
-        }
 
         // Validate File Ảnh
         if (!isUpdate && (imageFile == null || imageFile.isEmpty())) {
@@ -159,6 +149,31 @@ public class SliderService {
             }
         }
         return errors;
+    }
+
+    public void restoreSliderFormState(Model model, Slider sliderForm, List<Long> couponIds, List<Long> productIds, List<Integer> productDiscounts, boolean isUpdate) {
+        model.addAttribute("coupons", couponRepository.findAll());
+        model.addAttribute("products", productRepository.findAll());
+        
+        if (productIds != null && !productIds.isEmpty()) {
+            List<Product> pdList = productRepository.findAllById(productIds);
+            for (int i = 0; i < productIds.size(); i++) {
+                Long pId = productIds.get(i);
+                Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
+                Product p = pdList.stream().filter(prod -> prod.getProductId().equals(pId)).findFirst().orElse(null);
+                if (p != null) {
+                    sliderForm.addProduct(p, discount);
+                }
+            }
+        }
+        if (couponIds != null && !couponIds.isEmpty()) {
+            sliderForm.setCoupons(couponRepository.findAllById(couponIds));
+        }
+
+        if (isUpdate) {
+            Slider existing = getSliderById(sliderForm.getId());
+            if (existing != null) sliderForm.setImageUrl(existing.getImageUrl());
+        }
     }
 
     // 2. HÀM XỬ LÝ LƯU FILE VÀ GHI DATABASE

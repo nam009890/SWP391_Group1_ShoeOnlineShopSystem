@@ -2,7 +2,6 @@ package Group1.ShoesOnlineShop.controller;
 
 import Group1.ShoesOnlineShop.entity.Slider;
 import Group1.ShoesOnlineShop.service.SliderService;
-import Group1.ShoesOnlineShop.entity.Product;
 import Group1.ShoesOnlineShop.repository.CouponRepository;
 import Group1.ShoesOnlineShop.repository.ProductRepository;
 import jakarta.validation.Valid;
@@ -10,18 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -81,28 +73,7 @@ public class SliderController {
         }
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("coupons", couponRepository.findAll());
-            model.addAttribute("products", productRepository.findAll());
-            
-            if (productIds != null && !productIds.isEmpty()) {
-                List<Product> pdList = productRepository.findAllById(productIds);
-                for (int i = 0; i < productIds.size(); i++) {
-                    Long pId = productIds.get(i);
-                    Integer discount = (productDiscounts != null && i < productDiscounts.size()) ? productDiscounts.get(i) : 0;
-                    Product p = pdList.stream().filter(prod -> prod.getProductId().equals(pId)).findFirst().orElse(null);
-                    if (p != null) {
-                        sliderForm.addProduct(p, discount);
-                    }
-                }
-            }
-            if (couponIds != null && !couponIds.isEmpty()) {
-                sliderForm.setCoupons(couponRepository.findAllById(couponIds));
-            }
-
-            if (isUpdate) {
-                Slider existing = sliderService.getSliderById(sliderForm.getId());
-                if (existing != null) sliderForm.setImageUrl(existing.getImageUrl());
-            }
+            sliderService.restoreSliderFormState(model, sliderForm, couponIds, productIds, productDiscounts, isUpdate);
             return isUpdate ? "slider-update" : "slider-create";
         }
 

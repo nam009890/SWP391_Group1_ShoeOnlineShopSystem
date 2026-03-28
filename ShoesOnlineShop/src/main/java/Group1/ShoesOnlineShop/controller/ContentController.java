@@ -52,20 +52,10 @@ public class ContentController {
             Model model) {
 
         boolean isNew = (content.getId() == null);
-        
-        if (isNew && (imageFile == null || imageFile.isEmpty())) {
-            result.rejectValue("imageUrl", "error.content", "Please upload a thumbnail image!");
-        }
 
-        // Validate contentText: Summernote can submit <p><br></p> for empty content
-        if (content.getContentText() == null || content.getContentText().replaceAll("<[^>]*>", "").replaceAll("&nbsp;", "").trim().isEmpty()) {
-            result.rejectValue("contentText", "error.content", "Content body cannot be empty!");
-        }
-
-        // Validate duplicate title
-        if (content.getContentTitle() != null && !content.getContentTitle().trim().isEmpty()
-                && contentService.isContentTitleExists(content.getContentTitle().trim(), content.getId())) {
-            result.rejectValue("contentTitle", "error.content", "This content title already exists, please choose another!");
+        java.util.Map<String, String> errors = contentService.validateContent(content, imageFile);
+        if (!errors.isEmpty()) {
+            errors.forEach((field, message) -> result.rejectValue(field, "error.content", message));
         }
 
         if (result.hasErrors()) {

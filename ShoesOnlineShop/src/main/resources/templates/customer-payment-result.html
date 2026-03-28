@@ -7,40 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary:#0a0a0a;--primary-light:#1a1a2e;--accent:#e94560;--accent-hover:#ff6b81;
-            --surface:#16213e;--bg:#0f0f23;--text:#eaeaea;--text-muted:#a0a0b0;
-            --glass:rgba(255,255,255,0.06);--glass-border:rgba(255,255,255,0.1);
-            --radius:16px;--radius-sm:10px;--shadow:0 8px 32px rgba(0,0,0,0.4);
-            --transition:all .35s cubic-bezier(.25,.46,.45,.94);
-        }
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
-        a{text-decoration:none;color:inherit}
-
-        .navbar{display:flex;justify-content:space-between;align-items:center;padding:0 3rem;height:72px;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);position:fixed;width:100%;top:0;z-index:1000}
-        .navbar-brand{font-family:'Teko',sans-serif;font-size:2.2rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:3px}
-
-        .result-container { padding: 120px 2rem 4rem; max-width: 600px; margin: 0 auto; text-align: center; }
-        .result-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 3rem 2rem; }
-        
-        .icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
-        .icon-success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
-        .icon-failed { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
-        
-        .result-title { font-family: 'Teko', sans-serif; font-size: 3rem; text-transform: uppercase; color: #fff; line-height: 1; margin-bottom: 0.5rem; }
-        .result-message { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; }
-        
-        .order-id { font-size: 1.2rem; font-weight: 700; color: #fff; background: var(--bg); padding: 0.8rem 1.5rem; border-radius: 8px; display: inline-block; margin-bottom: 2.5rem; border: 1px dashed var(--glass-border); }
-        
-        .actions { display: flex; gap: 1rem; justify-content: center; }
-        .btn { padding: 0.8rem 2rem; border-radius: var(--radius-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); }
-        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: #fff; border: none; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(233,69,96,0.4); }
-        .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--glass-border); }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/pages/customer-payment-result.css}">
 </head>
 <body>
     <nav class="navbar">

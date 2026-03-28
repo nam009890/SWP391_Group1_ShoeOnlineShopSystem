@@ -19,7 +19,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     // Upload directory — using absolute path to avoid
     // working-directory issues when running with mvnw or from IDE.
-    public static final Path UPLOAD_DIR = Paths.get("d:/SWP_Project/New_Code/ShoesOnlineShop/uploads").toAbsolutePath().normalize();
+    public static final Path UPLOAD_DIR = Paths
+            .get(System.getProperty("user.dir"), "src", "main", "resources", "static", "uploads").toAbsolutePath()
+            .normalize();
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

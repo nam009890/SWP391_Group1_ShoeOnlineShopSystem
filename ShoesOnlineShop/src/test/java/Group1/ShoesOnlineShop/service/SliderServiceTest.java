@@ -1,31 +1,30 @@
 package Group1.ShoesOnlineShop.service;
 
+import Group1.ShoesOnlineShop.entity.Coupon;
+import Group1.ShoesOnlineShop.entity.Product;
 import Group1.ShoesOnlineShop.entity.Slider;
 import Group1.ShoesOnlineShop.repository.CouponRepository;
 import Group1.ShoesOnlineShop.repository.ProductRepository;
 import Group1.ShoesOnlineShop.repository.SliderRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.ui.Model;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SliderServiceTest {
+public class SliderServiceTest {
 
     @Mock
     private SliderRepository sliderRepository;
@@ -36,93 +35,162 @@ class SliderServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private Model model;
+
     @InjectMocks
     private SliderService sliderService;
 
-    private Validator validator;
+    // --- Khối 1: Lấy dữ liệu (Get/Read) ---
+    @Test
+    void testGetSliders_NoFilter() {
+        Pageable paging = PageRequest.of(0, 5);
+        Page<Slider> expectedPage = new PageImpl<>(Arrays.asList(new Slider(), new Slider()));
+        when(sliderRepository.findAll(paging)).thenReturn(expectedPage);
 
-    @BeforeEach
-    void setUp() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Page<Slider> result = sliderService.getSliders(null, null, 1, 5);
+        assertEquals(2, result.getContent().size());
+        verify(sliderRepository, times(1)).findAll(paging);
     }
 
-    // 1. Test Successful Creation
     @Test
-    void testSaveSlider_Success() throws java.io.IOException {
-        Slider slider = new Slider();
-        slider.setSliderTitle("Exciting Summer");
-        List<Long> couponIds = Arrays.asList(1L, 2L);
-        List<Long> productIds = Arrays.asList(3L, 4L);
+    void testGetSliders_WithKeywordAndStatus() {
+        Pageable paging = PageRequest.of(0, 5);
+        when(sliderRepository.findBySliderTitleContainingIgnoreCaseAndIsActive("Sale", true, paging)).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        sliderService.processAndSaveSlider(slider, couponIds, productIds, Arrays.asList(0, 0), null);
-
-        verify(sliderRepository, times(1)).save(any(Slider.class));
-        verify(couponRepository, times(1)).findAllById(couponIds);
-        verify(productRepository, times(1)).findAllById(productIds);
+        sliderService.getSliders("Sale", true, 1, 5);
+        verify(sliderRepository, times(1)).findBySliderTitleContainingIgnoreCaseAndIsActive("Sale", true, paging);
     }
 
-    // 2. Test Duplicate Slider Title
     @Test
-    void testValidateLogic_DuplicateTitle() {
+    void testGetSliderById_Found() {
         Slider slider = new Slider();
-        slider.setSliderTitle("Summer");
+        slider.setId(1L);
+        when(sliderRepository.findById(1L)).thenReturn(Optional.of(slider));
 
-        when(sliderRepository.existsBySliderTitle("Summer")).thenReturn(true);
+        Slider result = sliderService.getSliderById(1L);
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
 
-        Map<String, String> errors = sliderService.validateSlider(slider, Arrays.asList(1L), Arrays.asList(2L), null);
+    // --- Khối 2: Kiểm duyệt Validation ---
+    @Test
+    void testValidateSlider_ValidData() {
+        Slider slider = new Slider();
+        slider.setSliderTitle("Valid Title");
 
-        assertFalse(errors.isEmpty());
+        Map<String, String> errors = sliderService.validateSliderLogic(slider, Arrays.asList(1L), Arrays.asList(2L));
+        assertTrue(errors.isEmpty(), "Valid data should not return any errors");
+    }
+
+    @Test
+    void testValidateSliderLogic_DuplicateTitle() {
+        Slider slider = new Slider();
+        slider.setSliderTitle("Duplicate");
+        when(sliderRepository.existsBySliderTitle("Duplicate")).thenReturn(true);
+
+        Map<String, String> errors = sliderService.validateSliderLogic(slider, Arrays.asList(1L), Arrays.asList(2L));
+        assertTrue(errors.containsKey("sliderTitle"));
         assertEquals("This Slider title already exists, please choose another!", errors.get("sliderTitle"));
     }
 
-    // 3. Test Error: No Product Selected
     @Test
-    void testValidateLogic_MissingProducts() {
+    void testValidateSliderLogic_MissingProducts() {
         Slider slider = new Slider();
-        slider.setSliderTitle("Winter");
+        slider.setSliderTitle("New Title");
 
-        Map<String, String> errors = sliderService.validateSlider(slider, Arrays.asList(1L), Collections.emptyList(), null);
-
+        Map<String, String> errors = sliderService.validateSliderLogic(slider, Arrays.asList(1L), null);
         assertTrue(errors.containsKey("products"));
         assertEquals("Please select at least one product!", errors.get("products"));
     }
 
-    // 4. Test Error: No Coupon Selected
     @Test
-    void testValidateLogic_MissingCoupons() {
+    void testValidateSliderLogic_MissingCoupons() {
         Slider slider = new Slider();
-        slider.setSliderTitle("Winter");
+        slider.setSliderTitle("New Title");
 
-        Map<String, String> errors = sliderService.validateSlider(slider, null, Arrays.asList(1L), null);
-
+        Map<String, String> errors = sliderService.validateSliderLogic(slider, null, Arrays.asList(1L));
         assertTrue(errors.containsKey("coupons"));
         assertEquals("Please select at least one coupon!", errors.get("coupons"));
     }
 
-    // 5. Test Error: Blank Title
     @Test
-    void testValidateEntity_BlankTitle() {
+    void testValidateSlider_MissingImageOnCreate() {
         Slider slider = new Slider();
-        slider.setSliderTitle("");
-        slider.setImageUrl("http://image.com/pic.jpg");
-
-        Set<ConstraintViolation<Slider>> violations = validator.validate(slider);
-        
-        boolean hasTitleError = violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("sliderTitle"));
-        assertTrue(hasTitleError, "Must report an error when Slider Title is blank");
+        slider.setId(null); 
+        Map<String, String> errors = sliderService.validateSlider(slider, Arrays.asList(1L), Arrays.asList(1L), null);
+        assertTrue(errors.containsKey("imageUrl"));
+        assertEquals("Please upload an image!", errors.get("imageUrl"));
     }
 
-    // 6. Test Error: Blank Image URL
     @Test
-void testValidateEntity_BlankImageUrl() {
-    Slider slider = new Slider();
-    slider.setSliderTitle("Valid Title");
-    slider.setImageUrl(""); // Cố tình để trống
+    void testValidateSlider_InvalidImageFormat() {
+        Slider slider = new Slider();
+        MockMultipartFile pdfFile = new MockMultipartFile("file", "doc.pdf", "application/pdf", new byte[]{1});
+        Map<String, String> errors = sliderService.validateSlider(slider, Arrays.asList(1L), Arrays.asList(1L), pdfFile);
+        assertTrue(errors.containsKey("imageUrl"));
+        assertEquals("Only image files are allowed!", errors.get("imageUrl"));
+    }
 
-    Set<ConstraintViolation<Slider>> violations = validator.validate(slider);
-    
-    // SỬA LẠI DÒNG NÀY: Thay vì mong đợi có lỗi, bây giờ ta mong đợi KHÔNG có lỗi (vì đã dời lên Controller)
-    assertTrue(violations.isEmpty(), "Entity must NOT report an error because image validation is moved to Controller");
-}
+    // --- Khối 3: Phục hồi trạng thái (Form Restore) ---
+    @Test
+    void testRestoreSliderFormState() {
+        Slider sliderForm = new Slider();
+        sliderForm.setId(1L);
+
+        Product p = new Product();
+        p.setProductId(10L);
+        when(productRepository.findAllById(Arrays.asList(10L))).thenReturn(Arrays.asList(p));
+        
+        Coupon c = new Coupon();
+        c.setId(20L);
+        when(couponRepository.findAllById(Arrays.asList(20L))).thenReturn(Arrays.asList(c));
+
+        Slider existingSlider = new Slider();
+        existingSlider.setImageUrl("/old-image.jpg");
+        when(sliderRepository.findById(1L)).thenReturn(Optional.of(existingSlider));
+
+        sliderService.restoreSliderFormState(model, sliderForm, Arrays.asList(20L), Arrays.asList(10L), Arrays.asList(5), true);
+
+        verify(model, times(1)).addAttribute(eq("coupons"), any());
+        verify(model, times(1)).addAttribute(eq("products"), any());
+        
+        assertEquals(1, sliderForm.getSliderProducts().size());
+        assertEquals(1, sliderForm.getCoupons().size());
+        assertEquals("/old-image.jpg", sliderForm.getImageUrl());
+    }
+
+    // --- Khối 4: Lưu/Thao tác Database ---
+    @Test
+    void testProcessAndSaveSlider_CreateNew() throws Exception {
+        Slider sliderForm = new Slider();
+        sliderForm.setSliderTitle("New Slider");
+
+        MockMultipartFile image = new MockMultipartFile("file", "test.jpg", "image/jpeg", new byte[]{1});
+
+        sliderService.processAndSaveSlider(sliderForm, Arrays.asList(1L), Arrays.asList(2L), Arrays.asList(10), image);
+
+        verify(sliderRepository, times(1)).save(any(Slider.class));
+    }
+
+    @Test
+    void testProcessAndSaveSlider_UpdateExisting() throws Exception {
+        Slider sliderForm = new Slider();
+        sliderForm.setId(1L);
+        sliderForm.setSliderTitle("Updated Title");
+
+        Slider dbSlider = new Slider();
+        when(sliderRepository.findById(1L)).thenReturn(Optional.of(dbSlider));
+
+        sliderService.processAndSaveSlider(sliderForm, Arrays.asList(1L), Arrays.asList(2L), Arrays.asList(10), null);
+
+        verify(sliderRepository, times(1)).save(dbSlider);
+        assertEquals("Updated Title", dbSlider.getSliderTitle());
+    }
+
+    @Test
+    void testDeleteSlider() {
+        sliderService.deleteSlider(1L);
+        verify(sliderRepository, times(1)).deleteById(1L);
+    }
 }

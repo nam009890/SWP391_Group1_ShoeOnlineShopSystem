@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <meta charset="UTF-8">
+        <title>Update Coupon</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <span class="brand-name">Shoes Online Shop Marketing</span>
+            </div>
+            <span class="nav-label">Navigation</span>
+
+            <a href="/internal/MarketingHome">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a href="/internal/sliders">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+                Slider
+            </a>
+            <a href="/internal/coupons" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+                Coupon Code
+            </a>
+            <a href="/internal/contents">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Content
+            </a>
+            <div class="sidebar-logout">
+                <a href="/internal/logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="main">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <h4>Update Coupon</h4>
+                    <p>Edit coupon details and validity period</p>
+                </div>
+               <div class="user-pill" style="cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar">MKT</div>
+                    <div>
+                        <div class="user-name">Username</div>
+                        <div class="user-role">Marketing</div>
+                    </div>
+                </div>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="/internal/profile">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Edit Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/internal/profile/change-password">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            Change Password
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb-bar">
+                <a href="/internal/coupons">Coupon Management</a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span>Update Coupon</span>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card" style="max-width: 720px;">
+                <div th:if="${errorMessage}" class="alert alert-danger mb-3" style="padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px;">
+                    <strong th:text="${errorMessage}"></strong>
+                </div>
+                <div class="card-header-bar">
+                    <h6>Edit Coupon Information</h6>
+
+
+                    <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${coupon.id}" style="font-weight:600; color:var(--text-mid)">&mdash;</span></span>
+
+
+                </div>
+                <div class="card-body-pad">
+                    <form th:action="@{/internal/coupons/save}" th:object="${coupon}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <!-- Coupon Name -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Name of Coupon</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" th:field="*{couponName}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('couponName')} ? 'is-invalid' : ''"
+                                       placeholder="Enter coupon name">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('couponName')}" th:errors="*{couponName}"></div>
+                            </div>
+                        </div>
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Status</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-check form-switch mt-1">
+                                    <input class="form-check-input" type="checkbox" th:field="*{isActive}" id="statusSwitch">
+                                    <label class="form-check-label fw-bold" for="statusSwitch">Active Coupon</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Coupon Code -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Coupon Code</label>
+                                <p style="font-size:12px; color:var(--text-light); margin-top:3px">Auto-generate or enter manually</p>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="input-code-group">
+                                    <input type="text" id="couponCodeInput" th:field="*{couponCode}" class="form-control"
+                                           th:classappend="${#fields.hasErrors('couponCode')} ? 'is-invalid' : ''"
+                                           placeholder="e.g. SALE-ABC123"
+                                           style="font-family:'Courier New',monospace; font-weight:600; letter-spacing:.06em">
+                                    <button type="button" class="btn-random" onclick="generateRandomCode()">
+                                        <svg width="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                                        Random
+                                    </button>
+                                </div>
+                                <div class="text-danger mt-1" style="font-size:.875em" th:if="${#fields.hasErrors('couponCode')}" th:errors="*{couponCode}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Discount Type & Value -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Discount Config</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-md-5">
+                                        <select th:field="*{discountType}" class="form-select" id="discountTypeSelect">
+                                            <option value="PERCENTAGE">Percentage (%)</option>
+                                            <option value="FIXED_AMOUNT">Fixed Amount (VND)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="number" th:field="*{discountValue}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('discountValue')} ? 'is-invalid' : ''"
+                                               placeholder="Enter value...">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('discountValue')}" th:errors="*{discountValue}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Limits: Min Order & Max Discount -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Condition & Limit</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label style="font-size:12px; color:var(--text-mid)">Min Order Value (VND)</label>
+                                        <input type="number" th:field="*{minOrderValue}" class="form-control" placeholder="0 = No limit">
+                                    </div>
+                                    <div class="col-md-6" id="maxDiscountBox">
+                                        <label style="font-size:12px; color:var(--text-mid)">Max Discount Cap (VND)</label>
+                                        <input type="number" th:field="*{maxDiscountAmount}" class="form-control" placeholder="Optional cap">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scope Settings -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Application Scope</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select th:field="*{scope}" class="form-select mb-2" id="scopeSelect">
+                                    <option value="ALL">All Items in System</option>
+                                    <option value="SPECIFIC_PRODUCTS">Specific Products Only</option>
+                                </select>
+                                
+                                <div id="productSelectionBox" style="display:none; max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; background: #fafafa;">
+                                    <div th:each="prod : ${allProducts}" class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" th:field="*{products}" th:value="${prod.productId}" th:id="'prod_'+${prod.productId}">
+                                        <label class="form-check-label" th:for="'prod_'+${prod.productId}" th:text="${prod.name} + ' (' + ${prod.size} + ')'" style="font-size:13px;"></label>
+                                    </div>
+                                    <p th:if="${allProducts == null || allProducts.isEmpty()}" class="text-muted" style="font-size:13px; margin:0;">No products available to select.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Start Date -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Start Date</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="date" name="createDate" th:value="${coupon.createDate}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('createDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('createDate')}" th:errors="*{createDate}"></div>
+                            </div>
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="row mb-2 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">End Date</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="date" name="endDate" th:value="${coupon.endDate}" class="form-control"
+                                       th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="form-footer" style="margin-top:28px; border-radius:0; border-left:none; border-right:none; border-bottom:none; padding-left:0; padding-right:0; padding-bottom:0">
+                            <a href="/internal/coupons" class="btn-outline">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                                Back
+                            </a>
+
+                            <div style="display:flex; gap:10px">
+                                <button type="reset" class="btn-outline">Reset Form</button>
+                                <button type="submit" class="btn-dark-solid">Save Coupon</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                                    function generateRandomCode() {
+                                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                                        let code = '';
+                                        for (let i = 0; i < 8; i++)
+                                            code += chars.charAt(Math.floor(Math.random() * chars.length));
+                                        document.getElementById('couponCodeInput').value = code;
+                                    }
+
+            // Mở rộng Logic hiển thị nâng cao
+            document.addEventListener("DOMContentLoaded", function() {
+                const typeSelect = document.getElementById("discountTypeSelect");
+                const maxBox = document.getElementById("maxDiscountBox");
+                const scopeSelect = document.getElementById("scopeSelect");
+                const prodBox = document.getElementById("productSelectionBox");
+
+                function toggleFields() {
+                    if (typeSelect && maxBox) {
+                        maxBox.style.display = (typeSelect.value === 'PERCENTAGE') ? 'block' : 'none';
+                    }
+                    if (scopeSelect && prodBox) {
+                        prodBox.style.display = (scopeSelect.value === 'SPECIFIC_PRODUCTS') ? 'block' : 'none';
+                    }
+                }
+
+                if(typeSelect) typeSelect.addEventListener("change", toggleFields);
+                if(scopeSelect) scopeSelect.addEventListener("change", toggleFields);
+                toggleFields();
+            });
+
+        </script>
+    </body>
+</html>

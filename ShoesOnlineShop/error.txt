@@ -1,0 +1,116 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< Group1:ShoesOnlineShop >-----------------------
+[INFO] Building ShoesOnlineShop 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ ShoesOnlineShop ---
+[INFO] Deleting D:\SWP_Project\New_Code\ShoesOnlineShop\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ ShoesOnlineShop ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 197 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ ShoesOnlineShop ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 91 source files with javac [debug parameters release 17] to target\classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminCategoryController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminCategoryController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminFinancialController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminFinancialController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminOrderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminOrderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProductController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProductController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProfileController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProfileController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminUserController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminUserController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CartController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CartController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CheckoutController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CheckoutController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ContentController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ContentController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CouponController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CouponController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CustomerOrderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CustomerOrderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/FeedbackController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/FeedbackController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/HomeController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/HomeController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/InvoiceController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/InvoiceController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/MarketingController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/MarketingController.java:[6,9] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/OrderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/OrderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ProfileController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ProfileController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SaleDashboardController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SaleDashboardController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SliderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SliderController.java:[1,10] class, interface, enum, or record expected
+[INFO] 40 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.101 s
+[INFO] Finished at: 2026-03-31T12:41:02+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.14.1:compile (default-compile) on project ShoesOnlineShop: Compilation failure: Compilation failure: 
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminCategoryController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminCategoryController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminFinancialController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminFinancialController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminOrderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminOrderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProductController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProductController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProfileController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminProfileController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminUserController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/AdminUserController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CartController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CartController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CheckoutController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CheckoutController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ContentController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ContentController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CouponController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CouponController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CustomerOrderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/CustomerOrderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/FeedbackController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/FeedbackController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/HomeController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/HomeController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/InvoiceController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/InvoiceController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/MarketingController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/MarketingController.java:[6,9] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/OrderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/OrderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ProfileController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/ProfileController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SaleDashboardController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SaleDashboardController.java:[1,10] class, interface, enum, or record expected
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SliderController.java:[1,1] illegal character: '\ufeff'
+[ERROR] /D:/SWP_Project/New_Code/ShoesOnlineShop/src/main/java/Group1/ShoesOnlineShop/controller/SliderController.java:[1,10] class, interface, enum, or record expected
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

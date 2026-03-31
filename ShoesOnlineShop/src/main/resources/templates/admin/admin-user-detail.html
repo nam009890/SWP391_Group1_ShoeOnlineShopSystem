@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - User Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/admin-user-detail.css}">
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+    <a href="/internal/admin/home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a>
+    <a href="/internal/admin/products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>Products</a>
+    <a href="/internal/admin/categories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>Categories</a>
+    <a href="/internal/admin/users" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Users</a>
+    <a href="/internal/admin/orders"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg>Orders</a>
+    <a href="/internal/admin/financials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Financials</a>
+    <a href="/internal/logout" style="margin-top:auto; color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <div>
+            <h4>User Detail</h4>
+            <p>Viewing user account information</p>
+        </div>
+        <a href="/internal/admin/profile" style="text-decoration:none;">
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div><div class="user-name" th:text="${#authentication.principal.user.fullName}">Administrator</div><div class="user-role">Admin</div></div>
+        </div>
+        </a>
+    </div>
+
+    <div class="breadcrumb-bar">
+        <a href="/internal/admin/home">Dashboard</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="/internal/admin/users">Users</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span>Detail</span>
+    </div>
+
+    <div class="card">
+        <div class="article-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#4f6ef7,#818cf8); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:white;"
+                     th:text="${#strings.substring(user.fullName, 0, 2).toUpperCase()}">AB</div>
+                <div>
+                    <div class="detail-meta">
+                        <span class="status-badge" th:classappend="${user.isActive} ? 'status-active' : 'status-expired'" th:text="${user.isActive ? 'Active' : 'Blocked'}">Active</span>
+                        <span class="role-badge" th:classappend="'role-' + ${user.userRole}" th:text="${#strings.replace(user.userRole, '_', ' ')}">CUSTOMER</span>
+                    </div>
+                    <h5 style="font-weight:800; font-size:20px; margin-top:6px;" th:text="${user.fullName}">Full Name</h5>
+                    <div style="font-size:13px; color:var(--text-mid);" th:text="'@' + ${user.userName}">@username</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <a th:href="@{/internal/admin/users/update/{id}(id=${user.userId})}" class="btn-accent">
+                    <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Edit User
+                </a>
+                <a href="/internal/admin/users" class="btn-outline">Back to List</a>
+            </div>
+        </div>
+
+        <div class="card-body-pad">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div style="background:var(--bg); border-radius:10px; padding:20px;">
+                        <h6 style="font-weight:700; margin-bottom:16px; color:var(--text-mid); font-size:12px; text-transform:uppercase; letter-spacing:.06em;">Account Information</h6>
+                        <div class="detail-row">
+                            <div class="detail-label">User ID</div>
+                            <div class="detail-value" th:text="${user.userId}">1</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Username</div>
+                            <div class="detail-value" th:text="${user.userName}">username</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value" th:text="${user.userEmail}">email</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Role</div>
+                            <div class="detail-value" th:text="${#strings.replace(user.userRole, '_', ' ')}">CUSTOMER</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">
+                                <span class="status-badge" th:classappend="${user.isActive} ? 'status-active' : 'status-expired'"
+                                      th:text="${user.isActive ? 'Active' : 'Blocked'}">Active</span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Joined</div>
+
+                            <div class="detail-value" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="background:var(--bg); border-radius:10px; padding:20px;">
+                        <h6 style="font-weight:700; margin-bottom:16px; color:var(--text-mid); font-size:12px; text-transform:uppercase; letter-spacing:.06em;">Contact Information</h6>
+                        <div class="detail-row">
+                            <div class="detail-label">Full Name</div>
+                            <div class="detail-value" style="font-weight:600;" th:text="${user.fullName}">Name</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Phone</div>
+                            <div class="detail-value" th:text="${user.phone != null ? user.phone : '&mdash;'}">&mdash;</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Address</div>
+                            <div class="detail-value" th:text="${user.address != null ? user.address : '&mdash;'}">&mdash;</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Updated At</div>
+                            <div class="detail-value" th:text="${user.updatedAt != null ? #temporals.format(user.updatedAt, 'dd/MM/yyyy HH:mm') : '&mdash;'}">&mdash;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

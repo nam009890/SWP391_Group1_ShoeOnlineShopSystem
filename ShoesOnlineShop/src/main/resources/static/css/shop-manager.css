@@ -1,0 +1,132 @@
+/* =========================================================================
+   SHOP MANAGER MODULE SPECIFIC STYLES
+   ========================================================================= */
+
+/* 1. Status Badges */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.badge-pending   { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
+.badge-open      { background: rgba(13, 110, 253, 0.1); color: #0d6efd; border: 1px solid rgba(13,110,253,0.3); }
+.badge-progress  { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
+.badge-completed { background: rgba(40, 167, 69, 0.1); color: #28a745; border: 1px solid rgba(40,167,69,0.3); }
+.badge-cancelled { background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220,53,69,0.3); }
+
+/* 2. Actions & Buttons */
+.action-form { 
+    display: inline-block; 
+    margin-right: 5px; 
+}
+.btn-approve {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.btn-approve:hover { background: #28a745; color: white; border-color: #28a745; }
+
+.btn-reject {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.btn-reject:hover { background: #dc3545; color: white; border-color: #dc3545; }
+
+.btn-remake {
+    background: rgba(253, 126, 20, 0.1);
+    color: #fd7e14;
+    border: 1px solid rgba(253, 126, 20, 0.3);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-remake:hover { background: #fd7e14; color: white; border-color: #fd7e14; }
+
+.remake-control {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+/* 3. Forms */
+.form-input-dark {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    color: var(--text-dark);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    flex: 1;
+}
+.form-input-dark::placeholder { color: #888; }
+.form-input-dark:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+}
+.form-label {
+    color: #ccc;
+    font-weight: 500;
+}
+.form-control-dark {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+    transition: all 0.3s;
+}
+.form-control-dark:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+.form-select-dark {
+    background: rgba(255, 255, 255, 0.05) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") no-repeat right 0.75rem center/16px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+    appearance: none;
+    transition: all 0.3s;
+}
+.form-select-dark:focus {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+}
+.form-select-dark option {
+    background-color: #2c3e50;
+    color: white;
+}

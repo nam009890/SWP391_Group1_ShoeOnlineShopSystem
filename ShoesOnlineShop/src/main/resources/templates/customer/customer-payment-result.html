@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Result | ShoesOnlineShop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/pages/customer-payment-result.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+    </nav>
+
+    <div class="result-container">
+        <div class="result-card">
+            
+            <th:block th:if="${status == 'success'}">
+                <div class="icon icon-success">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <h1 class="result-title">Payment Successful!</h1>
+                <p class="result-message">Thank you for your purchase. Your order has been placed and is being processed.</p>
+                <div class="order-id" th:if="${orderId != null}">
+                    Order ID: #<span th:text="${orderId}"></span>
+                </div>
+            </th:block>
+
+            <th:block th:if="${status == 'failed' or status == null}">
+                <div class="icon icon-failed">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </div>
+                <h1 class="result-title">Payment Failed</h1>
+                <p class="result-message">Something went wrong with your payment. Your order was not confirmed.</p>
+                <div class="order-id" th:if="${orderId != null}">
+                    Order ID: #<span th:text="${orderId}"></span>
+                </div>
+            </th:block>
+
+            <div class="actions">
+                <a th:href="@{/products}" class="btn btn-primary">Continue Shopping</a>
+                <a th:href="@{/}" class="btn btn-secondary">Return Home</a>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

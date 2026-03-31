@@ -60,7 +60,7 @@ public class AdminCategoryController {
             model.addAttribute("isActive", isActive);
         }
 
-        return "admin-category-list";
+        return "admin/admin-category-list";
     }
 
     // ========================== CREATE FORM ==========================
@@ -68,7 +68,7 @@ public class AdminCategoryController {
     public String createForm(Model model) {
         model.addAttribute("category", new Category());
         model.addAttribute("rootCategories", adminCategoryService.getRootCategories(null));
-        return "admin-category-create";
+        return "admin/admin-category-create";
     }
 
     // ========================== CREATE SUBMIT ==========================
@@ -95,7 +95,7 @@ public class AdminCategoryController {
             model.addAttribute("errors", errors);
             model.addAttribute("category", category);
             model.addAttribute("rootCategories", adminCategoryService.getRootCategories(null));
-            return "admin-category-create";
+            return "admin/admin-category-create";
         }
 
 
@@ -113,7 +113,7 @@ public class AdminCategoryController {
             return "redirect:/internal/admin/categories";
         }
         model.addAttribute("category", category);
-        return "admin-category-detail";
+        return "admin/admin-category-detail";
     }
 
     // ========================== UPDATE FORM ==========================
@@ -125,7 +125,7 @@ public class AdminCategoryController {
         }
         model.addAttribute("category", category);
         model.addAttribute("rootCategories", adminCategoryService.getRootCategories(category));
-        return "admin-category-update";
+        return "admin/admin-category-update";
     }
 
     // ========================== UPDATE SUBMIT ==========================
@@ -163,7 +163,7 @@ public class AdminCategoryController {
             model.addAttribute("errors", errors);
             model.addAttribute("category", category);
             model.addAttribute("rootCategories", adminCategoryService.getRootCategories(category));
-            return "admin-category-update";
+            return "admin/admin-category-update";
         }
 
 
@@ -185,3 +185,4 @@ public class AdminCategoryController {
         return "redirect:/internal/admin/categories";
     }
 }
+

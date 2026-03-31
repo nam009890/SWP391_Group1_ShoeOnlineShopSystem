@@ -52,6 +52,7 @@ public class SaleDashboardController {
         model.addAttribute("monthRevenue", monthRevenue);
         model.addAttribute("recentOrders", recentOrders);
 
-        return "sale-dashboard";
+        return "sale/sale-dashboard";
     }
 }
+

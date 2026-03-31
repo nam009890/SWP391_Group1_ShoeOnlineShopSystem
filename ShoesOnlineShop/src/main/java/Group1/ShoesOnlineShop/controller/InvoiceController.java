@@ -39,7 +39,7 @@ public class InvoiceController {
         model.addAttribute("status", status);
         model.addAttribute("sort", sort);
 
-        return "invoice-list";
+        return "sale/invoice-list";
     }
 
     // VIEW DETAIL
@@ -47,7 +47,7 @@ public class InvoiceController {
     public String invoiceDetail(@PathVariable(name = "id") Long id, Model model) {
         Invoice invoice = invoiceService.findById(id);
         model.addAttribute("invoice", invoice);
-        return "invoice-detail";
+        return "sale/invoice-detail";
     }
 
     // DELETE
@@ -63,7 +63,7 @@ public class InvoiceController {
     public String createPage(Model model) {
         List<Order> orders = invoiceService.getConfirmOrders();
         model.addAttribute("orders", orders);
-        return "invoice-create";
+        return "sale/invoice-create";
     }
 
     // Load Order Info
@@ -73,7 +73,7 @@ public class InvoiceController {
         List<Order> orders = invoiceService.getConfirmOrders();
         model.addAttribute("order", order);
         model.addAttribute("orders", orders);
-        return "invoice-create";
+        return "sale/invoice-create";
     }
 
     // Generate Invoice

@@ -50,7 +50,7 @@ public class AdminProductController {
         model.addAttribute("isActive", isActive);
         model.addAttribute("categories", categories);
 
-        return "admin-product-list";
+        return "admin/admin-product-list";
     }
 
     // 2. Form tạo mới
@@ -58,7 +58,7 @@ public class AdminProductController {
     public String showCreateForm(Model model) {
         model.addAttribute("product", new Product());
         model.addAttribute("categories", adminCategoryService.getRootCategories(null));
-        return "admin-product-create";
+        return "admin/admin-product-create";
     }
 
     // 3. Xử lý lưu (Create & Update)
@@ -79,7 +79,7 @@ public class AdminProductController {
         if (bindingResult.hasErrors() || !errors.isEmpty()) {
             errors.forEach((field, msg) -> bindingResult.rejectValue(field, "error.product", msg));
             model.addAttribute("categories", adminCategoryService.getRootCategories(null));
-            return isNew ? "admin-product-create" : "admin-product-update";
+            return isNew ? "admin/admin-product-create" : "admin/admin-product-update";
         }
 
         // Upload ảnh nếu có
@@ -90,7 +90,7 @@ public class AdminProductController {
             } catch (IllegalArgumentException e) {
                 bindingResult.rejectValue("imageUrl", "error.product", e.getMessage());
                 model.addAttribute("categories", adminCategoryService.getRootCategories(null));
-                return isNew ? "admin-product-create" : "admin-product-update";
+                return isNew ? "admin/admin-product-create" : "admin/admin-product-update";
             }
         }
 
@@ -119,7 +119,7 @@ public class AdminProductController {
 
         model.addAttribute("product", product);
         model.addAttribute("categories", adminCategoryService.getRootCategories(null));
-        return "admin-product-update";
+        return "admin/admin-product-update";
     }
 
     // 5. Chi tiết
@@ -129,7 +129,7 @@ public class AdminProductController {
         if (product == null) return "redirect:/internal/admin/products";
 
         model.addAttribute("product", product);
-        return "admin-product-detail";
+        return "admin/admin-product-detail";
     }
 
     // 6. Xóa
@@ -144,3 +144,4 @@ public class AdminProductController {
         return "redirect:/internal/admin/products";
     }
 }
+

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products | ShoesOnlineShop</title>
+    <meta name="description" content="Browse all shoes - sneakers, boots, sandals and more. Filter by category and price.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/pages/customer-product-list.css}">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+        <div class="nav-categories">
+            <div class="nav-cat-item" th:each="cat : ${rootCategories}">
+                <a class="nav-cat-link" th:href="@{/products(categoryId=${cat.id})}" th:text="${cat.name}">Category</a>
+                <span th:if="${cat.children != null and !cat.children.isEmpty()}" style="margin-left: 2px;">
+                    <svg class="nav-cat-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+                <div class="nav-dropdown" th:if="${cat.children != null and !cat.children.isEmpty()}">
+                    <a th:each="child : ${cat.children}" th:if="${child.isActive}"
+                       th:href="@{/products(categoryId=${child.id})}" th:text="${child.name}">SubCategory</a>
+                </div>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a th:href="@{/}">HOME</a>
+            <th:block th:if="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/profile}" th:text="${#authentication.name.toUpperCase()}">USER</a>
+                <a th:href="@{/logout}">LOGOUT</a>
+            </th:block>
+            <th:block th:unless="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/login}">LOG IN</a>
+                <a th:href="@{/register}">SIGN UP</a>
+            </th:block>
+            <a href="/cart">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h1>All Products</h1>
+        <p>Browse our complete collection of premium footwear</p>
+        <div class="breadcrumb">
+            <a th:href="@{/}">Home</a> <span>/</span> <span>Products</span>
+        </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+        <div class="products-layout">
+            <!-- FILTER SIDEBAR -->
+            <aside class="filter-sidebar">
+                <div class="filter-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" stroke-linecap="round"/></svg>
+                    Filters
+                </div>
+                <form id="filterForm" method="get" th:action="@{/products}">
+                    <!-- Price Filter -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">Price Range</div>
+                        <label class="filter-option">
+                            <input type="radio" name="priceRange" value="all"
+                                   th:checked="${selectedMinPrice == null}" onchange="submitFilter(this, 'all')"> All Prices
+                        </label>
+                        <label class="filter-option">
+                            <input type="radio" name="priceRange" value="0-500000"
+                                   th:checked="${selectedMinPrice != null and selectedMinPrice == 0 and selectedMaxPrice == 500000}"
+                                   onchange="submitFilter(this, '0-500000')"> Under 500.000₫
+                        </label>
+                        <label class="filter-option">
+                            <input type="radio" name="priceRange" value="500000-1000000"
+                                   th:checked="${selectedMinPrice != null and selectedMinPrice == 500000}"
+                                   onchange="submitFilter(this, '500000-1000000')"> 500.000₫ — 1.000.000₫
+                        </label>
+                        <label class="filter-option">
+                            <input type="radio" name="priceRange" value="1000000-2000000"
+                                   th:checked="${selectedMinPrice != null and selectedMinPrice == 1000000}"
+                                   onchange="submitFilter(this, '1000000-2000000')"> 1.000.000₫ — 2.000.000₫
+                        </label>
+                        <label class="filter-option">
+                            <input type="radio" name="priceRange" value="2000000-5000000"
+                                   th:checked="${selectedMinPrice != null and selectedMinPrice == 2000000}"
+                                   onchange="submitFilter(this, '2000000-5000000')"> 2.000.000₫ — 5.000.000₫
+                        </label>
+                        <label class="filter-option">
+                            <input type="radio" name="priceRange" value="5000000-999999999"
+                                   th:checked="${selectedMinPrice != null and selectedMinPrice == 5000000}"
+                                   onchange="submitFilter(this, '5000000-999999999')"> Over 5.000.000₫
+                        </label>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">Categories</div>
+                        <label class="filter-option">
+                            <input type="radio" name="catFilter" value="all"
+                                   th:checked="${selectedCategoryId == null}"
+                                   onchange="submitCategoryFilter(null)"> All Categories
+                        </label>
+                        <th:block th:each="cat : ${rootCategories}">
+                            <label class="filter-option">
+                                <input type="radio" name="catFilter" th:value="${cat.id}"
+                                       th:checked="${selectedCategoryId != null and selectedCategoryId == cat.id}"
+                                       th:attr="data-id=${cat.id}"
+                                       onchange="submitCategoryFilter(this.getAttribute('data-id'))">
+                                <span th:text="${cat.name}">Parent</span>
+                            </label>
+                            <th:block th:if="${cat.children != null}">
+                                <label class="filter-option child" th:each="child : ${cat.children}" th:if="${child.isActive}">
+                                    <input type="radio" name="catFilter" th:value="${child.id}"
+                                           th:checked="${selectedCategoryId != null and selectedCategoryId == child.id}"
+                                           th:attr="data-id=${child.id}"
+                                           onchange="submitCategoryFilter(this.getAttribute('data-id'))">
+                                    <span th:text="${child.name}">Child</span>
+                                </label>
+                            </th:block>
+                        </th:block>
+                    </div>
+
+                    <!-- Hidden fields for actual params -->
+                    <input type="hidden" name="categoryId" id="hiddenCategoryId" th:value="${selectedCategoryId}">
+                    <input type="hidden" name="minPrice" id="hiddenMinPrice" th:value="${selectedMinPrice}">
+                    <input type="hidden" name="maxPrice" id="hiddenMaxPrice" th:value="${selectedMaxPrice}">
+
+                    <button type="submit" class="filter-btn">Apply Filters</button>
+                    <button type="button" class="filter-clear" onclick="clearAllFilters()">Clear All</button>
+                </form>
+            </aside>
+
+            <!-- PRODUCTS GRID -->
+            <div>
+                <div class="results-info">
+                    <div class="results-count" th:text="'Showing ' + ${#lists.size(products)} + ' products'">Showing 0 products</div>
+                </div>
+                <div class="products-grid">
+                    <a th:each="product, iterStat : ${products}"
+                       th:href="@{/product/{id}(id=${product.id})}"
+                       class="product-card animate-in"
+                       th:style="'animation-delay:' + ${iterStat.index * 0.05} + 's'">
+                        <div class="product-img-wrap">
+                            <div th:if="${productDiscounts != null and productDiscounts.containsKey(product.id)}" class="product-badge" style="position: absolute; top: 1rem; left: 1rem; background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px; z-index:10;" th:text="'-' + ${productDiscounts.get(product.id)} + '%'">-10%</div>
+                            <img th:src="${product.imageUrl}" th:alt="${product.name}"
+                                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-category-label" th:text="${product.category != null ? product.category.name : ''}">Category</div>
+                            <div class="product-name" th:text="${product.name}">Product Name</div>
+                            <div th:if="${productDiscounts != null and productDiscounts.containsKey(product.id)}" class="product-price">
+                                <span style="text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem; margin-right: 8px;" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
+                                <span th:text="${#numbers.formatDecimal(product.price - (product.price * productDiscounts.get(product.id) / 100), 0, 'COMMA', 0, 'POINT')} + ' ₫'" style="color: var(--accent-hover); font-weight: 700;">0 ₫</span>
+                            </div>
+                            <div th:unless="${productDiscounts != null and productDiscounts.containsKey(product.id)}" class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                        </div>
+                    </a>
+
+                    <div class="no-products" th:if="${products == null or products.isEmpty()}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                        <p>No products match your criteria.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">SHOESONLINESHOP</div>
+        <p>&copy; 2026 ShoesOnlineShop Group 1. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function submitFilter(radio, value) {
+            if (value === 'all') {
+                document.getElementById('hiddenMinPrice').value = '';
+                document.getElementById('hiddenMaxPrice').value = '';
+            } else {
+                const [min, max] = value.split('-');
+                document.getElementById('hiddenMinPrice').value = min;
+                document.getElementById('hiddenMaxPrice').value = max;
+            }
+            document.getElementById('filterForm').submit();
+        }
+
+        function submitCategoryFilter(catId) {
+            document.getElementById('hiddenCategoryId').value = catId || '';
+            document.getElementById('filterForm').submit();
+        }
+
+        function clearAllFilters() {
+            document.getElementById('hiddenCategoryId').value = '';
+            document.getElementById('hiddenMinPrice').value = '';
+            document.getElementById('hiddenMaxPrice').value = '';
+            document.getElementById('filterForm').submit();
+        }
+    </script>
+</body>
+</html>

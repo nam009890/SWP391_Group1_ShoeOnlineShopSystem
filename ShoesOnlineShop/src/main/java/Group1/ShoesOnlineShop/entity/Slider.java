@@ -2,7 +2,7 @@ package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +23,12 @@ public class Slider {
     // Đã bỏ @NotBlank và @Pattern để hỗ trợ upload file cục bộ mượt mà hơn
     @Column(name = "image_url", length = 500)
     private String imageUrl;
+
+    @Column(name = "approval_status", length = 20)
+    private String approvalStatus = "PENDING";
+
+    @Column(name = "remake_note", columnDefinition = "NVARCHAR(MAX)")
+    private String remakeNote;
 
 
 
@@ -55,6 +61,10 @@ public class Slider {
     public void setSliderTitle(String sliderTitle) { this.sliderTitle = sliderTitle; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getApprovalStatus() { return approvalStatus; }
+    public void setApprovalStatus(String approvalStatus) { this.approvalStatus = approvalStatus; }
+    public String getRemakeNote() { return remakeNote; }
+    public void setRemakeNote(String remakeNote) { this.remakeNote = remakeNote; }
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     public LocalDateTime getCreatedAt() { return createdAt; }

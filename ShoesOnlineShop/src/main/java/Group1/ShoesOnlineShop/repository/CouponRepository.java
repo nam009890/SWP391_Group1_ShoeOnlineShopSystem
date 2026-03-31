@@ -23,4 +23,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>,JpaSpecifi
     long countByIsActive(Boolean isActive);
     java.util.List<Coupon> findTop5ByOrderByCreatedAtDesc();
     java.util.List<Coupon> findTop50ByOrderByCreatedAtDesc();
+    
+    Page<Coupon> findByApprovalStatus(String approvalStatus, Pageable pageable);
 }

@@ -45,7 +45,7 @@ public class AdminProfileController {
         User admin = userService.getUserById(currentAdminId);
         if (admin == null) return "redirect:/internal/admin/home";
         model.addAttribute("admin", admin);
-        return "admin-profile";
+        return "admin/admin-profile";
     }
 
     // === UPDATE PROFILE ===
@@ -157,3 +157,4 @@ public class AdminProfileController {
         return "redirect:/internal/admin/profile";
     }
 }
+

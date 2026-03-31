@@ -179,7 +179,7 @@ public class HomeController {
         }
         model.addAttribute("savedCouponIds", savedCouponIds);
 
-        return "customer-slider-detail";
+        return "customer/customer-slider-detail";
     }
 
     // ===================== PRODUCT LIST =====================
@@ -229,7 +229,7 @@ public class HomeController {
         model.addAttribute("selectedMaxPrice", maxPrice);
         model.addAttribute("keyword", keyword);
         model.addAttribute("productDiscounts", getActiveProductDiscounts());
-        return "customer-product-list";
+        return "customer/customer-product-list";
     }
 
     // ===================== PRODUCT DETAIL =====================
@@ -273,7 +273,7 @@ public class HomeController {
         model.addAttribute("avgRating", avgRating);
         model.addAttribute("feedbackCount", feedbacks.size());
         model.addAttribute("productDiscounts", getActiveProductDiscounts());
-        return "customer-product-detail";
+        return "customer/customer-product-detail";
     }
 
     // ===================== CONTENT DETAIL =====================
@@ -284,7 +284,7 @@ public class HomeController {
             return "redirect:/home";
         }
         model.addAttribute("content", content);
-        return "customer-content-detail";
+        return "customer/customer-content-detail";
     }
 
     @PostMapping("/save-coupon")
@@ -319,3 +319,4 @@ public class HomeController {
         return ResponseEntity.ok(response);
     }
 }
+

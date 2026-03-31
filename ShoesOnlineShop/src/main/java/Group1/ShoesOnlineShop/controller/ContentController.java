@@ -34,13 +34,13 @@ public class ContentController {
         model.addAttribute("totalPages", pageContents.getTotalPages());
         model.addAttribute("keyword", keyword);
         model.addAttribute("type", type);
-        return "content-list"; 
+        return "marketing/content-list"; 
     }
 
     @GetMapping("/create")
     public String showCreateContentForm(Model model) {
         model.addAttribute("content", new Content());
-        return "content-create";
+        return "marketing/content-create";
     }
 
     @PostMapping("/save")
@@ -59,7 +59,7 @@ public class ContentController {
         }
 
         if (result.hasErrors()) {
-            return isNew ? "content-create" : "content-update";
+            return isNew ? "marketing/content-create" : "marketing/content-update";
         }
 
         try {
@@ -86,7 +86,7 @@ public class ContentController {
             redirectAttributes.addFlashAttribute("successMessage", isNew ? "Content created successfully!" : "Content updated successfully!");
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Failed to upload image: " + e.getMessage());
-            return isNew ? "content-create" : "content-update";
+            return isNew ? "marketing/content-create" : "marketing/content-update";
         }
 
         return "redirect:/internal/contents";
@@ -97,7 +97,7 @@ public class ContentController {
         Content content = contentService.getContentById(id);
         if (content == null) return "redirect:/internal/contents";
         model.addAttribute("content", content);
-        return "content-update";
+        return "marketing/content-update";
     }
 
     @GetMapping("/delete/{id}")
@@ -112,7 +112,7 @@ public class ContentController {
         Content content = contentService.getContentById(id);
         if (content == null) return "redirect:/internal/contents";
         model.addAttribute("content", content);
-        return "content-detail"; 
+        return "marketing/content-detail"; 
     }
 
     @PostMapping("/upload-image")

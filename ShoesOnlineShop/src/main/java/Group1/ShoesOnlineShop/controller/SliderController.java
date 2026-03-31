@@ -43,7 +43,7 @@ public class SliderController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("status", status); 
         model.addAttribute("size", size); 
-        return "slider-list";
+        return "marketing/slider-list";
     }
 
     @GetMapping("/create")
@@ -51,7 +51,7 @@ public class SliderController {
         model.addAttribute("slider", new Slider());
         model.addAttribute("coupons", couponRepository.findAll());
         model.addAttribute("products", productRepository.findAll());
-        return "slider-create";
+        return "marketing/slider-create";
     }
 
     @PostMapping("/save")
@@ -74,7 +74,7 @@ public class SliderController {
 
         if (bindingResult.hasErrors()) {
             sliderService.restoreSliderFormState(model, sliderForm, couponIds, productIds, productDiscounts, isUpdate);
-            return isUpdate ? "slider-update" : "slider-create";
+            return isUpdate ? "marketing/slider-update" : "marketing/slider-create";
         }
 
         try {
@@ -95,7 +95,7 @@ public class SliderController {
         model.addAttribute("slider", slider);
         model.addAttribute("coupons", couponRepository.findAll());
         model.addAttribute("products", productRepository.findAll());
-        return "slider-update";
+        return "marketing/slider-update";
     }
 
     @GetMapping("/detail/{id}")
@@ -103,7 +103,7 @@ public class SliderController {
         Slider slider = sliderService.getSliderById(id);
         if (slider == null) return "redirect:/internal/sliders";
         model.addAttribute("slider", slider);
-        return "slider-detail";
+        return "marketing/slider-detail";
     }
 
     @GetMapping("/delete/{id}")

@@ -33,7 +33,7 @@ public class AdminOrderController {
         model.addAttribute("status", status);
         model.addAttribute("keyword", keyword);
 
-        return "admin-order-list";
+        return "admin/admin-order-list";
     }
 
     // 2. Chi tiết đơn hàng (view-only)
@@ -43,6 +43,7 @@ public class AdminOrderController {
         if (order == null) return "redirect:/internal/admin/orders";
 
         model.addAttribute("order", order);
-        return "admin-order-detail";
+        return "admin/admin-order-detail";
     }
 }
+

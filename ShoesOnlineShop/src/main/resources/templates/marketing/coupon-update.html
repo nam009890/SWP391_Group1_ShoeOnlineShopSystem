@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
     <meta charset="UTF-8">
-        <title>Create Coupon</title>
+        <title>Update Coupon</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -46,10 +46,10 @@
             <!-- Topbar -->
             <div class="topbar">
                 <div>
-                    <h4>Create Coupon</h4>
-                    <p>Add a new discount coupon code</p>
+                    <h4>Update Coupon</h4>
+                    <p>Edit coupon details and validity period</p>
                 </div>
-                <div class="user-pill" style="cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+               <div class="user-pill" style="cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="user-avatar">MKT</div>
                     <div>
                         <div class="user-name">Username</div>
@@ -76,20 +76,25 @@
             <div class="breadcrumb-bar">
                 <a href="/internal/coupons">Coupon Management</a>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                <span>Create Coupon</span>
+                <span>Update Coupon</span>
             </div>
 
             <!-- Form Card -->
             <div class="card" style="max-width: 720px;">
-
                 <div th:if="${errorMessage}" class="alert alert-danger mb-3" style="padding: 12px; background: #fee2e2; color: #991b1b; border-radius: 8px; font-size: 14px;">
                     <strong th:text="${errorMessage}"></strong>
                 </div>
                 <div class="card-header-bar">
-                    <h6>Coupon Information</h6>
+                    <h6>Edit Coupon Information</h6>
+
+
+                    <span style="font-size:12px; color:var(--text-light)">ID: <span th:text="${coupon.id}" style="font-weight:600; color:var(--text-mid)">&mdash;</span></span>
+
+
                 </div>
                 <div class="card-body-pad">
                     <form th:action="@{/internal/coupons/save}" th:object="${coupon}" method="post">
+                        <input type="hidden" th:field="*{id}">
 
                         <!-- Coupon Name -->
                         <div class="row mb-4 align-items-start">
@@ -99,7 +104,7 @@
                             <div class="col-md-8">
                                 <input type="text" th:field="*{couponName}" class="form-control"
                                        th:classappend="${#fields.hasErrors('couponName')} ? 'is-invalid' : ''"
-                                       placeholder="e.g. Summer Sale Coupon">
+                                       placeholder="Enter coupon name">
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('couponName')}" th:errors="*{couponName}"></div>
                             </div>
                         </div>
@@ -114,7 +119,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Coupon Code -->
                         <div class="row mb-4 align-items-start">
                             <div class="col-md-4">
@@ -136,43 +140,88 @@
                             </div>
                         </div>
 
-                        <!-- Discount -->
+                        <!-- Discount Type & Value -->
                         <div class="row mb-4 align-items-start">
                             <div class="col-md-4">
-                                <label class="form-label" style="padding-top:8px">Discount (%)</label>
+                                <label class="form-label" style="padding-top:8px">Discount Config</label>
                             </div>
                             <div class="col-md-8">
-                                <select th:field="*{discountPercent}" class="form-select"
-                                        th:classappend="${#fields.hasErrors('discountPercent')} ? 'is-invalid' : ''">
-
-
-                                    <option value="">&mdash; Select Discount &mdash;</option>
-
-
-                                    <option th:each="i : ${#numbers.sequence(5, 50, 5)}" th:value="${i}" th:text="${i + '%'}"></option>
-                                </select>
-                                <div class="invalid-feedback" th:if="${#fields.hasErrors('discountPercent')}" th:errors="*{discountPercent}"></div>
+                                <div class="row g-2">
+                                    <div class="col-md-5">
+                                        <select th:field="*{discountType}" class="form-select" id="discountTypeSelect">
+                                            <option value="PERCENTAGE">Percentage (%)</option>
+                                            <option value="FIXED_AMOUNT">Fixed Amount (VND)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="number" th:field="*{discountValue}" class="form-control"
+                                               th:classappend="${#fields.hasErrors('discountValue')} ? 'is-invalid' : ''"
+                                               placeholder="Enter value...">
+                                        <div class="invalid-feedback" th:if="${#fields.hasErrors('discountValue')}" th:errors="*{discountValue}"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Date row -->
+                        <!-- Advanced Limits: Min Order & Max Discount -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Condition & Limit</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label style="font-size:12px; color:var(--text-mid)">Min Order Value (VND)</label>
+                                        <input type="number" th:field="*{minOrderValue}" class="form-control" placeholder="0 = No limit">
+                                    </div>
+                                    <div class="col-md-6" id="maxDiscountBox">
+                                        <label style="font-size:12px; color:var(--text-mid)">Max Discount Cap (VND)</label>
+                                        <input type="number" th:field="*{maxDiscountAmount}" class="form-control" placeholder="Optional cap">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scope Settings -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Application Scope</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select th:field="*{scope}" class="form-select mb-2" id="scopeSelect">
+                                    <option value="ALL">All Items in System</option>
+                                    <option value="SPECIFIC_PRODUCTS">Specific Products Only</option>
+                                </select>
+                                
+                                <div id="productSelectionBox" style="display:none; max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; background: #fafafa;">
+                                    <div th:each="prod : ${allProducts}" class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" th:field="*{products}" th:value="${prod.productId}" th:id="'prod_'+${prod.productId}">
+                                        <label class="form-check-label" th:for="'prod_'+${prod.productId}" th:text="${prod.name} + ' (' + ${prod.size} + ')'" style="font-size:13px;"></label>
+                                    </div>
+                                    <p th:if="${allProducts == null || allProducts.isEmpty()}" class="text-muted" style="font-size:13px; margin:0;">No products available to select.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Start Date -->
                         <div class="row mb-4 align-items-start">
                             <div class="col-md-4">
                                 <label class="form-label" style="padding-top:8px">Start Date</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="date" th:field="*{createDate}" class="form-control"
+                                <input type="date" name="createDate" th:value="${coupon.createDate}" class="form-control"
                                        th:classappend="${#fields.hasErrors('createDate')} ? 'is-invalid' : ''">
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('createDate')}" th:errors="*{createDate}"></div>
                             </div>
                         </div>
 
+                        <!-- End Date -->
                         <div class="row mb-2 align-items-start">
                             <div class="col-md-4">
                                 <label class="form-label" style="padding-top:8px">End Date</label>
                             </div>
                             <div class="col-md-8">
-                                <input type="date" th:field="*{endDate}" class="form-control"
+                                <input type="date" name="endDate" th:value="${coupon.endDate}" class="form-control"
                                        th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid' : ''">
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
                             </div>
@@ -186,7 +235,7 @@
                             </a>
 
                             <div style="display:flex; gap:10px">
-                                <button type="button" class="btn-outline" onclick="clearAllFields()">Reset Form</button>
+                                <button type="reset" class="btn-outline">Reset Form</button>
                                 <button type="submit" class="btn-dark-solid">Save Coupon</button>
                             </div>
                         </div>
@@ -196,36 +245,37 @@
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            function generateRandomCode() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let code = '';
-                for (let i = 0; i < 8; i++)
-                    code += chars.charAt(Math.floor(Math.random() * chars.length));
-                document.getElementById('couponCodeInput').value = code;
-            }
+                                    function generateRandomCode() {
+                                        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                                        let code = '';
+                                        for (let i = 0; i < 8; i++)
+                                            code += chars.charAt(Math.floor(Math.random() * chars.length));
+                                        document.getElementById('couponCodeInput').value = code;
+                                    }
 
-            // HÃ€M RESET Má»šI: QuÃ©t sáº¡ch toÃ n bá»™ Text, Date, vÃ  Select
-            function clearAllFields() {
-                // XÃ³a cÃ¡c Ã´ nháº­p chá»¯ vÃ  ngÃ y thÃ¡ng
-                const inputs = document.querySelectorAll('form input[type="text"], form input[type="date"]');
-                inputs.forEach(input => input.value = '');
+            // Mở rộng Logic hiển thị nâng cao
+            document.addEventListener("DOMContentLoaded", function() {
+                const typeSelect = document.getElementById("discountTypeSelect");
+                const maxBox = document.getElementById("maxDiscountBox");
+                const scopeSelect = document.getElementById("scopeSelect");
+                const prodBox = document.getElementById("productSelectionBox");
 
-                // Trả dropdown giảm giá về dòng đầu tiên
-                const selects = document.querySelectorAll('form select');
-                selects.forEach(select => select.selectedIndex = 0);
+                function toggleFields() {
+                    if (typeSelect && maxBox) {
+                        maxBox.style.display = (typeSelect.value === 'PERCENTAGE') ? 'block' : 'none';
+                    }
+                    if (scopeSelect && prodBox) {
+                        prodBox.style.display = (scopeSelect.value === 'SPECIFIC_PRODUCTS') ? 'block' : 'none';
+                    }
+                }
 
-                // Bá» check cÃ¡c Ã´ tráº¡ng thÃ¡i
-                const checkboxes = document.querySelectorAll('form input[type="checkbox"]');
-                checkboxes.forEach(cb => cb.checked = false);
+                if(typeSelect) typeSelect.addEventListener("change", toggleFields);
+                if(scopeSelect) scopeSelect.addEventListener("change", toggleFields);
+                toggleFields();
+            });
 
-                // Dọn luôn màu đỏ báo lỗi của Form (nếu có)
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(el => el.classList.remove('is-invalid'));
-                const errorTexts = document.querySelectorAll('.invalid-feedback, .text-danger');
-                errorTexts.forEach(el => el.style.display = 'none');
-            }
         </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

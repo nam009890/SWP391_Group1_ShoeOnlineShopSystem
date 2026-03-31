@@ -55,7 +55,7 @@ public class CustomerOrderController {
         model.addAttribute("orders", orders);
         model.addAttribute("user", user);
 
-        return "customer-order-list";
+        return "customer/customer-order-list";
     }
 
     @GetMapping("/{id}")
@@ -76,7 +76,7 @@ public class CustomerOrderController {
         model.addAttribute("order", order);
         model.addAttribute("timeline", timeline);
         model.addAttribute("user", user);
-        return "customer-order-detail";
+        return "customer/customer-order-detail";
     }
 
     @PostMapping("/{id}/cancel")
@@ -108,3 +108,4 @@ public class CustomerOrderController {
         }
     }
 }
+

@@ -55,7 +55,7 @@ public class User {
     @Column(name = "address", columnDefinition = "NVARCHAR(MAX)")
     private String address;
 
-    @Column(name = "user_role", nullable = false, length = 20)
+    @Column(name = "user_role", nullable = false, length = 50)
     private String userRole;
 
     @Column(name = "is_active")

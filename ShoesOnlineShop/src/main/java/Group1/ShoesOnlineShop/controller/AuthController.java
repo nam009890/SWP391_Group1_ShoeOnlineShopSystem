@@ -59,9 +59,7 @@ public class AuthController {
             User user = userOpt.get();
             // Generate 6-digit code
             String code = String.valueOf((int) (Math.random() * 900000) + 100000);
-            user.setResetToken(code);
-            user.setResetTokenExpiry(java.time.LocalDateTime.now().plusMinutes(15));
-            userRepository.save(user);
+            userRepository.updateResetToken(email, code, java.time.LocalDateTime.now().plusMinutes(15));
 
             // Send Email
             emailService.sendVerificationCode(email, code);
@@ -131,10 +129,7 @@ public class AuthController {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (token.equals(user.getResetToken())) {
-                user.setPasswordHash(passwordEncoder.encode(newPassword));
-                user.setResetToken(null);
-                user.setResetTokenExpiry(null);
-                userRepository.save(user);
+                userRepository.updatePasswordAndClearToken(email, passwordEncoder.encode(newPassword));
                 redirectAttributes.addFlashAttribute("successMessage", "Password has been reset successfully.");
                 return "redirect:/login";
             }

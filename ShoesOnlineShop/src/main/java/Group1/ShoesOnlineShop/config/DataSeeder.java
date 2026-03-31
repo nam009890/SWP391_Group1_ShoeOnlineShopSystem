@@ -43,6 +43,11 @@ public class DataSeeder implements CommandLineRunner {
             createUser("marketing2", "mkt2@shoeweb.com", "Le Thi Content", "0922222222", "400 Ba Trieu, Ha Noi", "123456", "MARKETING_STAFF")
         );
 
+        // =============== SHOP MANAGER ===============
+        List<User> mockShopManagers = Arrays.asList(
+            createUser("shopmanager1", "manager1@shoeweb.com", "Pham Van Manager", "0941111111", "Trinh Dinh Trong, Ha Noi", "123456", "SHOP_MANAGER")
+        );
+
         // =============== CUSTOMER ===============
         List<User> mockCustomers = Arrays.asList(
             createUser("customer1", "customer1@gmail.com", "Nguyen Van Khach", "0931111111", "500 Ly Tu Trong, Quan 1, TP HCM", "123456", "CUSTOMER"),
@@ -54,6 +59,7 @@ public class DataSeeder implements CommandLineRunner {
         seedUsers(mockAdmins, "ADMIN");
         seedUsers(mockSales, "SALE_STAFF");
         seedUsers(mockMarketings, "MARKETING_STAFF");
+        seedUsers(mockShopManagers, "SHOP_MANAGER");
         seedUsers(mockCustomers, "CUSTOMER");
     }
 

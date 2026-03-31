@@ -23,4 +23,6 @@ public interface ContentRepository extends JpaRepository<Content, Long> ,JpaSpec
     // Duplicate title check
     boolean existsByContentTitle(String contentTitle);
     boolean existsByContentTitleAndIdNot(String contentTitle, Long id);
+    
+    Page<Content> findByApprovalStatus(String approvalStatus, Pageable pageable);
 }

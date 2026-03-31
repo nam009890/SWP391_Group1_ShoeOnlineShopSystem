@@ -64,7 +64,7 @@ public class CartController {
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalAmount", total);
-        return "customer-cart";
+        return "customer/customer-cart";
     }
 
     @PostMapping("/add")
@@ -120,3 +120,4 @@ public class CartController {
         return "redirect:/cart";
     }
 }
+

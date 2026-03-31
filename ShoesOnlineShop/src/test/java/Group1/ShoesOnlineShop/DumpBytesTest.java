@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 public class DumpBytesTest {
     @Test
     public void dumpBytes() throws Exception {
-        byte[] bytes = Files.readAllBytes(Paths.get("src/main/resources/templates/admin-product-list.html"));
+        byte[] bytes = Files.readAllBytes(Paths.get("src/main/resources/templates/admin/admin-product-list.html"));
         String content = new String(bytes, "UTF-8");
         int index = content.indexOf("Price (");
         if (index != -1) {

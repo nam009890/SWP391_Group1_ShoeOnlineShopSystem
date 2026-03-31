@@ -31,7 +31,7 @@ public class FeedbackController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("sort", sort);
 
-        return "feedback-list";
+        return "customer/feedback-list";
     }
 
     @PostMapping("/toggle")
@@ -55,6 +55,6 @@ public String viewDetail(@PathVariable(name = "id") Long id, Model model) {
 
     model.addAttribute("feedback", feedback);
 
-    return "feedback-detail";
+    return "customer/feedback-detail";
 }
 }

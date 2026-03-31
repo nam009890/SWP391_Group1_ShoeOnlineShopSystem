@@ -75,7 +75,7 @@ public class MarketingController {
 
         model.addAttribute("recentActivities", recentActivities);
 
-        return "marketing-home";
+        return "marketing/marketing-home";
     }
 
     private String calculateTimeAgo(LocalDateTime createdAt) {
@@ -116,6 +116,7 @@ public class MarketingController {
                 .collect(Collectors.toList());
 
         model.addAttribute("activities", sortedActivities);
-        return "marketing-activities";
+        return "marketing/marketing-activities";
     }
 }
+

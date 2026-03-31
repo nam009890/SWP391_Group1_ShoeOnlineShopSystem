@@ -57,6 +57,7 @@ public class AdminController {
         model.addAttribute("monthRevenue", monthRevenue);
         model.addAttribute("recentOrders", recentOrders);
 
-        return "admin-home";
+        return "admin/admin-home";
     }
 }
+

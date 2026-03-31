@@ -4,6 +4,7 @@ import Group1.ShoesOnlineShop.entity.Coupon;
 import Group1.ShoesOnlineShop.service.CouponService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import Group1.ShoesOnlineShop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,9 @@ public class CouponController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping
     public String listCoupons(
@@ -42,13 +46,14 @@ public class CouponController {
         model.addAttribute("validity", validity);
         model.addAttribute("today", java.time.LocalDate.now()); 
 
-        return "coupon-list"; 
+        return "marketing/coupon-list"; 
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("coupon", new Coupon());
-        return "coupon-create"; 
+        model.addAttribute("allProducts", productRepository.findAll());
+        return "marketing/coupon-create"; 
     }
 
     @PostMapping("/save")
@@ -62,14 +67,14 @@ public class CouponController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Please check the highlighted fields and try again!");
-            return isNew ? "coupon-create" : "coupon-update";
+            return isNew ? "marketing/coupon-create" : "marketing/coupon-update";
         }
 
         Map<String, String> logicErrors = couponService.validateCouponLogic(coupon);
         if (!logicErrors.isEmpty()) {
             logicErrors.forEach((field, message) -> bindingResult.rejectValue(field, "error.coupon", message));
             model.addAttribute("errorMessage", "Validation failed, please fix the errors below!");
-            return isNew ? "coupon-create" : "coupon-update";
+            return isNew ? "marketing/coupon-create" : "marketing/coupon-update";
         }
 
         try {
@@ -90,7 +95,8 @@ public class CouponController {
             return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
-        return "coupon-update"; 
+        model.addAttribute("allProducts", productRepository.findAll());
+        return "marketing/coupon-update"; 
     }
 
     @GetMapping("/delete/{id}")
@@ -107,6 +113,6 @@ public class CouponController {
             return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
-        return "coupon-detail"; 
+        return "marketing/coupon-detail"; 
     }
 }

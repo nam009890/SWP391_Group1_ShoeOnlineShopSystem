@@ -42,7 +42,13 @@ public class DataSeeder implements CommandLineRunner {
             createUser("marketing1", "mkt1@shoeweb.com", "Hoang Van Marketing", "0921111111", "300 Nguyen Hue, Quan 1, TP HCM", "123456", "MARKETING_STAFF"),
             createUser("marketing2", "mkt2@shoeweb.com", "Le Thi Content", "0922222222", "400 Ba Trieu, Ha Noi", "123456", "MARKETING_STAFF")
         );
-
+        
+        List<User> mockShippers = Arrays.asList(
+            createUser("shipper1", "shipper1@shoeweb.com", "Pham Van Hung", "0941111112", "Trinh Dinh Trong, Ha Noi", "123456", "SHIPPER"),
+                 createUser("shipper2", "shipper2@shoeweb.com", "Tran Thi Hoa", "0941111113", "Trinh Dinh Trong, Ha Noi", "123456", "SHIPPER"),
+                  createUser("shipper3", "shipper3@shoeweb.com", "Nguyen Van Minh", "0941111114", "Trinh Dinh Trong, Ha Noi", "123456", "SHIPPER")
+        );
+        
         // =============== SHOP MANAGER ===============
         List<User> mockShopManagers = Arrays.asList(
             createUser("shopmanager1", "manager1@shoeweb.com", "Pham Van Manager", "0941111111", "Trinh Dinh Trong, Ha Noi", "123456", "SHOP_MANAGER")
@@ -61,6 +67,7 @@ public class DataSeeder implements CommandLineRunner {
         seedUsers(mockMarketings, "MARKETING_STAFF");
         seedUsers(mockShopManagers, "SHOP_MANAGER");
         seedUsers(mockCustomers, "CUSTOMER");
+        seedUsers(mockShippers, "SHIPPER");
     }
 
     private void seedUsers(List<User> users, String roleName) {

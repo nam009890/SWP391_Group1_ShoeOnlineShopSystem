@@ -20,7 +20,8 @@ public class InternalAuthenticationSuccessHandler implements AuthenticationSucce
         boolean isInternal = authentication.getAuthorities().stream()
                 .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()) ||
                                "ROLE_SALE_STAFF".equals(a.getAuthority()) ||
-                               "ROLE_MARKETING_STAFF".equals(a.getAuthority()));
+                               "ROLE_MARKETING_STAFF".equals(a.getAuthority()) ||
+                               "ROLE_SHOP_MANAGER".equals(a.getAuthority()));
 
         if (!isInternal) {
             request.getSession().invalidate();
@@ -39,6 +40,9 @@ public class InternalAuthenticationSuccessHandler implements AuthenticationSucce
                 break;
             } else if ("ROLE_MARKETING_STAFF".equals(auth.getAuthority())) {
                 redirectUrl = request.getContextPath() + "/internal/MarketingHome";
+                break;
+            } else if ("ROLE_SHOP_MANAGER".equals(auth.getAuthority())) {
+                redirectUrl = request.getContextPath() + "/internal/shop-manager/dashboard";
                 break;
             }
         }

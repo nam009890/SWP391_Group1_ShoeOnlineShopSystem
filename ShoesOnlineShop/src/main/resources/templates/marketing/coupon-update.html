@@ -200,6 +200,7 @@
                                     </div>
                                     <p th:if="${allProducts == null || allProducts.isEmpty()}" class="text-muted" style="font-size:13px; margin:0;">No products available to select.</p>
                                 </div>
+<<<<<<< HEAD
                                 <div class="text-danger mt-1" style="font-size:.875em" th:if="${#fields.hasErrors('products')}" th:errors="*{products}"></div>
                             </div>
                         </div>
@@ -215,6 +216,8 @@
                                 <p th:if="${coupon.usedCount > 0}" style="font-size:12px; color:var(--text-mid); margin-top:4px;">
                                     Currently used: <strong th:text="${coupon.usedCount}">0</strong> times.
                                 </p>
+=======
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
                             </div>
                         </div>
 

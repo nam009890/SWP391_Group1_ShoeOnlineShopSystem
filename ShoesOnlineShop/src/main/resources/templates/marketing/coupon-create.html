@@ -150,6 +150,49 @@
                                         <div class="invalid-feedback" th:if="${#fields.hasErrors('discountValue')}" th:errors="*{discountValue}"></div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
+=======
+                            </div>
+                        </div>
+
+                        <!-- Advanced Limits: Min Order & Max Discount -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Condition & Limit</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <label style="font-size:12px; color:var(--text-mid)">Min Order Value (VND)</label>
+                                        <input type="number" th:field="*{minOrderValue}" class="form-control" placeholder="0 = No limit">
+                                    </div>
+                                    <div class="col-md-6" id="maxDiscountBox">
+                                        <label style="font-size:12px; color:var(--text-mid)">Max Discount Cap (VND)</label>
+                                        <input type="number" th:field="*{maxDiscountAmount}" class="form-control" placeholder="Optional cap">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scope Settings -->
+                        <div class="row mb-4 align-items-start">
+                            <div class="col-md-4">
+                                <label class="form-label" style="padding-top:8px">Application Scope</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select th:field="*{scope}" class="form-select mb-2" id="scopeSelect">
+                                    <option value="ALL">All Items in System</option>
+                                    <option value="SPECIFIC_PRODUCTS">Specific Products Only</option>
+                                </select>
+                                
+                                <div id="productSelectionBox" style="display:none; max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; background: #fafafa;">
+                                    <div th:each="prod : ${allProducts}" class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="products" th:value="${prod.productId}" th:id="'prod_'+${prod.productId}">
+                                        <label class="form-check-label" th:for="'prod_'+${prod.productId}" th:text="${prod.name} + ' (' + ${prod.size} + ')'" style="font-size:13px;"></label>
+                                    </div>
+                                    <p th:if="${allProducts == null || allProducts.isEmpty()}" class="text-muted" style="font-size:13px; margin:0;">No products available to select.</p>
+                                </div>
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
                             </div>
                         </div>
 
@@ -259,6 +302,10 @@
             }
 
             function clearAllFields() {
+<<<<<<< HEAD
+=======
+                // XÃ³a cÃ¡c Ã´ nháº­p chá»¯ vÃ  ngÃ y thÃ¡ng
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
                 const inputs = document.querySelectorAll('form input[type="text"], form input[type="number"], form input[type="date"]');
                 inputs.forEach(input => input.value = '');
                 const selects = document.querySelectorAll('form select');
@@ -268,6 +315,11 @@
                         select.dispatchEvent(new Event('change'));
                     }
                 });
+<<<<<<< HEAD
+=======
+
+                // Bá»  check cÃ¡c Ã´ tráº¡ng thÃ¡i & checkbox
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
                 const checkboxes = document.querySelectorAll('form input[type="checkbox"]');
                 checkboxes.forEach(cb => cb.checked = false);
                 const invalidInputs = document.querySelectorAll('.is-invalid');
@@ -276,6 +328,10 @@
                 errorTexts.forEach(el => el.style.display = 'none');
             }
 
+<<<<<<< HEAD
+=======
+            // Mở rộng Logic hiển thị nâng cao
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
             document.addEventListener("DOMContentLoaded", function() {
                 const typeSelect = document.getElementById("discountTypeSelect");
                 const maxBox = document.getElementById("maxDiscountBox");

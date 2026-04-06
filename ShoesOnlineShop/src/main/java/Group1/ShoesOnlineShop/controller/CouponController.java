@@ -76,7 +76,9 @@ public class CouponController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Please check the highlighted fields and try again!");
+
             model.addAttribute("allProducts", productRepository.findAll());
+
             return isNew ? "marketing/coupon-create" : "marketing/coupon-update";
         }
 
@@ -84,7 +86,9 @@ public class CouponController {
         if (!logicErrors.isEmpty()) {
             logicErrors.forEach((field, message) -> bindingResult.rejectValue(field, "error.coupon", message));
             model.addAttribute("errorMessage", "Validation failed, please fix the errors below!");
+
             model.addAttribute("allProducts", productRepository.findAll());
+
             return isNew ? "marketing/coupon-create" : "marketing/coupon-update";
         }
 
@@ -155,8 +159,10 @@ public class CouponController {
             return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
+
         model.addAttribute("today", java.time.LocalDate.now());
         return "marketing/coupon-detail"; 
     }
 }
+
 

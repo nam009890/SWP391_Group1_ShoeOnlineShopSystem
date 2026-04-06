@@ -101,7 +101,11 @@ public class ContentController {
             contentService.saveContent(targetContent);
             redirectAttributes.addFlashAttribute("successMessage", isNew ? "Content created successfully!" : "Content updated successfully!");
         } catch (Exception e) {
+<<<<<<< HEAD
             model.addAttribute("errorMessage", "Failed to save content: " + e.getMessage());
+=======
+            model.addAttribute("errorMessage", "Failed to upload image: " + e.getMessage());
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
             return isNew ? "marketing/content-create" : "marketing/content-update";
         }
 
@@ -142,4 +146,7 @@ public class ContentController {
         }
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa

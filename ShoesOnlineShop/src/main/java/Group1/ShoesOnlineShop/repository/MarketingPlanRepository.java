@@ -16,6 +16,7 @@ public interface MarketingPlanRepository extends JpaRepository<MarketingPlan, Lo
     List<MarketingPlan> findByAssignedRoleAndStatus(String assignedRole, String status);
     
     Page<MarketingPlan> findAll(Pageable pageable);
+<<<<<<< HEAD
 
     // Search by title
     Page<MarketingPlan> findByTitleContainingIgnoreCase(String title, Pageable pageable);
@@ -42,3 +43,6 @@ public interface MarketingPlanRepository extends JpaRepository<MarketingPlan, Lo
     long countByIsReadFalse();
 }
 
+=======
+}
+>>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa

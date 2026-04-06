@@ -1,4 +1,6 @@
+
 ﻿<!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -38,6 +40,7 @@
 
             <div class="form-section-title" style="margin-top: 3rem;">Apply Coupon</div>
             <div class="form-group">
+
                 <select name="couponId" id="couponSelect" class="form-control" onchange="updateDiscount()" style="margin-bottom: 8px;">
                     <option value="">Select a coupon (Optional)</option>
                     <option th:each="c : ${coupons}" 
@@ -53,6 +56,7 @@
                 </select>
                 <div id="coupon-info-msg" style="font-size: 0.85rem; padding: 10px; border-radius: 8px; display: none;"></div>
                 <div id="coupon-detail-box" style="font-size: 0.85rem; padding: 10px; border-radius: 8px; margin-top: 8px; display: none; background: #f8fafc; border: 1px dashed #cbd5f5; color: #334155;"></div>
+
             </div>
 
             <div class="form-section-title" style="margin-top: 3rem;">Payment Method</div>
@@ -89,13 +93,17 @@
                         <div class="item-qty" th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
                     </div>
                 </div>
+
                 <div class="item-price" th:text="${#numbers.formatDecimal(item.product.price.doubleValue() * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' â‚«'">0 â‚«</div>
+
             </div>
 
             <div class="summary-totals">
                 <div class="total-row">
                     <span>Subtotal</span>
+
                     <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' â‚«'">0 â‚«</span>
+
                 </div>
                 <div class="total-row">
                     <span>Shipping</span>
@@ -103,11 +111,13 @@
                 </div>
                 <div class="total-row" id="discount-row" style="display: none; color: var(--accent);">
                     <span>Discount</span>
+
                     <span id="summary-discount">-0 â‚«</span>
                 </div>
                 <div class="total-row final">
                     <span>Total</span>
                     <span id="summary-total" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' â‚«'">0 â‚«</span>
+
                 </div>
             </div>
         </div>
@@ -115,6 +125,7 @@
 
     <script th:inline="javascript">
         /*<![CDATA[*/
+
         const cartItems = [
             /*[# th:each="item : ${cartItems}"]*/
             { id: [[${item.product.productId}]], price: [[${item.product.price}]], qty: [[${item.quantity}]] },
@@ -198,9 +209,11 @@
 
             const finalTotal = subtotal - discountAmount;
             
+
             const discRow = document.getElementById('discount-row');
             const discText = document.getElementById('summary-discount');
             const totalText = document.getElementById('summary-total');
+
 
             discRow.style.display = 'flex';
             discText.innerText = '-' + formatPrice(discountAmount);
@@ -272,4 +285,3 @@
     </script>
 </body>
 </html>
-

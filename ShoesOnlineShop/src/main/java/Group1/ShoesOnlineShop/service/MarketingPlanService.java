@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+
 
 @Service
 public class MarketingPlanService {
@@ -20,7 +22,9 @@ public class MarketingPlanService {
     private MarketingPlanRepository marketingPlanRepository;
 
     public Page<MarketingPlan> getPlans(int page, int size) {
+
         Pageable paging = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+
         return marketingPlanRepository.findAll(paging);
     }
     
@@ -53,6 +57,7 @@ public class MarketingPlanService {
             marketingPlanRepository.save(plan);
         }
     }
+
 
     /**
      * Search plans with optional keyword and status filter.
@@ -146,4 +151,5 @@ public class MarketingPlanService {
         return marketingPlanRepository.countByIsReadFalse();
     }
 }
+
 

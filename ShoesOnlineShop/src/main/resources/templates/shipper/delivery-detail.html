@@ -140,6 +140,9 @@
                             <option value="DELIVERING" th:if="${delivery.deliveryStatus == 'PICKED_UP' or delivery.deliveryStatus == 'ASSIGNED'}">START DELIVERING</option>
                             <option value="DELIVERED" th:if="${delivery.deliveryStatus == 'DELIVERING' or delivery.deliveryStatus == 'PICKED_UP'}">MARK AS DELIVERED</option>
                             <option value="FAILED" th:if="${delivery.deliveryStatus == 'DELIVERING' or delivery.deliveryStatus == 'PICKED_UP'}">FAILED DELIVERY</option>
+                            <!-- Re-attempt options when FAILED -->
+                            <option value="DELIVERING" th:if="${delivery.deliveryStatus == 'FAILED'}">RE-ATTEMPT DELIVERING</option>
+                            <option value="DELIVERED" th:if="${delivery.deliveryStatus == 'FAILED'}">MARK AS DELIVERED</option>
                         </select>
                     </div>
                     <div class="col-md-5" id="proofImageDiv" style="display: none;">

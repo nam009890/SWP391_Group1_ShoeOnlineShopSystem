@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Delivery Management</title>
+    <title>My Deliveries</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,47 +19,29 @@
         <div class="sidebar-brand">
             <div class="brand-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
                 </svg>
             </div>
-            <span class="brand-name">Sale Staff</span>
+            <span class="brand-name">Shipper</span>
         </div>
 
         <span class="nav-label">Management</span>
 
-        <a th:href="@{/internal/sales/dashboard}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Dashboard
-        </a>
-
-        <a th:href="@{/internal/orders}">
+        <a th:href="@{/internal/shipper/deliveries/available}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
             </svg>
-            Order Management
+            Available Jobs
         </a>
 
-        <a th:href="@{/internal/deliveries}" class="active">
+        <a th:href="@{/internal/shipper/deliveries}" class="active">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
-            Delivery Management
-        </a>
-
-        <a th:href="@{/internal/feedbacks}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
-            </svg>
-            Feedback Management
-        </a>
-
-        <a th:href="@{/internal/invoices}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14l-3-2-3 2-3-2-3 2V5a2 2 0 012-2z"/>
-            </svg>
-            Invoice Management
+            My Deliveries
         </a>
 
         <div class="sidebar-logout" style="margin-top:auto;">
@@ -81,30 +63,22 @@
         <!-- TOPBAR -->
         <div class="topbar">
             <div>
-                <h4>Delivery Management</h4>
-                <p>Manage and track assigned shipments</p>
+                <h4>My Deliveries</h4>
+                <p>Manage and track your assigned shipments</p>
             </div>
-            <a href="/internal/profile" style="text-decoration:none;">
             <div class="user-pill">
-                <div class="user-avatar">SS</div>
+                <div class="user-avatar" style="background:#0d9488;">SH</div>
                 <div>
-                    <div class="user-name">Sale Staff</div>
-                    <div class="user-role">Administrator</div>
+                    <div class="user-name">Shipper</div>
                 </div>
             </div>
-            </a>
         </div>
 
         <!-- BREADCRUMB -->
         <div class="breadcrumb-bar" style="margin-bottom: 15px;">
             <a th:href="@{/}">Home</a>
              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="9 18 15 12 9 6"/></svg>
-            <span>Delivery Management</span>
-        </div>
-
-        <!-- NEW BUTTON -->
-        <div style="display:flex; justify-content:flex-end; margin-bottom: 20px;">
-            <a th:href="@{/internal/deliveries/create}" class="btn-primary" style="text-decoration:none; display:inline-block; border-radius:8px; padding:10px 18px; font-weight:600; color:#fff; background:var(--primary-color);">+ Create New Delivery</a>
+            <span>My Deliveries</span>
         </div>
 
         <!-- Alert messages -->
@@ -121,14 +95,14 @@
             <!-- TOOLBAR / FILTER -->
             <div class="toolbar" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
 
-                <form method="get" id="filterForm" th:action="@{/internal/deliveries}" style="display:flex; align-items:center; gap:10px; width:100%;">
+                <form method="get" id="filterForm" th:action="@{/internal/shipper/deliveries}" style="display:flex; align-items:center; gap:10px; width:100%;">
                     
                     <div class="search-input" style="flex: 1; max-width: 380px;">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"/>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
-                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by customer or shipper name" />
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by customer name" />
                     </div>
 
                     <button type="submit" class="btn-search" style="padding: 0 20px; height: 40px; border-radius: 8px; font-weight: 600;">Search</button>
@@ -153,7 +127,6 @@
                         <th>ID</th>
                         <th>ORDER ID</th>
                         <th>CUSTOMER</th>
-                        <th>SHIPPER</th>
                         <th>SHIPPING FEE</th>
                         <th>STATUS</th>
                         <th>ACTIONS</th>
@@ -163,7 +136,7 @@
 
                     <!-- Empty state -->
                     <tr class="empty-row" th:if="${#lists.isEmpty(deliveries.content)}">
-                        <td colspan="7">No deliveries found.</td>
+                        <td colspan="6">You have no deliveries matching the criteria.</td>
                     </tr>
 
                     <tr th:each="d, stat : ${deliveries.content}">
@@ -171,9 +144,7 @@
                         <td th:text="'#' + ${d.order.orderId}"></td>
                         <td>
                             <div style="font-weight:600; color:var(--text-dark);" th:text="${d.order.user.fullName}"></div>
-                        </td>
-                        <td>
-                            <div style="font-weight:600; color:#0d9488;" th:text="${d.shipper != null ? d.shipper.fullName : 'None'}"></div>
+                            <div style="font-size:12px; color:var(--text-mid);" th:text="${d.order.shippingAddress}"></div>
                         </td>
                         <td style="font-weight:700; color:var(--danger);">
                             <span th:text="${#numbers.formatDecimal(d.shippingFee, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
@@ -187,9 +158,7 @@
 
                         <td>
                             <div class="action-btns" style="display: flex; gap: 8px;">
-                                <a th:href="@{/internal/deliveries/view/{id}(id=${d.deliveryId})}" class="btn-outline" style="padding:5px 14px; font-size:12.5px;">Detail</a>
-                                <a th:if="${d.deliveryStatus == 'PENDING'}" th:href="@{/internal/orders/assign-shipper/{id}(id=${d.order.orderId}, source='delivery')}" class="btn-upd" style="padding:5px 14px; font-size:12.5px;">Update</a>
-                                <a th:if="${d.deliveryStatus == 'PENDING' or d.deliveryStatus == 'DELIVERED' or d.deliveryStatus == 'FAILED'}" th:href="@{/internal/deliveries/delete/{id}(id=${d.deliveryId})}" class="btn-del" style="padding:5px 14px; font-size:12.5px; background:#fee2e2; color:#b91c1c; border-radius:6px; font-weight:600; border:1px solid #fca5a5; text-decoration:none;" onclick="return confirm('Are you sure you want to delete this delivery?')">Delete</a>
+                                <a th:href="@{/internal/shipper/deliveries/view/{id}(id=${d.deliveryId})}" class="btn-outline" style="padding:5px 14px; font-size:12.5px;">Detail & Update</a>
                             </div>
                         </td>
                     </tr>
@@ -206,13 +175,13 @@
                     <!-- Prev arrow -->
                     <a class="page-btn"
                        th:classappend="${deliveries.number == 0} ? ' disabled' : ''"
-                       th:href="@{/internal/deliveries(page=${deliveries.number - 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
+                       th:href="@{/internal/shipper/deliveries(page=${deliveries.number - 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
                         &#8249;
                     </a>
 
                     <a class="page-btn"
                        th:each="i : ${#numbers.sequence(0, deliveries.totalPages-1)}"
-                       th:href="@{/internal/deliveries(page=${i}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}"
+                       th:href="@{/internal/shipper/deliveries(page=${i}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}"
                        th:text="${i+1}"
                        th:classappend="${i == deliveries.number} ? ' active' : ''">
                     </a>
@@ -220,7 +189,7 @@
                     <!-- Next arrow -->
                     <a class="page-btn"
                        th:classappend="${deliveries.number + 1 >= deliveries.totalPages} ? ' disabled' : ''"
-                       th:href="@{/internal/deliveries(page=${deliveries.number + 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
+                       th:href="@{/internal/shipper/deliveries(page=${deliveries.number + 1}, status=${currentStatus}, keyword=${keyword}, sort=${sort})}">
                         &#8250;
                     </a>
                 </div>

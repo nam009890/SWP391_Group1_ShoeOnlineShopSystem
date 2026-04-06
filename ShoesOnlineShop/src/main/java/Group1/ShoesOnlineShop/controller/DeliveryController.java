@@ -74,7 +74,7 @@ public class DeliveryController {
 
     @PostMapping("/create")
     public String createDelivery(@RequestParam(name="orderId") Long orderId,
-                                 @RequestParam(name="shipperId") Long shipperId,
+                                 @RequestParam(name="shipperId", required=false) Long shipperId,
                                  @RequestParam(name="shippingFee", required=false) java.math.BigDecimal shippingFee,
                                  @RequestParam(name="note", required=false) String note,
                                  RedirectAttributes redirectAttributes) {

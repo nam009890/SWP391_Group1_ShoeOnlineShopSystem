@@ -105,9 +105,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Select Shipper <span style="color: red;">*</span></label>
-                    <select name="shipperId" class="form-select" required>
-                        <option value="">-- Choose a shipper --</option>
+                    <label class="form-label">Select Shipper (Optional)</label>
+                    <select name="shipperId" class="form-select">
+                        <option value="">-- Leave unassigned (Open for Shippers to accept) --</option>
                         <th:block th:each="s : ${shippers}">
                             <option th:value="${s.userId}" th:text="|${s.fullName} (${s.userEmail})|"></option>
                         </th:block>

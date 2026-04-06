@@ -44,6 +44,7 @@ public class AdminFinancialController {
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
 
-        return "admin-financial";
+        return "admin/admin-financial";
     }
 }
+

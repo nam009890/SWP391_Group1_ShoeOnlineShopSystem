@@ -81,7 +81,7 @@ public class CheckoutController {
         model.addAttribute("totalAmount", total);
         model.addAttribute("user", user); // Pass user to pre-fill standard shipping info
         model.addAttribute("coupons", userCouponService.getAvailableCoupons(user.getUserId()));
-        return "customer-checkout";
+        return "customer/customer-checkout";
     }
 
     @PostMapping("/checkout/process")
@@ -197,6 +197,7 @@ public class CheckoutController {
                                 Model model) {
         model.addAttribute("status", status);
         model.addAttribute("orderId", orderId);
-        return "customer-payment-result";
+        return "customer/customer-payment-result";
     }
 }
+

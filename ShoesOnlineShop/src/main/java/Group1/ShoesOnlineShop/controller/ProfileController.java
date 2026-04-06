@@ -53,7 +53,7 @@ public class ProfileController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        return "customer-profile";
+        return "customer/customer-profile";
     }
 
     @PostMapping("/profile/update")
@@ -73,7 +73,7 @@ public class ProfileController {
 
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "Please fix the invalid fields!");
-            return "customer-profile";
+            return "customer/customer-profile";
         }
 
         try {
@@ -93,7 +93,7 @@ public class ProfileController {
         User user = getAuthenticatedUser();
         if (user == null) return "redirect:/login";
         model.addAttribute("user", user);
-        return "customer-change-password";
+        return "customer/customer-change-password";
     }
 
     @PostMapping("/profile/change-password")
@@ -139,11 +139,11 @@ public class ProfileController {
         model.addAttribute("user", user);
         
         if ("SALE_STAFF".equalsIgnoreCase(user.getUserRole())) {
-            return "sale-profile";
+            return "sale/sale-profile";
         } else if ("ADMIN".equalsIgnoreCase(user.getUserRole())) {
-            return "admin-profile";
+            return "admin/admin-profile";
         }
-        return "marketing-profile";
+        return "marketing/marketing-profile";
     }
 
     @PostMapping("/internal/profile/update")
@@ -164,11 +164,11 @@ public class ProfileController {
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "Please fix the invalid fields!");
             if ("SALE_STAFF".equalsIgnoreCase(currentUser.getUserRole())) {
-                return "sale-profile";
+                return "sale/sale-profile";
             } else if ("ADMIN".equalsIgnoreCase(currentUser.getUserRole())) {
-                return "admin-profile";
+                return "admin/admin-profile";
             }
-            return "marketing-profile";
+            return "marketing/marketing-profile";
         }
 
         try {
@@ -190,11 +190,11 @@ public class ProfileController {
         model.addAttribute("user", user);
         
         if ("SALE_STAFF".equalsIgnoreCase(user.getUserRole())) {
-            return "sale-change-password";
+            return "sale/sale-change-password";
         } else if ("ADMIN".equalsIgnoreCase(user.getUserRole())) {
             return "admin-change-password";
         }
-        return "marketing-change-password";
+        return "marketing/marketing-change-password";
     }
 
     @PostMapping("/internal/profile/change-password")

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <meta charset="UTF-8">
+        <title>Coupon Management</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <span class="brand-name">Shoes Online Shop Marketing</span>
+            </div>
+            <span class="nav-label">Navigation</span>
+
+            <a href="/internal/MarketingHome">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a href="/internal/sliders">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+                Slider
+            </a>
+            <a href="/internal/coupons" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+                Coupon Code
+            </a>
+            <a href="/internal/contents">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Content
+            </a>
+                        <a href="/internal/plans">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg>
+                Marketing Plan
+            </a>
+            <div class="sidebar-logout">
+                <a href="/internal/logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="main">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div>
+                    <h4>Coupon Code Management</h4>
+                    <p>Create and manage promotional discount codes</p>
+                </div>
+                <div class="user-pill" style="cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar">MKT</div>
+                    <div>
+                        <div class="user-name">Username</div>
+                        <div class="user-role">Marketing</div>
+                    </div>
+                </div>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="/internal/profile">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            Edit Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/internal/profile/change-password">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            Change Password
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Card -->
+            <div class="card">
+
+                <div th:if="${successMessage}" class="alert alert-success" style="margin: 15px 22px 0; padding: 12px; background: #d1fae5; color: #065f46; border-radius: 8px; font-size: 14px;">
+                    <strong th:text="${successMessage}"></strong>
+                </div>
+
+                <div class="toolbar" style="flex-wrap: wrap; gap: 15px;">
+                    <form action="/internal/coupons" method="get" class="search-wrap" style="flex-wrap: wrap; gap: 10px;">
+                        <div class="search-input">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+
+
+                            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search name or code...">
+
+
+                        </div>
+                        <button type="submit" class="btn-search">Search</button>
+
+                        <select name="discount" class="form-select" style="width:auto; height: 38px;" onchange="this.form.submit()">
+                            <option value="">All Discounts</option>
+                            <option value="5" th:selected="${discount == 5}">5%</option>
+                            <option value="10" th:selected="${discount == 10}">10%</option>
+                            <option value="15" th:selected="${discount == 15}">15%</option>
+                            <option value="20" th:selected="${discount == 20}">20%</option>
+                            <option value="25" th:selected="${discount == 25}">25%</option>
+                            <option value="30" th:selected="${discount == 30}">30%</option>
+                            <option value="35" th:selected="${discount == 35}">35%</option>
+                            <option value="40" th:selected="${discount == 40}">40%</option>
+                            <option value="45" th:selected="${discount == 45}">45%</option>
+                            <option value="50" th:selected="${discount == 50}">50%</option>
+                        </select>
+
+                        <select name="status" class="form-select" style="width:auto; height: 38px;" onchange="this.form.submit()">
+                            <option value="">All Status</option>
+                            <option value="true" th:selected="${status == true}">Active</option>
+                            <option value="false" th:selected="${status == false}">Inactive</option>
+                        </select>
+
+                        <select name="validity" class="form-select" style="width:auto; height: 38px;" onchange="this.form.submit()">
+                            <option value="">All Validity</option>
+                            <option value="VALID" th:selected="${validity == 'VALID'}">Valid </option>
+                            <option value="EXPIRED" th:selected="${validity == 'EXPIRED'}">Expired </option>
+                        </select>
+                    </form>
+
+                    <a th:href="@{/internal/coupons/create}" class="btn-create" style="margin-left: auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Create Coupon
+                    </a>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:60px">No</th>
+                            <th>Coupon Name / Code</th>
+                            <th>Discount</th>
+                            <th>Approval Status</th>
+                            <th>End Date</th>
+                            <th style="width:210px; text-align:center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="coupon, state : ${coupons}">
+                            <td style="color:var(--text-mid); font-weight:600" th:text="${(currentPage - 1) * 5 + state.count}">1</td>
+                            <td>
+                                <div style="font-weight:700; color:var(--text-dark); font-size: 14px;" th:text="${coupon.couponName}">Sale Name</div>
+                                <span style="font-family:'Courier New',monospace; font-weight:700; color:var(--accent); background:var(--accent-light); padding:2px 6px; border-radius:4px; font-size:11.5px; display:inline-block; margin-top:4px" th:text="${coupon.couponCode}">SALE-XYZ</span>
+                            </td>
+                            <td>
+                                <span style="background:#fef2f2; color:var(--danger); padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700" 
+                                      th:text="${coupon.discountType == 'PERCENTAGE' ? coupon.discountValue + '%' : #numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT') + ' đ'}">10%
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${coupon.approvalStatus == 'PENDING'}" style="background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">Pending</span>
+                                <span th:if="${coupon.approvalStatus == 'REMAKE'}" style="background: #e0e7ff; color: #4338ca; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">Remake</span>
+                                <span th:if="${coupon.approvalStatus == 'REJECTED'}" style="background: #fee2e2; color: #bd271e; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">Rejected</span>
+                                <th:block th:if="${coupon.approvalStatus == 'APPROVED'}">
+                                <span th:if="${!coupon.isActive}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Inactive</span>
+                                <span th:if="${coupon.isActive and coupon.endDate < today}" class="status-badge status-expired" style="font-size:11px; padding:3px 8px;">Expired</span>
+                                <span th:if="${coupon.isActive and coupon.createDate > today}" class="status-badge status-upcoming" style="font-size:11px; background: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; padding:3px 8px;">Upcoming</span>
+                                <span th:if="${coupon.isActive and coupon.createDate <= today and coupon.endDate >= today}" class="status-badge status-active" style="font-size:11px; padding:3px 8px;">Active & Valid</span>
+                                </th:block>
+                            </td>
+                            <td><span class="date-chip" th:text="${#temporals.format(coupon.endDate, 'dd/MM/yyyy')}">31/12/2024</span></td>
+                            <td>
+                                <div class="action-btns" style="justify-content:center">
+                                    <a th:href="@{/internal/coupons/detail/{id}(id=${coupon.id})}" style="padding:5px 14px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12.5px; font-weight:600; text-decoration:none;">Detail</a>
+                                    <a th:href="@{/internal/coupons/update/{id}(id=${coupon.id})}" class="btn-upd">Update</a>
+                                    <a th:href="@{/internal/coupons/delete/{id}(id=${coupon.id})}" class="btn-del" onclick="return confirm('Are you sure to delete this coupon?')">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination-bar" th:if="${totalPages > 1}">
+                    <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${totalPages}">5</strong></span>
+                    <div class="page-btns">
+                        <a class="page-btn" th:classappend="${currentPage == 1} ? 'disabled'" th:href="@{/internal/coupons(page=${currentPage - 1}, keyword=${keyword}, discount=${discount}, status=${status}, validity=${validity})}">
+                            <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                        </a>
+                        <a class="page-btn" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'" th:href="@{/internal/coupons(page=${i}, keyword=${keyword}, discount=${discount}, status=${status}, validity=${validity})}" th:text="${i}">1</a>
+                        <a class="page-btn" th:classappend="${currentPage == totalPages} ? 'disabled'" th:href="@{/internal/coupons(page=${currentPage + 1}, keyword=${keyword}, discount=${discount}, status=${status}, validity=${validity})}">
+                            <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

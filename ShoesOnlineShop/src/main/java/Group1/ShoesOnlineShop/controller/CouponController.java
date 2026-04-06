@@ -4,6 +4,7 @@ import Group1.ShoesOnlineShop.entity.Coupon;
 import Group1.ShoesOnlineShop.service.CouponService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import Group1.ShoesOnlineShop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/internal/coupons")
@@ -19,6 +22,9 @@ public class CouponController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping
     public String listCoupons(
@@ -42,39 +48,80 @@ public class CouponController {
         model.addAttribute("validity", validity);
         model.addAttribute("today", java.time.LocalDate.now()); 
 
-        return "coupon-list"; 
+        return "marketing/coupon-list"; 
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("coupon", new Coupon());
-        return "coupon-create"; 
+        model.addAttribute("allProducts", productRepository.findAll());
+        return "marketing/coupon-create"; 
     }
 
     @PostMapping("/save")
     public String saveCoupon(
-            @Valid @ModelAttribute("coupon") Coupon coupon, 
+            @Valid @ModelAttribute("coupon") Coupon couponForm, 
             BindingResult bindingResult,
+            @RequestParam(name = "products", required = false) List<Long> productIds,
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        boolean isNew = (coupon.getId() == null);
+        boolean isNew = (couponForm.getId() == null);
+
+        List<Group1.ShoesOnlineShop.entity.Product> selectedProducts = new ArrayList<>();
+        if (productIds != null && !productIds.isEmpty()) {
+            selectedProducts = productRepository.findAllById(productIds);
+        }
+        couponForm.setProducts(selectedProducts);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Please check the highlighted fields and try again!");
-            return isNew ? "coupon-create" : "coupon-update";
+            model.addAttribute("allProducts", productRepository.findAll());
+            return isNew ? "marketing/coupon-create" : "marketing/coupon-update";
         }
 
-        Map<String, String> logicErrors = couponService.validateCouponLogic(coupon);
+        Map<String, String> logicErrors = couponService.validateCouponLogic(couponForm);
         if (!logicErrors.isEmpty()) {
             logicErrors.forEach((field, message) -> bindingResult.rejectValue(field, "error.coupon", message));
             model.addAttribute("errorMessage", "Validation failed, please fix the errors below!");
-            return isNew ? "coupon-create" : "coupon-update";
+            model.addAttribute("allProducts", productRepository.findAll());
+            return isNew ? "marketing/coupon-create" : "marketing/coupon-update";
         }
 
         try {
-            coupon.setIsActive(coupon.getIsActive() != null && coupon.getIsActive());
-            couponService.saveCoupon(coupon);
+            Coupon targetCoupon;
+            if (!isNew) {
+                targetCoupon = couponService.getCouponById(couponForm.getId());
+                if (targetCoupon == null) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Coupon not found!");
+                    return "redirect:/internal/coupons";
+                }
+            } else {
+                targetCoupon = new Coupon();
+                targetCoupon.setCreateDate(java.time.LocalDate.now());
+            }
+
+            // Map form fields to target entity to prevent losing unmapped DB fields
+            targetCoupon.setCouponName(couponForm.getCouponName());
+            targetCoupon.setCouponCode(couponForm.getCouponCode());
+            targetCoupon.setDiscountType(couponForm.getDiscountType());
+            targetCoupon.setDiscountValue(couponForm.getDiscountValue());
+            targetCoupon.setMaxDiscountAmount(couponForm.getMaxDiscountAmount());
+            targetCoupon.setMinOrderValue(couponForm.getMinOrderValue());
+            if (couponForm.getCreateDate() != null) targetCoupon.setCreateDate(couponForm.getCreateDate());
+            targetCoupon.setEndDate(couponForm.getEndDate());
+            targetCoupon.setScope(couponForm.getScope());
+            targetCoupon.setUpdateNote(couponForm.getUpdateNote());
+            targetCoupon.setIsActive(couponForm.getIsActive() != null && couponForm.getIsActive());
+            targetCoupon.setQuantity(couponForm.getQuantity());
+
+            if ("SPECIFIC_PRODUCTS".equals(couponForm.getScope())) {
+                targetCoupon.setProducts(selectedProducts);
+            } else {
+                targetCoupon.setProducts(new ArrayList<>());
+            }
+
+            couponService.saveCoupon(targetCoupon);
             redirectAttributes.addFlashAttribute("successMessage", isNew ? "Coupon created successfully!" : "Coupon updated successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "System error: Failed to save coupon!");
@@ -90,13 +137,14 @@ public class CouponController {
             return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
-        return "coupon-update"; 
+        model.addAttribute("allProducts", productRepository.findAll());
+        return "marketing/coupon-update"; 
     }
 
     @GetMapping("/delete/{id}")
     public String deleteCoupon(@PathVariable(name = "id") Long id, HttpSession session) {
-        couponService.deleteCoupon(id);
-        session.setAttribute("message", "Delete successfully!");
+        couponService.requestDelete(id);
+        session.setAttribute("message", "Delete request sent to Admin!");
         return "redirect:/internal/coupons";
     }
 
@@ -107,6 +155,8 @@ public class CouponController {
             return "redirect:/internal/coupons";
         }
         model.addAttribute("coupon", coupon);
-        return "coupon-detail"; 
+        model.addAttribute("today", java.time.LocalDate.now());
+        return "marketing/coupon-detail"; 
     }
 }
+

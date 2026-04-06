@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | ShoesOnlineShop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/pages/customer-cart.css}">
+</head>
+<body>
+    <!-- JAVASCRIPT FOR ERROR MESSAGES (IF ANY) -->
+    <script th:if="${errorMessage}">
+        alert('[[${errorMessage}]]');
+    </script>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+        <div class="nav-actions">
+            <a th:href="@{/}">HOME</a>
+            <a th:href="@{/products}">PRODUCTS</a>
+            <th:block th:if="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/profile}" th:text="${#authentication.name.toUpperCase()}">USER</a>
+                <a th:href="@{/logout}">LOGOUT</a>
+            </th:block>
+            <th:block th:unless="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/login}">LOG IN</a>
+                <a th:href="@{/register}">SIGN UP</a>
+            </th:block>
+        </div>
+    </nav>
+
+    <div class="cart-container">
+        <div>
+            <h1 class="cart-header">Your Cart</h1>
+            <div class="cart-items" th:if="${cartItems != null and !cartItems.isEmpty()}">
+                <div class="cart-item" th:each="item : ${cartItems}">
+                    <div class="cart-item-img">
+                        <img th:src="${item.product.imageUrl}" alt="Product image" onerror="this.src='/images/placeholder.png'">
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-title" th:text="${item.product.name}">Product Name</div>
+                        <div class="cart-item-variant" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem;">
+                            Size: <span th:text="${item.size}">38</span> | Color: <span th:text="${item.color}">Black</span>
+                        </div>
+                        <div class="cart-item-price" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</div>
+                        <div class="cart-item-actions">
+                            <div class="quantity-form">
+                                <button type="button" class="quantity-btn minus" th:onclick="'changeQuantity(' + ${item.cartId} + ', -1)'">−</button>
+                                <input type="number" class="quantity-input" th:id="'qty-' + ${item.cartId}" 
+                                       th:value="${item.quantity}" min="0" th:max="${item.product.stockQuantity}"
+                                       th:onchange="'manualUpdate(' + ${item.cartId} + ', this.value)'">
+                                <button type="button" class="quantity-btn plus" th:onclick="'changeQuantity(' + ${item.cartId} + ', 1)'">+</button>
+                            </div>
+                        </div>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="cartId" th:value="${item.cartId}">
+                            <button type="submit" class="btn-remove">Remove &times;</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-empty" th:if="${cartItems == null or cartItems.isEmpty()}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <h2>Your cart is empty</h2>
+                <p style="margin-top: 0.5rem">Looks like you haven't added any shoes yet.</p>
+                <a th:href="@{/products}" class="btn-shop">Shop Now</a>
+            </div>
+        </div>
+
+        <div class="cart-summary" th:if="${cartItems != null and !cartItems.isEmpty()}">
+            <h2 class="summary-title">Order Summary</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Calculating at checkout</span>
+            </div>
+            <div class="summary-total">
+                <span>Total</span>
+                <span th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
+            </div>
+            <a th:href="@{/checkout}" class="btn-checkout">Proceed to Checkout</a>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function changeQuantity(cartId, delta) {
+            const input = document.getElementById('qty-' + cartId);
+            let newQty = parseInt(input.value) + delta;
+            
+            if (newQty < 0) newQty = 0;
+            const max = parseInt(input.getAttribute('max'));
+            if (newQty > max) {
+                alert("Only " + max + " items available in stock.");
+                newQty = max;
+            }
+            
+            updateCart(cartId, newQty);
+        }
+
+        function manualUpdate(cartId, value) {
+            let newQty = parseInt(value);
+            if (isNaN(newQty) || newQty < 0) newQty = 0;
+            
+            const input = document.getElementById('qty-' + cartId);
+            const max = parseInt(input.getAttribute('max'));
+            if (newQty > max) {
+                alert("Only " + max + " items available in stock.");
+                newQty = max;
+                input.value = max;
+            }
+            
+            updateCart(cartId, newQty);
+        }
+
+        function updateCart(cartId, quantity) {
+            const formData = new URLSearchParams();
+            formData.append('cartId', cartId);
+            formData.append('quantity', quantity);
+
+            fetch('/cart/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString()
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // For simplicity, reload page to reflect changes in subtotal/total
+                    // In a more advanced version, we could update DOM elements directly
+                    location.reload();
+                } else {
+                    alert(data.message || "Failed to update cart");
+                    location.reload();
+                }
+            })
+            .catch(err => {
+                console.error('Update cart error:', err);
+                alert("An error occurred while updating the cart");
+            });
+        }
+    </script>
+</body>
+</html>

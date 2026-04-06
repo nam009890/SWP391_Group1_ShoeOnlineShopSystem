@@ -1,0 +1,17 @@
+.stat-products { border-left: 4px solid #8b5cf6; }
+        .stat-orders   { border-left: 4px solid var(--warning); }
+        .icon-products { background: #ede9fe; color: #7c3aed; }
+        .icon-orders   { background: #fef3c7; color: #92400e; }
+        .order-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+        .status-PENDING   { background:#fef3c7; color:#92400e; }
+        .status-APPROVED  { background:#d1fae5; color:#065f46; }
+        .status-SHIPPED   { background:#dbeafe; color:#1e40af; }
+        .status-DELIVERED { background:#d1fae5; color:#065f46; }
+        .status-CANCELLED { background:#fee2e2; color:#991b1b; }
+        .status-CONFIRMED { background:#f3e8ff; color:#7e22ce; }

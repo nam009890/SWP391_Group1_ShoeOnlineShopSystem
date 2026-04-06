@@ -13,6 +13,7 @@ import Group1.ShoesOnlineShop.repository.ProductRepository;
 import Group1.ShoesOnlineShop.repository.SliderRepository;
 import Group1.ShoesOnlineShop.repository.UserRepository;
 import Group1.ShoesOnlineShop.service.CouponService;
+import Group1.ShoesOnlineShop.service.MarketingPlanService;
 import Group1.ShoesOnlineShop.service.UserCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,8 +54,11 @@ public class HomeController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MarketingPlanService marketingPlanService;
+
     private Map<Long, Integer> getActiveProductDiscounts() {
-        List<Slider> activeSliders = sliderRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+        List<Slider> activeSliders = sliderRepository.findByIsActiveTrueAndApprovalStatusOrderByCreatedAtDesc("APPROVED");
         Map<Long, Integer> productDiscounts = new HashMap<>();
         for (Slider s : activeSliders) {
             for (Group1.ShoesOnlineShop.entity.SliderProduct sp : s.getSliderProducts()) {
@@ -73,12 +77,12 @@ public class HomeController {
     public String showHomePage(Model model) {
         List<Category> rootCategories = categoryRepository
                 .findByParentIsNullAndIsActiveTrueOrderByDisplayOrderAscNameAsc();
-        List<Slider> sliders = sliderRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+        List<Slider> sliders = sliderRepository.findByIsActiveTrueAndApprovalStatusOrderByCreatedAtDesc("APPROVED");
         List<Product> featuredProducts = productRepository.findByIsActiveTrueOrderByCreatedAtDesc();
         if (featuredProducts.size() > 12) {
             featuredProducts = featuredProducts.subList(0, 12);
         }
-        List<Content> contents = contentRepository.findByIsActiveTrueOrderByCreatedAtDesc();
+        List<Content> contents = contentRepository.findByIsActiveTrueAndApprovalStatusOrderByCreatedAtDesc("APPROVED");
         if (contents.size() > 6) {
             contents = contents.subList(0, 6);
         }
@@ -88,6 +92,7 @@ public class HomeController {
         model.addAttribute("featuredProducts", featuredProducts);
         model.addAttribute("contents", contents);
         model.addAttribute("productDiscounts", getActiveProductDiscounts());
+        model.addAttribute("marketingPlans", marketingPlanService.getApprovedActivePlans());
         return "home";
     }
 
@@ -179,7 +184,7 @@ public class HomeController {
         }
         model.addAttribute("savedCouponIds", savedCouponIds);
 
-        return "customer-slider-detail";
+        return "customer/customer-slider-detail";
     }
 
     // ===================== PRODUCT LIST =====================
@@ -229,7 +234,7 @@ public class HomeController {
         model.addAttribute("selectedMaxPrice", maxPrice);
         model.addAttribute("keyword", keyword);
         model.addAttribute("productDiscounts", getActiveProductDiscounts());
-        return "customer-product-list";
+        return "customer/customer-product-list";
     }
 
     // ===================== PRODUCT DETAIL =====================
@@ -273,7 +278,7 @@ public class HomeController {
         model.addAttribute("avgRating", avgRating);
         model.addAttribute("feedbackCount", feedbacks.size());
         model.addAttribute("productDiscounts", getActiveProductDiscounts());
-        return "customer-product-detail";
+        return "customer/customer-product-detail";
     }
 
     // ===================== CONTENT DETAIL =====================
@@ -284,7 +289,7 @@ public class HomeController {
             return "redirect:/home";
         }
         model.addAttribute("content", content);
-        return "customer-content-detail";
+        return "customer/customer-content-detail";
     }
 
     @PostMapping("/save-coupon")
@@ -319,3 +324,4 @@ public class HomeController {
         return ResponseEntity.ok(response);
     }
 }
+

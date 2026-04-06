@@ -328,3 +328,40 @@ VALUES
  N'Latest sneaker models have arrived. Check them out now!',
  '/images/banner2.jpg',
  'BANNER');
+
+-- Table Deliveries
+CREATE TABLE deliveries (
+    delivery_id BIGINT IDENTITY(1,1) PRIMARY KEY,
+
+    order_id BIGINT NOT NULL,
+    user_id BIGINT NULL, -- shipper (user role = SHIPPER)
+
+    tracking_number NVARCHAR(100) UNIQUE,
+
+    delivery_status NVARCHAR(30) DEFAULT 'PENDING'
+        CHECK (delivery_status IN (
+            'PENDING',
+            'ASSIGNED',
+            'PICKED_UP',
+            'DELIVERING',
+            'DELIVERED',
+            'FAILED'
+        )),
+
+    shipping_fee DECIMAL(10,2) DEFAULT 0,
+    proof_image_url NVARCHAR(500),
+    created_at DATETIME2 DEFAULT GETDATE(),
+    assigned_at DATETIME2 NULL,
+    shipped_date DATETIME2 NULL,
+    delivered_date DATETIME2 NULL,
+
+    note NVARCHAR(MAX),
+
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+GO
+
+ALTER TABLE deliveries
+ADD is_deleted BIT DEFAULT 0;
+GO

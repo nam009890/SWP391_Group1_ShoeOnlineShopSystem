@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/internal/login").permitAll()
                 .requestMatchers("/internal/admin/**").hasRole("ADMIN")
                 .requestMatchers("/internal/orders/**", "/internal/invoices/**").hasAnyRole("SALE_STAFF", "ADMIN")
-                .requestMatchers("/internal/MarketingHome/**", "/internal/sliders/**", "/internal/coupons/**", "/internal/contents/**").hasAnyRole("MARKETING_STAFF", "ADMIN")
+                .requestMatchers("/internal/MarketingHome/**", "/internal/sliders/**", "/internal/coupons/**", "/internal/contents/**", "/internal/marketing-plans/**").hasAnyRole("MARKETING_STAFF", "ADMIN")
                 .requestMatchers("/internal/feedbacks/**").hasAnyRole("ADMIN", "SALE_STAFF", "MARKETING_STAFF")
                 .anyRequest().hasAnyRole("ADMIN", "SALE_STAFF", "MARKETING_STAFF")
             )

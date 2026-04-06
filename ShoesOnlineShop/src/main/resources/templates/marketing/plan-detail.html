@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <meta charset="UTF-8">
+        <title>Plan Details</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                </div>
+                <span class="brand-name">Marketing</span>
+            </div>
+            <span class="nav-label">Navigation</span>
+
+            <a href="/internal/MarketingHome">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Dashboard
+            </a>
+            <a href="/internal/sliders">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg>
+                Slider
+            </a>
+            <a href="/internal/coupons">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg>
+                Coupon Code
+            </a>
+            <a href="/internal/contents">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Content
+            </a>
+            <a href="/internal/plans" class="active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg>
+                Marketing Plan
+            </a>
+            <div class="sidebar-logout">
+                <a href="/internal/logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="topbar">
+                <div>
+                    <h4>Plan Details</h4>
+                    <p>View and manage your marketing plan</p>
+                </div>
+                <div class="user-pill" style="cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar">MKT</div>
+                    <div>
+                        <div class="user-name">Username</div>
+                        <div class="user-role">Marketing</div>
+                    </div>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="/internal/profile">Edit Profile</a></li>
+                    <li><a class="dropdown-item" href="/internal/profile/change-password">Change Password</a></li>
+                </ul>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div th:if="${successMessage}" class="alert alert-success" role="alert" style="background: rgba(40,167,69,0.2); color:#28a745; border:1px solid rgba(40,167,69,0.5); border-radius:12px;">
+                <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert" style="background: rgba(220,53,69,0.2); color:#dc3545; border:1px solid rgba(220,53,69,0.5); border-radius:12px;">
+                <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${errorMessage}"></span>
+            </div>
+
+            <div class="breadcrumb-bar">
+                <a href="/internal/plans">Marketing Plan</a>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span>Detail</span>
+            </div>
+
+            <!-- General Info -->
+            <div class="card mb-4">
+                <div class="card-header-bar">
+                    <h6>General Information</h6>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span th:if="${plan.status == 'OPEN'}" class="plan-status plan-open">Open</span>
+                        <span th:if="${plan.status == 'IN_PROGRESS'}" class="plan-status plan-progress">In Progress</span>
+                        <span th:if="${plan.status == 'COMPLETED'}" class="plan-status plan-completed">Completed</span>
+                        <span th:if="${plan.status == 'CANCELLED'}" class="plan-status plan-cancelled">Cancelled</span>
+
+                        <span th:if="${plan.approvalStatus == 'PENDING'}" class="plan-status plan-approval-pending">Pending Approval</span>
+                        <span th:if="${plan.approvalStatus == 'APPROVED'}" class="plan-status plan-approval-approved">Approved</span>
+                        <span th:if="${plan.approvalStatus == 'REJECTED'}" class="plan-status plan-approval-rejected">Rejected</span>
+                        <span th:if="${plan.approvalStatus == 'REMAKE'}" class="plan-status plan-approval-remake">Remake Required</span>
+
+                        <!-- Overdue badge -->
+                        <span th:if="${plan.status == 'IN_PROGRESS' and plan.endDate != null and plan.endDate.isBefore(T(java.time.LocalDate).now())}"
+                              style="background:#fee2e2; color:#991b1b; padding:4px 12px; border-radius:20px; font-size:11.5px; font-weight:700;">⏰ Overdue</span>
+                    </div>
+                </div>
+                <div class="card-body-pad">
+                    <div class="detail-row">
+                        <span class="detail-label">Title</span>
+                        <span class="detail-value" style="font-weight:700; font-size:16px" th:text="${plan.title}">Plan Title</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Description</span>
+                        <span class="detail-value" th:text="${plan.description != null ? plan.description : 'No description provided'}">Description text</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Assigned Role</span>
+                        <span class="detail-value">
+                            <span style="background:var(--bg); color:var(--text-mid); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;"
+                                  th:text="${plan.assignedRole != null ? plan.assignedRole : 'Not assigned'}">MARKETING_STAFF</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule -->
+            <div class="card mb-4">
+                <div class="card-header-bar">
+                    <h6>Schedule</h6>
+                </div>
+                <div class="card-body-pad">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="detail-row" style="border-bottom:none">
+                                <span class="detail-label">Start Date</span>
+                                <span class="detail-value">
+                                    <span class="date-chip" th:text="${plan.startDate != null ? #temporals.format(plan.startDate, 'dd/MM/yyyy') : 'Not set'}">01/01/2026</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-row" style="border-bottom:none">
+                                <span class="detail-label">End Date</span>
+                                <span class="detail-value">
+                                    <span class="date-chip" th:text="${plan.endDate != null ? #temporals.format(plan.endDate, 'dd/MM/yyyy') : 'Not set'}">31/12/2026</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Update Actions (Marketing Staff) -->
+            <div class="card mb-4" th:if="${plan.status != 'COMPLETED' and plan.status != 'CANCELLED'}">
+                <div class="card-header-bar">
+                    <h6>Update Status</h6>
+                </div>
+                <div class="card-body-pad">
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <!-- OPEN → IN_PROGRESS -->
+                        <form th:if="${plan.status == 'OPEN'}" th:action="@{/internal/plans/update-status/{id}(id=${plan.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="newStatus" value="IN_PROGRESS">
+                            <button type="submit" style="background:rgba(59,130,246,0.15); color:#3b82f6; border:1px solid rgba(59,130,246,0.3); border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                                <i class="fas fa-play me-1"></i> Confirm & Start
+                            </button>
+                        </form>
+                        <!-- IN_PROGRESS → COMPLETED -->
+                        <form th:if="${plan.status == 'IN_PROGRESS'}" th:action="@{/internal/plans/update-status/{id}(id=${plan.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="newStatus" value="COMPLETED">
+                            <button type="submit" style="background:rgba(40,167,69,0.15); color:#28a745; border:1px solid rgba(40,167,69,0.3); border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                                <i class="fas fa-check me-1"></i> Mark Completed
+                            </button>
+                        </form>
+                        <!-- IN_PROGRESS → CANCELLED -->
+                        <form th:if="${plan.status == 'IN_PROGRESS'}" th:action="@{/internal/plans/update-status/{id}(id=${plan.id})}" method="post" style="display:inline;"
+                              onsubmit="return confirm('Are you sure you want to cancel this plan?');">
+                            <input type="hidden" name="newStatus" value="CANCELLED">
+                            <button type="submit" style="background:rgba(220,53,69,0.15); color:#dc3545; border:1px solid rgba(220,53,69,0.3); border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                                <i class="fas fa-times me-1"></i> Cancel Plan
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remake Note -->
+            <div class="card mb-4" th:if="${plan.approvalStatus == 'REMAKE' and plan.remakeNote != null and !plan.remakeNote.isEmpty()}">
+                <div class="card-header-bar" style="border-left: 4px solid #ffc107;">
+                    <h6>⚠ Remake Note from Admin</h6>
+                </div>
+                <div class="card-body-pad">
+                    <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:16px; color:#92400e; font-size:14px; line-height:1.6;"
+                         th:text="${plan.remakeNote}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rejection Note -->
+            <div class="card mb-4" th:if="${plan.approvalStatus == 'REJECTED'}">
+                <div class="card-header-bar" style="border-left: 4px solid #dc3545;">
+                    <h6>✕ This plan has been rejected</h6>
+                </div>
+                <div class="card-body-pad">
+                    <div style="background:#fee2e2; border:1px solid #fecaca; border-radius:8px; padding:16px; color:#991b1b; font-size:14px; line-height:1.6;"
+                         th:text="${plan.remakeNote != null ? plan.remakeNote : 'No additional notes provided.'}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timestamps -->
+            <div class="card mb-4">
+                <div class="card-header-bar">
+                    <h6>Timestamps</h6>
+                </div>
+                <div class="card-body-pad">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="detail-row" style="border-bottom:none">
+                                <span class="detail-label">Created At</span>
+                                <span class="detail-value">
+                                    <span class="date-chip" th:text="${plan.createdAt != null ? #temporals.format(plan.createdAt, 'dd/MM/yyyy HH:mm') : 'N/A'}">01/01/2026 09:00</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-row" style="border-bottom:none">
+                                <span class="detail-label">Updated At</span>
+                                <span class="detail-value">
+                                    <span class="date-chip" th:text="${plan.updatedAt != null ? #temporals.format(plan.updatedAt, 'dd/MM/yyyy HH:mm') : 'N/A'}">01/01/2026 09:00</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div style="display:flex; justify-content:flex-start; align-items:center; gap:12px; margin-top:8px">
+                <a href="/internal/plans" class="btn-outline">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px"><polyline points="15 18 9 12 15 6"/></svg>
+                    Back to List
+                </a>
+            </div>
+
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
+

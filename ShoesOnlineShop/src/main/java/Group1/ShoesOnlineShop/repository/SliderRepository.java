@@ -25,4 +25,10 @@ public interface SliderRepository extends JpaRepository<Slider, Long> {
 
     // Active sliders for home page carousel
     java.util.List<Slider> findByIsActiveTrueOrderByCreatedAtDesc();
+
+    // Active + Approved sliders for homepage (only show approved content)
+    java.util.List<Slider> findByIsActiveTrueAndApprovalStatusOrderByCreatedAtDesc(String approvalStatus);
+    
+    Page<Slider> findByApprovalStatus(String approvalStatus, Pageable pageable);
+    Page<Slider> findByApprovalStatusAndSliderTitleContainingIgnoreCase(String approvalStatus, String keyword, Pageable pageable);
 }

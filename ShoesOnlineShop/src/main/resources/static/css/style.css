@@ -975,3 +975,28 @@ tbody td:last-child {
     transform: translateY(-2px);
 }
 
+/* =========================================
+   MARKETING PLAN - Status & Approval Badges
+   ========================================= */
+.plan-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+}
+
+/* Status badges */
+.plan-open       { background: #dbeafe; color: #1e40af; }
+.plan-progress   { background: #fef3c7; color: #92400e; }
+.plan-completed  { background: #d1fae5; color: #065f46; }
+.plan-cancelled  { background: #f3f4f6; color: #6b7280; text-decoration: line-through; }
+
+/* Approval badges */
+.plan-approval-pending  { background: #fef3c7; color: #92400e; }
+.plan-approval-approved { background: #d1fae5; color: #065f46; }
+.plan-approval-rejected { background: #fee2e2; color: #991b1b; }
+.plan-approval-remake   { background: #ede9fe; color: #5b21b6; }
+

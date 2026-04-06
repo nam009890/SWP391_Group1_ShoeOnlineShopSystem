@@ -274,10 +274,58 @@ public Order createOrderFromCart(User user, java.util.List<Group1.ShoesOnlineSho
     
     // Apply Coupon Discount
     if (coupon != null) {
+        if (coupon.getMinOrderValue() != null && totalAmount.compareTo(BigDecimal.valueOf(coupon.getMinOrderValue())) < 0) {
+            throw new IllegalArgumentException("Đơn hàng chưa đạt giá trị tối thiểu " + coupon.getMinOrderValue() + "đ để áp dụng mã này");
+        }
+        
         order.setCoupon(coupon);
-        BigDecimal discount = totalAmount.multiply(BigDecimal.valueOf(coupon.getDiscountPercent())).divide(BigDecimal.valueOf(100));
-        totalAmount = totalAmount.subtract(discount);
+        
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        BigDecimal eligibleAmount = BigDecimal.ZERO;
+        
+        boolean isSpecific = "SPECIFIC_PRODUCTS".equals(coupon.getScope());
+        java.util.List<Long> eligibleProductIds = new java.util.ArrayList<>();
+        if (isSpecific && coupon.getProducts() != null) {
+            for (Product p : coupon.getProducts()) {
+                eligibleProductIds.add(p.getProductId());
+            }
+        }
+        
+        for (Group1.ShoesOnlineShop.entity.Cart cart : cartItems) {
+            Product p = cart.getProduct();
+            // Ràng buộc User yêu cầu: coupon chỉ áp dụng cho sản phẩm CÒN HÀNG (tồn kho ban đầu > 0, đây là tồn kho hiện tại)
+            if (p.getStockQuantity() >= 0) { // Đã bị trừ ở vòng lặp trên nên có thể = 0. Nếu muốn chặt hơn thì check tồn kho ban đầu = p.getStockQuantity() + cart.getQuantity() > 0
+                if (!isSpecific || eligibleProductIds.contains(p.getProductId())) {
+                    eligibleAmount = eligibleAmount.add(p.getPrice().multiply(BigDecimal.valueOf(cart.getQuantity())));
+                }
+            }
+        }
+
+        if (eligibleAmount.compareTo(BigDecimal.ZERO) > 0) {
+            if ("PERCENTAGE".equals(coupon.getDiscountType())) {
+                discountAmount = eligibleAmount.multiply(BigDecimal.valueOf(coupon.getDiscountValue())).divide(BigDecimal.valueOf(100));
+                if (coupon.getMaxDiscountAmount() != null && discountAmount.compareTo(BigDecimal.valueOf(coupon.getMaxDiscountAmount())) > 0) {
+                    discountAmount = BigDecimal.valueOf(coupon.getMaxDiscountAmount());
+                }
+            } else if ("FIXED_AMOUNT".equals(coupon.getDiscountType())) {
+                discountAmount = BigDecimal.valueOf(coupon.getDiscountValue());
+                if (discountAmount.compareTo(eligibleAmount) > 0) {
+                    discountAmount = eligibleAmount;
+                }
+            }
+        }
+        
+        totalAmount = totalAmount.subtract(discountAmount);
+        if (totalAmount.compareTo(BigDecimal.ZERO) < 0) totalAmount = BigDecimal.ZERO;
+        
         order.setTotalAmount(totalAmount);
+        
+        // Increment used count on coupon
+        coupon.setUsedCount(coupon.getUsedCount() + 1);
+        // Auto-deactivate if quantity reached
+        if (coupon.getQuantity() != null && coupon.getUsedCount() >= coupon.getQuantity()) {
+            coupon.setIsActive(false);
+        }
     }
     
     order.setOrderDetails(details);

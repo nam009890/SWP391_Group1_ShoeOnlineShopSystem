@@ -43,15 +43,15 @@ public class SliderController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("status", status); 
         model.addAttribute("size", size); 
-        return "slider-list";
+        return "marketing/slider-list";
     }
 
     @GetMapping("/create")
     public String showCreateSliderForm(Model model) {
         model.addAttribute("slider", new Slider());
-        model.addAttribute("coupons", couponRepository.findAll());
+        model.addAttribute("coupons", couponRepository.findValidCouponsForSlider());
         model.addAttribute("products", productRepository.findAll());
-        return "slider-create";
+        return "marketing/slider-create";
     }
 
     @PostMapping("/save")
@@ -74,7 +74,7 @@ public class SliderController {
 
         if (bindingResult.hasErrors()) {
             sliderService.restoreSliderFormState(model, sliderForm, couponIds, productIds, productDiscounts, isUpdate);
-            return isUpdate ? "slider-update" : "slider-create";
+            return isUpdate ? "marketing/slider-update" : "marketing/slider-create";
         }
 
         try {
@@ -93,9 +93,9 @@ public class SliderController {
         Slider slider = sliderService.getSliderById(id);
         if (slider == null) return "redirect:/internal/sliders";
         model.addAttribute("slider", slider);
-        model.addAttribute("coupons", couponRepository.findAll());
+        model.addAttribute("coupons", couponRepository.findValidCouponsForSlider());
         model.addAttribute("products", productRepository.findAll());
-        return "slider-update";
+        return "marketing/slider-update";
     }
 
     @GetMapping("/detail/{id}")
@@ -103,13 +103,27 @@ public class SliderController {
         Slider slider = sliderService.getSliderById(id);
         if (slider == null) return "redirect:/internal/sliders";
         model.addAttribute("slider", slider);
-        return "slider-detail";
+        return "marketing/slider-detail";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteSlider(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
-        sliderService.deleteSlider(id);
-        redirectAttributes.addFlashAttribute("successMessage", "Slider deleted successfully!");
+        Slider slider = sliderService.getSliderById(id);
+        if (slider != null) {
+            slider.setIsActive(false);
+            slider.setApprovalStatus("PENDING");
+            slider.setRemakeNote("DELETE REQUEST");
+            // Save it back to trigger approval
+            try {
+                // To avoid passing null constraints, we can use repository directly or a service method
+                // We'll call save from repository directly if possible or add a method. Wait, sliderService has no simple save for an entity without products.
+                // We will add a method or just use the repository if it's autowired. It's not autowired here.
+                // But sliderForm save needs couponIds etc.
+                sliderService.requestDelete(id);
+            } catch (Exception e) {}
+        }
+        redirectAttributes.addFlashAttribute("successMessage", "Delete request sent to Admin!");
         return "redirect:/internal/sliders";
     }
 }
+

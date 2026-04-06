@@ -63,6 +63,16 @@ public class ContentService {
     public void deleteContent(Long id) {
         contentRepository.deleteById(id);
     }
+    
+    public void requestDelete(Long id) {
+        Content content = contentRepository.findById(id).orElse(null);
+        if(content != null) {
+            content.setIsActive(false);
+            content.setApprovalStatus("PENDING");
+            content.setRemakeNote("DELETE_REQUEST");
+            contentRepository.save(content);
+        }
+    }
 
     public boolean isContentTitleExists(String title, Long id) {
         if (id == null) {

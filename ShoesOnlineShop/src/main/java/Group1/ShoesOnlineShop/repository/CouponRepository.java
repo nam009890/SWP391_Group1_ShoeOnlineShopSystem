@@ -23,4 +23,14 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>,JpaSpecifi
     long countByIsActive(Boolean isActive);
     java.util.List<Coupon> findTop5ByOrderByCreatedAtDesc();
     java.util.List<Coupon> findTop50ByOrderByCreatedAtDesc();
+    
+    Page<Coupon> findByApprovalStatus(String approvalStatus, Pageable pageable);
+    Page<Coupon> findByApprovalStatusAndCouponNameContainingIgnoreCase(String approvalStatus, String keyword, Pageable pageable);
+
+    // Active + Approved coupons for customers
+    java.util.List<Coupon> findByIsActiveTrueAndApprovalStatusOrderByCreatedAtDesc(String approvalStatus);
+
+    // Valid coupons for slider (active and within validity period)
+    @org.springframework.data.jpa.repository.Query("SELECT c FROM Coupon c WHERE c.isActive = true AND c.approvalStatus = 'APPROVED' AND c.createDate <= CURRENT_DATE AND c.endDate >= CURRENT_DATE")
+    java.util.List<Coupon> findValidCouponsForSlider();
 }

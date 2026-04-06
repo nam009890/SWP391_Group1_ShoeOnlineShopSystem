@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${content.contentTitle} + ' | ShoesOnlineShop'">Story Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/pages/customer-content-detail.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+    </nav>
+
+    <div class="content-container">
+        <span class="content-badge" th:text="${content.contentType}">Story</span>
+        <h1 class="content-title" th:text="${content.contentTitle}">Content Title</h1>
+        
+        <div class="content-date" th:if="${content.createdAt != null}">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span th:text="${#temporals.format(content.createdAt, 'MMMM dd, yyyy')}">Publish Date</span>
+        </div>
+
+        <img th:if="${content.imageUrl != null and !content.imageUrl.isEmpty()}" 
+             th:src="${content.imageUrl != null and content.imageUrl.startsWith('/uploads') ? content.imageUrl : '/uploads/contents/' + content.imageUrl}" 
+             th:alt="${content.contentTitle}" 
+             class="content-hero-img"
+             onerror="this.src='/images/placeholder.png'">
+
+        <div class="content-body" th:utext="${content.contentText}">
+            Content HTML goes here...
+        </div>
+
+        <a th:href="@{/home}" class="btn-back">&larr; Back to Home</a>
+    </div>
+
+    <footer>
+        <div class="footer-logo">SHOESONLINESHOP</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;">&copy; 2026 ShoesOnlineShop Group 1.</p>
+    </footer>
+</body>
+</html>

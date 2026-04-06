@@ -34,35 +34,54 @@ public class ContentController {
         model.addAttribute("totalPages", pageContents.getTotalPages());
         model.addAttribute("keyword", keyword);
         model.addAttribute("type", type);
-        return "content-list"; 
+        return "marketing/content-list"; 
     }
 
     @GetMapping("/create")
     public String showCreateContentForm(Model model) {
         model.addAttribute("content", new Content());
-        return "content-create";
+        return "marketing/content-create";
     }
 
     @PostMapping("/save")
     public String saveContent(
-            @Valid @ModelAttribute("content") Content content, 
+            @Valid @ModelAttribute("content") Content contentForm, 
             BindingResult result,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        boolean isNew = (content.getId() == null);
+        boolean isNew = (contentForm.getId() == null);
 
-        java.util.Map<String, String> errors = contentService.validateContent(content, imageFile);
+        java.util.Map<String, String> errors = contentService.validateContent(contentForm, imageFile);
         if (!errors.isEmpty()) {
             errors.forEach((field, message) -> result.rejectValue(field, "error.content", message));
         }
 
         if (result.hasErrors()) {
-            return isNew ? "content-create" : "content-update";
+            return isNew ? "marketing/content-create" : "marketing/content-update";
         }
 
         try {
+            Content targetContent;
+            if (!isNew) {
+                targetContent = contentService.getContentById(contentForm.getId());
+                if (targetContent == null) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Content not found!");
+                    return "redirect:/internal/contents";
+                }
+            } else {
+                targetContent = new Content();
+                targetContent.setCreatedAt(java.time.LocalDateTime.now());
+            }
+
+            // Map standard fields
+            targetContent.setContentTitle(contentForm.getContentTitle());
+            targetContent.setContentType(contentForm.getContentType());
+            targetContent.setContentText(contentForm.getContentText());
+            targetContent.setUpdateNote(contentForm.getUpdateNote());
+            targetContent.setIsActive(contentForm.getIsActive() != null && contentForm.getIsActive());
+
             if (imageFile != null && !imageFile.isEmpty()) {
                 String fileName = System.currentTimeMillis() + "_" + org.springframework.util.StringUtils.cleanPath(imageFile.getOriginalFilename());
                 java.nio.file.Path uploadPath = Group1.ShoesOnlineShop.config.WebMvcConfig.UPLOAD_DIR.resolve("contents");
@@ -73,20 +92,17 @@ public class ContentController {
                 
                 try (java.io.InputStream inputStream = imageFile.getInputStream()) {
                     java.nio.file.Files.copy(inputStream, uploadPath.resolve(fileName), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                    content.setImageUrl("/uploads/contents/" + fileName); 
-                }
-            } else if (content.getId() != null) {
-                Content existingContent = contentService.getContentById(content.getId());
-                if (existingContent != null) {
-                    content.setImageUrl(existingContent.getImageUrl());
+                    targetContent.setImageUrl("/uploads/contents/" + fileName); 
                 }
             }
             
-            contentService.saveContent(content);
+            targetContent.setApprovalStatus("PENDING");
+            targetContent.setUpdatedAt(java.time.LocalDateTime.now());
+            contentService.saveContent(targetContent);
             redirectAttributes.addFlashAttribute("successMessage", isNew ? "Content created successfully!" : "Content updated successfully!");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Failed to upload image: " + e.getMessage());
-            return isNew ? "content-create" : "content-update";
+            model.addAttribute("errorMessage", "Failed to save content: " + e.getMessage());
+            return isNew ? "marketing/content-create" : "marketing/content-update";
         }
 
         return "redirect:/internal/contents";
@@ -97,13 +113,13 @@ public class ContentController {
         Content content = contentService.getContentById(id);
         if (content == null) return "redirect:/internal/contents";
         model.addAttribute("content", content);
-        return "content-update";
+        return "marketing/content-update";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteContent(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
-        contentService.deleteContent(id);
-        redirectAttributes.addFlashAttribute("successMessage", "Content deleted successfully!");
+        contentService.requestDelete(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Delete request sent to Admin!");
         return "redirect:/internal/contents";
     }
 
@@ -112,7 +128,7 @@ public class ContentController {
         Content content = contentService.getContentById(id);
         if (content == null) return "redirect:/internal/contents";
         model.addAttribute("content", content);
-        return "content-detail"; 
+        return "marketing/content-detail"; 
     }
 
     @PostMapping("/upload-image")
@@ -126,3 +142,4 @@ public class ContentController {
         }
     }
 }
+

@@ -1,0 +1,33 @@
+.activity-page-card {
+                padding: 30px;
+            }
+            .activity-list-container {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+            .back-btn-wrap {
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .back-btn-wrap a {
+                color: var(--text-mid);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                transition: color 0.15s;
+            }
+            .back-btn-wrap a:hover {
+                color: var(--accent);
+            }
+            .activity-row {
+                padding: 16px 20px;
+            }
+            .activity-text span {
+                font-size: 13px;
+                margin-top: 4px;
+            }

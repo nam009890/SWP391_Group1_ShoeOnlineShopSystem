@@ -20,7 +20,13 @@ public interface ContentRepository extends JpaRepository<Content, Long> ,JpaSpec
     // Active content for home page
     java.util.List<Content> findByIsActiveTrueOrderByCreatedAtDesc();
 
+    // Active + Approved content for homepage (only show approved content)
+    java.util.List<Content> findByIsActiveTrueAndApprovalStatusOrderByCreatedAtDesc(String approvalStatus);
+
     // Duplicate title check
     boolean existsByContentTitle(String contentTitle);
     boolean existsByContentTitleAndIdNot(String contentTitle, Long id);
+    
+    Page<Content> findByApprovalStatus(String approvalStatus, Pageable pageable);
+    Page<Content> findByApprovalStatusAndContentTitleContainingIgnoreCase(String approvalStatus, String keyword, Pageable pageable);
 }

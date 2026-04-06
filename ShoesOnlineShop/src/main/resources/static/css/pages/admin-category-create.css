@@ -1,0 +1,48 @@
+.error-text {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        /* Badge preview loại danh mục */
+        .cat-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+        .cat-type-badge.root {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+        .cat-type-badge.child {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        /* Hint box dưới select */
+        .parent-hint {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+        .parent-hint.hint-root {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .parent-hint.hint-child {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }

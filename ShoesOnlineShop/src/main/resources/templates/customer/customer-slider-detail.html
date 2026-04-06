@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${slider.sliderTitle} + ' | ShoesOnlineShop'">Slider Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/pages/customer-slider-detail.css}">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a th:href="@{/}" class="navbar-brand">SHOESONLINESHOP</a>
+        <div class="nav-actions">
+            <a th:href="@{/products}">ALL PRODUCTS</a>
+            <a th:href="@{/}">HOME</a>
+            <th:block th:if="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/profile}" th:text="${#authentication.name.toUpperCase()}">USER</a>
+                <a th:href="@{/logout}">LOGOUT</a>
+            </th:block>
+            <th:block th:unless="${#authorization.expression('hasRole(''CUSTOMER'')')}">
+                <a th:href="@{/login}">LOG IN</a>
+                <a th:href="@{/register}">SIGN UP</a>
+            </th:block>
+            <a href="/cart">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <section class="slider-hero">
+        <img th:src="${slider.imageUrl}" th:alt="${slider.sliderTitle}"
+             onerror="this.style.display='none'">
+        <div class="slider-hero-overlay">
+            <div class="slider-hero-title" th:text="${slider.sliderTitle}">Slider Title</div>
+        </div>
+    </section>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+        <a th:href="@{/}" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Home
+        </a>
+
+        <!-- COUPONS SECTION -->
+        <div th:if="${slider.coupons != null and !slider.coupons.isEmpty()}">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24"><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6M12 2v20M2 12h20M7.5 2a2.5 2.5 0 0 0 0 5H12M16.5 2a2.5 2.5 0 0 1 0 5H12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Coupon Codes
+            </div>
+            <div class="coupons-grid">
+                <div class="coupon-card animate-in" th:each="coupon, iterStat : ${slider.coupons}"
+                     th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'"
+                     th:classappend="${savedCouponIds != null and savedCouponIds.contains(coupon.id)} ? 'saved' : ''">
+                    <div class="coupon-discount" th:text="${coupon.discountPercent} + '%'">20%</div>
+                    <div class="coupon-name" th:text="${coupon.couponName}">Coupon Name</div>
+                    <div class="coupon-code-wrap">
+                        <div class="coupon-code" th:text="${coupon.couponCode}" th:id="'code-' + ${coupon.id}">CODE123</div>
+                        <button class="btn-save-coupon" 
+                                th:attr="onclick='saveCoupon(' + ${coupon.id} + ', this)'"
+                                th:disabled="${savedCouponIds != null and savedCouponIds.contains(coupon.id)}"
+                                th:text="${savedCouponIds != null and savedCouponIds.contains(coupon.id)} ? 'Saved ✓' : 'Save Coupon'">
+                            Save Coupon
+                        </button>
+                    </div>
+                    <div class="coupon-dates">
+                        Valid: <span th:text="${coupon.createDate}">2026-01-01</span> — <span th:text="${coupon.endDate}">2026-12-31</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" th:if="${slider.coupons == null or slider.coupons.isEmpty()}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+            <p>No coupon codes available for this promotion.</p>
+        </div>
+
+        <!-- PRODUCTS SECTION -->
+        <div th:if="${slider.sliderProducts != null and !slider.sliderProducts.isEmpty()}">
+            <div class="section-title">
+                <svg viewBox="0 0 24 24"><path d="M20 12V22H4V12M22 7H2v5h20V7zM12 22V7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Featured Products
+            </div>
+            <div class="products-grid">
+                <a th:each="sp, iterStat : ${slider.sliderProducts}"
+                   th:href="@{/product/{id}(id=${sp.product.id})}"
+                   class="product-card animate-in"
+                   th:style="'animation-delay:' + ${iterStat.index * 0.08} + 's; text-decoration:none;'">
+                    <div class="product-img-wrap">
+                        <span class="product-badge" th:if="${sp.discount != null and sp.discount > 0}"
+                              th:text="'-' + ${sp.discount} + '%'">-10%</span>
+                        <span class="product-badge" th:if="${sp.discount == null or sp.discount == 0}">Featured</span>
+                        <img th:src="${sp.product.imageUrl}" th:alt="${sp.product.name}"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>No Image</text></svg>'">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category-label" th:text="${sp.product.category != null ? sp.product.category.name : ''}">Category</div>
+                        <div class="product-name" th:text="${sp.product.name}">Product Name</div>
+                        <div class="price-box">
+                            <!-- Original Price (only if discount exists) -->
+                            <span class="original-price" th:if="${sp.discount != null and sp.discount > 0}">
+                                <span th:text="${#numbers.formatDecimal(sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            </span>
+                            
+                            <!-- Sale Price -->
+                            <span class="sale-price" 
+                                  th:text="${#numbers.formatDecimal(sp.discount != null and sp.discount > 0 ? (sp.product.price - (sp.product.price * sp.discount / 100)) : sp.product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                            </span>
+                            
+                            <!-- Discount Badge -->
+                            <span class="discount-badge" th:if="${sp.discount != null and sp.discount > 0}"
+                                  th:text="'-' + ${sp.discount} + '%'">
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="empty-state" th:if="${slider.sliderProducts == null or slider.sliderProducts.isEmpty()}" style="margin-top:2rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 12V22H4V12M22 7H2v5h20V7zM12 22V7"/></svg>
+            <p>No products in this promotion.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-logo">SHOESONLINESHOP</div>
+        <p>&copy; 2026 ShoesOnlineShop Group 1. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function saveCoupon(couponId, btn) {
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Saving...';
+
+            fetch('/save-coupon?couponId=' + couponId, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    btn.innerText = 'Saved ✓';
+                    btn.style.background = 'rgba(46, 204, 113, 0.2)';
+                    btn.style.color = '#2ecc71';
+                    btn.style.border = '1px solid #2ecc71';
+                    // Add saved class to the parent card
+                    btn.closest('.coupon-card').classList.add('saved');
+                } else if (data.message === 'Already saved') {
+                    btn.innerText = 'Saved ✓';
+                    btn.closest('.coupon-card').classList.add('saved');
+                } else {
+                    alert(data.message || 'Failed to save coupon');
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
+            })
+            .catch(err => {
+                console.error('Save coupon error:', err);
+                alert('An error occurred. Please try again.');
+                btn.disabled = false;
+                btn.innerText = originalText;
+            });
+        }
+    </script>
+</body>
+</html>

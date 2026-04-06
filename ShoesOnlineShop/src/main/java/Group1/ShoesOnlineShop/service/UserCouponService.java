@@ -41,6 +41,11 @@ public class UserCouponService {
             throw new RuntimeException("COUPON_INACTIVE");
         }
 
+        // Check quantity limit
+        if (coupon.getQuantity() != null && coupon.getUsedCount() >= coupon.getQuantity()) {
+            throw new RuntimeException("COUPON_OUT_OF_STOCK");
+        }
+
         LocalDate today = LocalDate.now();
         if (coupon.getCreateDate().isAfter(today) || coupon.getEndDate().isBefore(today)) {
             throw new RuntimeException("COUPON_EXPIRED");

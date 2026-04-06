@@ -93,6 +93,16 @@ public class SliderService {
     public void deleteSlider(Long id) {
         sliderRepository.deleteById(id);
     }
+    
+    public void requestDelete(Long id) {
+        Slider slider = sliderRepository.findById(id).orElse(null);
+        if(slider != null) {
+            slider.setIsActive(false);
+            slider.setApprovalStatus("PENDING");
+            slider.setRemakeNote("DELETE_REQUEST");
+            sliderRepository.save(slider);
+        }
+    }
 
     public boolean isSliderTitleExists(String title, Long id) {
         if (id == null) {
@@ -108,7 +118,7 @@ public class SliderService {
             errors.put("sliderTitle", "This Slider title already exists, please choose another!");
         }
         if (productIds == null || productIds.isEmpty()) {
-            errors.put("products", "Please select at least one product!"); // Changed from sliderProducts to products to match the view bindings
+            errors.put("sliderProducts", "Please select at least one product!");
         }
         if (couponIds == null || couponIds.isEmpty()) {
             errors.put("coupons", "Please select at least one coupon!");
@@ -152,7 +162,7 @@ public class SliderService {
     }
 
     public void restoreSliderFormState(Model model, Slider sliderForm, List<Long> couponIds, List<Long> productIds, List<Integer> productDiscounts, boolean isUpdate) {
-        model.addAttribute("coupons", couponRepository.findAll());
+        model.addAttribute("coupons", couponRepository.findValidCouponsForSlider());
         model.addAttribute("products", productRepository.findAll());
         
         if (productIds != null && !productIds.isEmpty()) {
@@ -192,6 +202,8 @@ public class SliderService {
         // Cập nhật các trường thông tin cơ bản
         targetSlider.setSliderTitle(sliderForm.getSliderTitle());
         targetSlider.setIsActive(sliderForm.getIsActive() != null ? sliderForm.getIsActive() : false);
+        targetSlider.setUpdateNote(sliderForm.getUpdateNote());
+        targetSlider.setApprovalStatus("PENDING");
         targetSlider.setUpdatedAt(LocalDateTime.now());
 
         // Xử lý lưu File Ảnh vào hệ thống

@@ -36,6 +36,15 @@ public class Content {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
+    @Column(name = "approval_status", length = 20)
+    private String approvalStatus = "PENDING";
+
+    @Column(name = "remake_note", columnDefinition = "NVARCHAR(MAX)")
+    private String remakeNote;
+
+    @Column(name = "update_note", columnDefinition = "NVARCHAR(MAX)")
+    private String updateNote;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -47,12 +56,14 @@ public class Content {
     }
 
     // 2. Constructor có tham số
-    public Content(Long id, String contentTitle, String contentText, String imageUrl, String contentType, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Content(Long id, String contentTitle, String contentText, String imageUrl, String contentType, String approvalStatus, String remakeNote, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.contentTitle = contentTitle;
         this.contentText = contentText;
         this.imageUrl = imageUrl;
         this.contentType = contentType;
+        this.approvalStatus = approvalStatus;
+        this.remakeNote = remakeNote;
         this.isActive = isActive;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -77,6 +88,15 @@ public class Content {
 
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public String getApprovalStatus() { return approvalStatus; }
+    public void setApprovalStatus(String approvalStatus) { this.approvalStatus = approvalStatus; }
+
+    public String getRemakeNote() { return remakeNote; }
+    public void setRemakeNote(String remakeNote) { this.remakeNote = remakeNote; }
+
+    public String getUpdateNote() { return updateNote; }
+    public void setUpdateNote(String updateNote) { this.updateNote = updateNote; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

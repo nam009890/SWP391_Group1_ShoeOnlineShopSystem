@@ -49,7 +49,7 @@ public class OrderController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("sort", sort);
 
-       return "order-list";
+       return "sale/order-list";
     }
 
     // ====== SHOW CREATE PAGE ======
@@ -111,7 +111,7 @@ public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redi
         model.addAttribute("statuses",
                 List.of("PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"));
 
-        return "edit-order";
+        return "sale/edit-order";
     }
 
     // ====== HANDLE UPDATE ======
@@ -140,6 +140,6 @@ public String viewOrder(@PathVariable(name = "id") Long id, Model model) {
 
     model.addAttribute("order", order);
 
-    return "order-detail";
+    return "sale/order-detail";
 }
 }

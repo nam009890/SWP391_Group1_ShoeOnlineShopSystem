@@ -38,7 +38,7 @@ public class CouponService {
 
             // 2. LỌC THEO DISCOUNT
             if (discount != null) {
-                predicates.add(criteriaBuilder.equal(root.get("discountPercent"), discount));
+                predicates.add(criteriaBuilder.equal(root.get("discountValue"), discount));
             }
 
             // 3. LỌC THEO TRẠNG THÁI ACTIVE
@@ -80,6 +80,7 @@ public class CouponService {
 
     // Save Coupon (Used for both Create and Update)
     public void saveCoupon(Coupon coupon) {
+        coupon.setApprovalStatus("PENDING");
         couponRepository.save(coupon);
     }
 
@@ -91,6 +92,16 @@ public class CouponService {
     // Delete Coupon
     public void deleteCoupon(Long id) {
         couponRepository.deleteById(id);
+    }
+    
+    public void requestDelete(Long id) {
+        Coupon coupon = couponRepository.findById(id).orElse(null);
+        if(coupon != null) {
+            coupon.setIsActive(false);
+            coupon.setApprovalStatus("PENDING");
+            coupon.setRemakeNote("DELETE_REQUEST");
+            couponRepository.save(coupon);
+        }
     }
 
     // Check for duplicate Name
@@ -129,6 +140,13 @@ public class CouponService {
         if (coupon.getCreateDate() != null && coupon.getEndDate() != null) {
             if (coupon.getEndDate().isBefore(coupon.getCreateDate())) {
                 errors.put("endDate", "The end date must be after or equal to the start date!");
+            }
+        }
+
+        // 4. Specific product scope must have at least one product
+        if ("SPECIFIC_PRODUCTS".equals(coupon.getScope())) {
+            if (coupon.getProducts() == null || coupon.getProducts().isEmpty()) {
+                errors.put("products", "Please select at least one product for specific scope!");
             }
         }
 

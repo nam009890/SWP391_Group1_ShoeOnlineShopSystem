@@ -45,4 +45,13 @@ public class SliderProduct {
 
     public Integer getDiscount() { return discount; }
     public void setDiscount(Integer discount) { this.discount = discount; }
+
+    public java.math.BigDecimal getDiscountedPrice() {
+        if (product != null && product.getPrice() != null && discount != null && discount > 0) {
+            return product.getPrice()
+                .multiply(java.math.BigDecimal.valueOf(100 - discount))
+                .divide(java.math.BigDecimal.valueOf(100), 0, java.math.RoundingMode.HALF_UP);
+        }
+        return product != null ? product.getPrice() : java.math.BigDecimal.ZERO;
+    }
 }

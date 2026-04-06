@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Content Approvals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/shop-manager.css}">
+</head>
+<body>
+
+    <div class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="brand-name">Admin Panel</span>
+    </div>
+    <span class="nav-label">Navigation</span>
+
+    <a href="/internal/admin/home" th:classappend="${requestURI == '/internal/admin/home' ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard
+    </a>
+    <a href="/internal/admin/products" th:classappend="${requestURI.startsWith('/internal/admin/products') ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Products
+    </a>
+    <a href="/internal/admin/categories" th:classappend="${requestURI.startsWith('/internal/admin/categories') ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg> Categories
+    </a>
+    <a href="/internal/admin/users" th:classappend="${requestURI.startsWith('/internal/admin/users') ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Users
+    </a>
+    <a href="/internal/admin/orders" th:classappend="${requestURI.startsWith('/internal/admin/orders') ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 11 12 14 22 4"/></svg> Orders
+    </a>
+    <a href="/internal/admin/financials" th:classappend="${requestURI.startsWith('/internal/admin/financials') ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Financials
+    </a>
+    <span class="nav-label" style="margin-top:15px; padding-left:15px; font-size:11px; text-transform:uppercase; color:var(--text-mid); font-weight:700; letter-spacing:0.5px;">Marketing Mgmt</span>
+    <a href="/internal/admin/approvals/sliders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 2l-4 5-4-5"/></svg> Slider Approvals
+    </a>
+    <a href="/internal/admin/approvals/coupons">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></svg> Coupon Approvals
+    </a>
+    <a href="/internal/admin/approvals/contents" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Content Approvals
+    </a>
+    <a href="/internal/admin/marketing-plans" th:classappend="${requestURI.startsWith('/internal/admin/marketing-plans') ? 'active' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg> Marketing Plans
+    </a>
+    <a href="/internal/logout" style="margin-top:auto; color:#ef4444;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</a>
+</div>
+<div class="main">
+        <div class="topbar">
+            <div>
+                <h4>Content Approvals</h4>
+                <p class="greeting-text">Review and manage content approvals</p>
+            </div>
+            <div class="user-pill">
+                <div class="user-avatar" style="background-color: var(--accent);">AD</div>
+                <div><div class="user-name">Admin</div><div class="user-role">Admin</div></div>
+            </div>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" role="alert" style="background: rgba(40,167,69,0.2); color:#28a745; border:1px solid rgba(40,167,69,0.5); border-radius:12px;">
+            <i class="fas fa-check-circle me-2"></i> <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert" style="background: rgba(220,53,69,0.2); color:#dc3545; border:1px solid rgba(220,53,69,0.5); border-radius:12px;">
+            <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${errorMessage}"></span>
+        </div>
+
+        <div class="card">
+            <div class="toolbar">
+                <form th:action="@{/internal/admin/approvals/contents}" method="get" class="search-wrap" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; width:100%;">
+                    <div class="search-input" style="flex:1; min-width:200px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by content title...">
+                    </div>
+                    <select name="approvalFilter" class="form-select" style="width:auto; height:38px;" onchange="this.form.submit()">
+                        <option value="PENDING" th:selected="${approvalFilter == 'PENDING'}">Pending</option>
+                        <option value="APPROVED" th:selected="${approvalFilter == 'APPROVED'}">Approved</option>
+                        <option value="REJECTED" th:selected="${approvalFilter == 'REJECTED'}">Rejected</option>
+                        <option value="REMAKE" th:selected="${approvalFilter == 'REMAKE'}">Remake</option>
+                    </select>
+                    <button type="submit" class="btn-search">Search</button>
+                </form>
+            </div>
+            
+            <div th:if="${items.totalElements == 0}" class="text-center py-5">
+                <i class="fas fa-check-double fa-3x mb-3" style="color: var(--border);"></i>
+                <h5 style="color: var(--text-dark);">No content found!</h5>
+                <p style="color: var(--text-mid);">Try different search criteria or filter.</p>
+            </div>
+
+            <div th:if="${items.totalElements > 0}">
+                <form id="batchForm" th:action="@{/internal/admin/process-batch-approval}" method="post">
+                    <input type="hidden" name="type" value="contents">
+                    <div class="mb-3 d-flex gap-2 align-items-center" style="background:var(--card-bg); padding:10px 15px; border-radius:8px; border:1px solid var(--border);">
+                        <strong style="color:var(--text-dark);">Batch Actions:</strong>
+                        <button type="submit" name="action" value="approve" class="btn-approve" style="padding:6px 12px; font-size:13px;"><i class="fas fa-check me-1"></i>Approve Selected</button>
+                        <button type="submit" name="action" value="reject" class="btn-reject" style="padding:6px 12px; font-size:13px;" onclick="return confirm('Reject selected items?');"><i class="fas fa-times me-1"></i>Reject Selected</button>
+                    </div>
+                </form>
+
+                <table>
+                <thead>
+                        <th style="width:4%"><input type="checkbox" onclick="const checkboxes = document.querySelectorAll('input[name=\'itemIds\']'); checkboxes.forEach(cb => {if(!cb.disabled) cb.checked = this.checked;});"></th>
+                        <th style="width:6%">ID</th>
+                        <th style="width:22%">Content Title</th>
+                        <th style="width:10%">Type</th>
+                        <th style="width:12%">Image</th>
+                        <th style="width:10%">Request Type</th>
+                        <th style="width:10%">Status</th>
+                        <th style="width:26%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items.content}">
+                        <td><input type="checkbox" name="itemIds" th:value="${item.id}" form="batchForm" th:disabled="${item.approvalStatus != 'PENDING'}"></td>
+                        <td th:text="${'#' + item.id}" style="color:var(--text-mid); font-weight:600">#1</td>
+                        <td>
+                            <strong th:text="${item.contentTitle}" style="color:var(--text-dark); font-size:14px;">Title</strong>
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary" th:text="${item.contentType}">Blog</span>
+                        </td>
+                        <td>
+                            <img th:if="${item.imageUrl != null}" th:src="${item.imageUrl}" style="max-width:80px; max-height:45px; border-radius:6px; object-fit:cover;" alt="Content">
+                            <span th:unless="${item.imageUrl != null}" style="color:var(--text-mid); font-size:12px;">No image</span>
+                        </td>
+                        <td>
+                            <span th:if="${item.remakeNote == 'DELETE_REQUEST'}" style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;"><i class="fas fa-trash-alt me-1"></i>Delete</span>
+                            <span th:unless="${item.remakeNote == 'DELETE_REQUEST'}" style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;"><i class="fas fa-edit me-1"></i>Add / Update</span>
+                        </td>
+                        <td>
+                            <span th:if="${item.approvalStatus == 'PENDING'}" class="status-badge badge-pending">PENDING</span>
+                            <span th:if="${item.approvalStatus == 'APPROVED'}" class="status-badge badge-completed">APPROVED</span>
+                            <span th:if="${item.approvalStatus == 'REJECTED'}" class="status-badge badge-cancelled">REJECTED</span>
+                            <span th:if="${item.approvalStatus == 'REMAKE'}" class="status-badge badge-progress">REMAKE</span>
+                        </td>
+                        <td>
+                            <div class="d-flex" style="gap:8px; flex-wrap:wrap; align-items:center;">
+                                <a th:href="@{/internal/admin/approvals/contents/detail/{id}(id=${item.id})}"
+                                   style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; border-radius:6px; padding:5px 12px; font-size:12px; font-weight:600; text-decoration:none;">
+                                    <i class="fas fa-eye me-1"></i>Detail
+                                </a>
+                            </div>
+                            <form th:if="${item.approvalStatus == 'PENDING'}" th:action="@{/internal/admin/process-approval}" method="post" class="action-form" style="width:100%; margin-top:8px;">
+                                <div class="remake-control">
+                                    <input type="hidden" name="type" value="contents">
+                                    <input type="hidden" name="id" th:value="${item.id}">
+                                    <input type="hidden" name="action" value="remake">
+                                    <input type="text" name="remakeNote" class="form-input-dark" placeholder="Specify what needs to be remade..." required>
+                                    <button type="submit" class="btn-remake"><i class="fas fa-undo me-1"></i>Remake</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <div class="pagination-bar" th:if="${items.totalPages > 1}">
+                <span class="page-info">Page <strong th:text="${currentPage}">1</strong> of <strong th:text="${items.totalPages}">5</strong></span>
+                <div class="page-btns">
+                    <a class="page-btn" th:classappend="${currentPage == 1 ? 'disabled' : ''}"
+                       th:href="${currentPage > 1} ? @{/internal/admin/approvals/contents(page=${currentPage - 1}, keyword=${keyword}, approvalFilter=${approvalFilter})} : '#'">
+                        <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                    </a>
+                    <a class="page-btn" th:each="i : ${#numbers.sequence(1, items.totalPages)}"
+                       th:classappend="${currentPage == i ? 'active' : ''}"
+                       th:href="@{/internal/admin/approvals/contents(page=${i}, keyword=${keyword}, approvalFilter=${approvalFilter})}"
+                       th:text="${i}">1</a>
+                    <a class="page-btn" th:classappend="${currentPage == items.totalPages ? 'disabled' : ''}"
+                       th:href="${currentPage < items.totalPages} ? @{/internal/admin/approvals/contents(page=${currentPage + 1}, keyword=${keyword}, approvalFilter=${approvalFilter})} : '#'">
+                        <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -55,7 +55,7 @@ public class AdminUserController {
         model.addAttribute("isActive", isActive);
         model.addAttribute("currentAdminId", currentAdminId);
 
-        return "admin-user-list";
+        return "admin/admin-user-list";
     }
 
     // 2. Chi tiết user (chặn xem detail admin khác)
@@ -72,7 +72,7 @@ public class AdminUserController {
         }
 
         model.addAttribute("user", user);
-        return "admin-user-detail";
+        return "admin/admin-user-detail";
     }
 
     // 3. Form cập nhật (chặn edit admin khác)
@@ -89,7 +89,7 @@ public class AdminUserController {
         }
 
         model.addAttribute("user", user);
-        return "admin-user-update";
+        return "admin/admin-user-update";
     }
 
     // 4. Xử lý cập nhật
@@ -162,7 +162,7 @@ public class AdminUserController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("user", new User());
-        return "admin-user-create";
+        return "admin/admin-user-create";
     }
 
     // 7. Xử lý tạo mới
@@ -210,3 +210,4 @@ public class AdminUserController {
         return "redirect:/internal/admin/users";
     }
 }
+

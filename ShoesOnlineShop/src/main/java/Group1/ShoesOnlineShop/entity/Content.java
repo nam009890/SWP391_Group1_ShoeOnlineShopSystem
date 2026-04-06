@@ -43,6 +43,7 @@ public class Content {
     private String remakeNote;
 
 
+
     @Column(name = "update_note", columnDefinition = "NVARCHAR(MAX)")
     private String updateNote;
 
@@ -95,6 +96,7 @@ public class Content {
 
     public String getRemakeNote() { return remakeNote; }
     public void setRemakeNote(String remakeNote) { this.remakeNote = remakeNote; }
+
 
 
     public String getUpdateNote() { return updateNote; }

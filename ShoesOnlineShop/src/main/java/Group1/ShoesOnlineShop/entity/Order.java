@@ -154,6 +154,14 @@ private Boolean isActive = true;
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
     
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+    
 public Boolean getIsActive() {
     return isActive;
 }

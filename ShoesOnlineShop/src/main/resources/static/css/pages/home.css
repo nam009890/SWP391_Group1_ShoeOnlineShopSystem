@@ -542,13 +542,16 @@
         .product-img-wrap {
             height: 220px;
 
+
             background: #ffffff;
+
 
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             position: relative;
+
 
             border-bottom: 1px solid var(--glass-border);
         }
@@ -558,6 +561,7 @@
             max-height: 90%;
             object-fit: contain;
             transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
+
 
         }
 
@@ -806,6 +810,7 @@
         }
 
 
+
         /* === MARKETING CAMPAIGNS SECTION === */
         .campaigns-section {
             padding: 5rem 4rem;
@@ -930,9 +935,11 @@
             .hero-slider { height: 50vh; }
             .slide-title { font-size: 2.5rem; }
 
+
             .categories-section, .products-section, .content-section, .campaigns-section, .cta-section { padding: 3rem 1.5rem; }
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
             .product-img-wrap { height: 180px; }
             .campaigns-grid { grid-template-columns: 1fr; }
+
 
         }

@@ -87,6 +87,7 @@
 
 .form-container {
 
+
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: 20px;
@@ -102,11 +103,13 @@
     border: 1px solid var(--border);
     color: var(--text-dark);
 
+
     padding: 12px;
     border-radius: 10px;
     width: 100%;
     transition: all 0.3s;
 }
+
 
 .form-control-dark::placeholder {
     color: var(--text-light);
@@ -122,6 +125,7 @@
     border: 1px solid var(--border);
     color: var(--text-dark);
 
+
     padding: 12px;
     border-radius: 10px;
     width: 100%;
@@ -129,6 +133,7 @@
     transition: all 0.3s;
 }
 .form-select-dark:focus {
+
 
     background-color: var(--white);
     border-color: var(--accent);
@@ -139,5 +144,6 @@
     background-color: var(--white);
     color: var(--text-dark);
 }
+
 
 

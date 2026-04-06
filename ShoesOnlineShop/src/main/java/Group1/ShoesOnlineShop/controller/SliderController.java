@@ -126,4 +126,3 @@ public class SliderController {
         return "redirect:/internal/sliders";
     }
 }
-

@@ -2,6 +2,7 @@ package Group1.ShoesOnlineShop.service;
 
 import Group1.ShoesOnlineShop.entity.Content;
 import Group1.ShoesOnlineShop.repository.ContentRepository;
+import Group1.ShoesOnlineShop.service.ContentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

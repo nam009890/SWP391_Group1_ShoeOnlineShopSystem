@@ -28,8 +28,5 @@ public interface ContentRepository extends JpaRepository<Content, Long> ,JpaSpec
     boolean existsByContentTitleAndIdNot(String contentTitle, Long id);
     
     Page<Content> findByApprovalStatus(String approvalStatus, Pageable pageable);
-<<<<<<< HEAD
     Page<Content> findByApprovalStatusAndContentTitleContainingIgnoreCase(String approvalStatus, String keyword, Pageable pageable);
-=======
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
 }

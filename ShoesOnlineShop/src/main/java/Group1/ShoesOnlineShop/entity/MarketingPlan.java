@@ -37,6 +37,7 @@ public class MarketingPlan {
     private String status = "OPEN"; // OPEN, IN_PROGRESS, COMPLETED, CANCELLED
 
 
+
     @Column(name = "approval_status", length = 20)
     private String approvalStatus = "PENDING"; // PENDING, APPROVED, REJECTED, REMAKE
 
@@ -77,11 +78,13 @@ public class MarketingPlan {
     public void setStatus(String status) { this.status = status; }
 
 
+
     public String getApprovalStatus() { return approvalStatus; }
     public void setApprovalStatus(String approvalStatus) { this.approvalStatus = approvalStatus; }
 
     public String getRemakeNote() { return remakeNote; }
     public void setRemakeNote(String remakeNote) { this.remakeNote = remakeNote; }
+
 
 
     public LocalDateTime getCreatedAt() { return createdAt; }
@@ -93,5 +96,6 @@ public class MarketingPlan {
 
     public Boolean getIsRead() { return isRead; }
     public void setIsRead(Boolean isRead) { this.isRead = isRead; }
+
 
 }

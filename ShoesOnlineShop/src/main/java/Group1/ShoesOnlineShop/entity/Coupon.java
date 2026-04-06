@@ -47,12 +47,11 @@ public class Coupon {
 
     @Column(name = "remake_note", columnDefinition = "NVARCHAR(MAX)")
     private String remakeNote;
-<<<<<<< HEAD
+
 
     @Column(name = "update_note", columnDefinition = "NVARCHAR(MAX)")
     private String updateNote;
-=======
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
+
 
     // 4. No start date & 8. Start date in the past
     @NotNull(message = "Please select a start date!")
@@ -80,15 +79,13 @@ public class Coupon {
     )
     private java.util.List<Product> products = new java.util.ArrayList<>();
 
-<<<<<<< HEAD
     @Column(name = "quantity")
     private Integer quantity; // NULL = unlimited
 
     @Column(name = "used_count")
     private Integer usedCount = 0;
 
-=======
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
+
     // 1. No-argument constructor (Required)
     public Coupon() {
     }
@@ -145,12 +142,11 @@ public class Coupon {
     public String getRemakeNote() { return remakeNote; }
     public void setRemakeNote(String remakeNote) { this.remakeNote = remakeNote; }
 
-<<<<<<< HEAD
+
     public String getUpdateNote() { return updateNote; }
     public void setUpdateNote(String updateNote) { this.updateNote = updateNote; }
 
-=======
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
+
     public java.util.List<Product> getProducts() { return products; }
     public void setProducts(java.util.List<Product> products) { this.products = products; }
 

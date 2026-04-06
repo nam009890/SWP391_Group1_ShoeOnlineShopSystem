@@ -26,6 +26,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>,JpaSpecifi
     
     Page<Coupon> findByApprovalStatus(String approvalStatus, Pageable pageable);
 <<<<<<< HEAD
+<<<<<<< HEAD
     Page<Coupon> findByApprovalStatusAndCouponNameContainingIgnoreCase(String approvalStatus, String keyword, Pageable pageable);
 
     // Active + Approved coupons for customers
@@ -36,4 +37,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>,JpaSpecifi
     java.util.List<Coupon> findValidCouponsForSlider();
 =======
 >>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
+=======
+>>>>>>> main
 }

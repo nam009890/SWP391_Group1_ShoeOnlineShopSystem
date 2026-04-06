@@ -64,6 +64,7 @@
         .product-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;transition:var(--transition);display:flex;flex-direction:column}
         .product-card:hover{transform:translateY(-8px);border-color:rgba(233,69,96,.3);box-shadow:0 16px 48px rgba(0,0,0,.3)}
 
+
         .product-img-wrap {
     height: 220px;
     background: #ffffff;
@@ -81,6 +82,7 @@
     object-fit: contain;
     transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
 }        .product-card:hover .product-img-wrap img{transform:scale(1.08) translateY(-8px)}
+
 
         .product-info{padding:1rem 1.2rem}
         .product-category-label{font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:.3rem}

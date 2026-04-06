@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,9 @@ public class MarketingPlanService {
 
     public Page<MarketingPlan> getPlans(int page, int size) {
 
+
         Pageable paging = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+
 
         return marketingPlanRepository.findAll(paging);
     }
@@ -151,5 +154,6 @@ public class MarketingPlanService {
         return marketingPlanRepository.countByIsReadFalse();
     }
 }
+
 
 

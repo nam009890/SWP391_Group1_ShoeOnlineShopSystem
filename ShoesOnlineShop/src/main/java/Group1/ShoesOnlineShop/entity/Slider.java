@@ -30,12 +30,9 @@ public class Slider {
     @Column(name = "remake_note", columnDefinition = "NVARCHAR(MAX)")
     private String remakeNote;
 
-<<<<<<< HEAD
     @Column(name = "update_note", columnDefinition = "NVARCHAR(MAX)")
     private String updateNote;
 
-=======
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
 
 
     @Column(name = "is_active")
@@ -71,11 +68,9 @@ public class Slider {
     public void setApprovalStatus(String approvalStatus) { this.approvalStatus = approvalStatus; }
     public String getRemakeNote() { return remakeNote; }
     public void setRemakeNote(String remakeNote) { this.remakeNote = remakeNote; }
-<<<<<<< HEAD
     public String getUpdateNote() { return updateNote; }
     public void setUpdateNote(String updateNote) { this.updateNote = updateNote; }
-=======
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
+
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
     public LocalDateTime getCreatedAt() { return createdAt; }

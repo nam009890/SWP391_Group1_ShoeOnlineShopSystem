@@ -3,6 +3,7 @@ package Group1.ShoesOnlineShop.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -26,10 +27,12 @@ public class MarketingPlan {
     private String assignedRole; // e.g. "MARKETING_STAFF"
 
     @NotNull(message = "Start date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "start_date")
     private LocalDate startDate;
 
     @NotNull(message = "End date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "end_date")
     private LocalDate endDate;
 

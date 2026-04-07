@@ -100,8 +100,8 @@ public class SliderServiceTest {
         slider.setSliderTitle("New Title");
 
         Map<String, String> errors = sliderService.validateSliderLogic(slider, Arrays.asList(1L), null);
-        assertTrue(errors.containsKey("products"));
-        assertEquals("Please select at least one product!", errors.get("products"));
+        assertTrue(errors.containsKey("sliderProducts"));
+        assertEquals("Please select at least one product!", errors.get("sliderProducts"));
     }
 
     @Test

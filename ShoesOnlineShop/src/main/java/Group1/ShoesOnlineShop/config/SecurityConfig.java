@@ -51,15 +51,9 @@ public class SecurityConfig {
                 .requestMatchers("/internal/admin/**").hasRole("ADMIN")
                 .requestMatchers("/internal/shop-manager/**").hasAnyRole("SHOP_MANAGER", "ADMIN")
                 .requestMatchers("/internal/orders/**", "/internal/invoices/**").hasAnyRole("SALE_STAFF", "ADMIN")
-<<<<<<< HEAD
+
                 .requestMatchers("/internal/MarketingHome/**", "/internal/sliders/**", "/internal/coupons/**", "/internal/contents/**", "/internal/marketing-plans/**").hasAnyRole("MARKETING_STAFF", "ADMIN")
-=======
-                .requestMatchers("/internal/MarketingHome/**", "/internal/sliders/**", "/internal/coupons/**", "/internal/contents/**").hasAnyRole("MARKETING_STAFF", "ADMIN")
-                .requestMatchers("/internal/marketing-plans/**").hasAnyRole("MARKETING_STAFF", "SHOP_MANAGER", "ADMIN")
-<<<<<<< HEAD
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
-=======
->>>>>>> main
+
                 .requestMatchers("/internal/feedbacks/**").hasAnyRole("ADMIN", "SALE_STAFF", "MARKETING_STAFF")
                 .anyRequest().hasAnyRole("ADMIN", "SALE_STAFF", "MARKETING_STAFF", "SHOP_MANAGER")
             )

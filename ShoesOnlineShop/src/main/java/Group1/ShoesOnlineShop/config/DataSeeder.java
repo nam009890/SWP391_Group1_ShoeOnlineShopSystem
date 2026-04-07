@@ -59,15 +59,6 @@ public class DataSeeder implements CommandLineRunner {
         seedUsers(mockAdmins, "ADMIN");
         seedUsers(mockSales, "SALE_STAFF");
         seedUsers(mockMarketings, "MARKETING_STAFF");
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-        seedUsers(mockShopManagers, "SHOP_MANAGER");
->>>>>>> 088cea8310666489ea9c06a81f5a59706a724daa
-=======
-        seedUsers(mockShopManagers, "SHOP_MANAGER");
->>>>>>> main
         seedUsers(mockCustomers, "CUSTOMER");
     }
 

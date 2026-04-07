@@ -56,8 +56,16 @@
                 <div class="coupon-card animate-in" th:each="coupon, iterStat : ${slider.coupons}"
                      th:style="'animation-delay:' + ${iterStat.index * 0.1} + 's'"
                      th:classappend="${savedCouponIds != null and savedCouponIds.contains(coupon.id)} ? 'saved' : ''">
-                    <div class="coupon-discount" th:text="${coupon.discountPercent} + '%'">20%</div>
-                    <div class="coupon-name" th:text="${coupon.couponName}">Coupon Name</div>
+                    <div class="coupon-discount" th:if="${coupon.discountType == 'PERCENTAGE'}" th:text="${coupon.discountValue} + '%'">20%</div>
+                    <div class="coupon-discount" th:if="${coupon.discountType != 'PERCENTAGE'}" th:text="${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 0, 'POINT')} + ' VND'" style="font-size: 2rem;">200,000 VND</div>
+                    
+                    <div class="coupon-name" style="font-size: 0.9em; margin-bottom: 3px;" th:if="${coupon.products == null or coupon.products.isEmpty()}">Applies to: All Products</div>
+                    <div class="coupon-name" style="font-size: 0.9em; margin-bottom: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" th:if="${coupon.products != null and !coupon.products.isEmpty()}">
+                        Applies to: <span th:each="p, stat : ${coupon.products}" th:text="${p.name} + ${!stat.last ? ', ' : ''}"></span>
+                    </div>
+                    <div class="coupon-name" style="font-size: 0.85em; color: var(--text-muted);">
+                        Condition: <span th:if="${coupon.minOrderValue != null and coupon.minOrderValue > 0}" th:text="'Min order ' + ${#numbers.formatDecimal(coupon.minOrderValue, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span><span th:if="${coupon.minOrderValue == null or coupon.minOrderValue == 0}">No min order</span>
+                    </div>
                     <div class="coupon-code-wrap">
                         <div class="coupon-code" th:text="${coupon.couponCode}" th:id="'code-' + ${coupon.id}">CODE123</div>
                         <button class="btn-save-coupon" 

@@ -2,6 +2,7 @@ package Group1.ShoesOnlineShop.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -56,12 +57,14 @@ public class Coupon {
     // 4. No start date & 8. Start date in the past
     @NotNull(message = "Please select a start date!")
     @FutureOrPresent(message = "Start date cannot be in the past!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
 
     // 5. No end date & 9. End date in the past
     @NotNull(message = "Please select an end date!")
     @FutureOrPresent(message = "End date cannot be in the past!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 

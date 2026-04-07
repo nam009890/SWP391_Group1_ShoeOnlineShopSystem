@@ -64,6 +64,9 @@ private Boolean isActive = true;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Feedback> feedbacks;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Delivery> deliveries;
+
     // Audit fields
 
     @Column(name = "created_at", updatable = false)
@@ -168,5 +171,13 @@ public Boolean getIsActive() {
 
 public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
+}
+
+public List<Delivery> getDeliveries() {
+    return deliveries;
+}
+
+public void setDeliveries(List<Delivery> deliveries) {
+    this.deliveries = deliveries;
 }
 }

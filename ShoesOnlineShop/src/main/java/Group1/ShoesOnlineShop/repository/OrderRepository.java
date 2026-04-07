@@ -31,6 +31,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByOrderStatus(String status);
     List<Order> findByUser_UserIdOrderByCreatedAtDesc(Long userId);
 
+    @Query("SELECT o FROM Order o WHERE o.isActive = true AND SIZE(o.deliveries) = 0")
+    List<Order> findUnassignedOrders();
+
     @Query("""
         SELECT o FROM Order o
         JOIN FETCH o.user

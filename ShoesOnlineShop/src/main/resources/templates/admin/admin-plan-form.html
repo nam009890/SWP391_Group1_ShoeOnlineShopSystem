@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -22,7 +22,7 @@
     <span class="nav-label">Navigation</span>
 
     <a href="/internal/admin/home" th:classappend="${requestURI == '/internal/admin/home' ? 'active' : ''}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Home
     </a>
     <a href="/internal/admin/products" th:classappend="${requestURI.startsWith('/internal/admin/products') ? 'active' : ''}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Products
@@ -80,17 +80,12 @@
             <form th:action="@{/internal/admin/marketing-plans/save}" method="post" th:object="${plan}" id="planForm">
                 <input type="hidden" th:field="*{id}">
                 
+                <input type="hidden" th:field="*{assignedRole}" value="MARKETING_STAFF">
+                
                 <div class="row g-4 mb-4">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <label class="form-label">Plan Title</label>
                         <input type="text" th:field="*{title}" class="form-control-dark" placeholder="E.g. Lunar New Year Mega Sale" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Assigned Department</label>
-                        <select th:field="*{assignedRole}" class="form-select-dark" required>
-                            <option value="MARKETING_STAFF">Marketing Team</option>
-                            <option value="SALE_STAFF">Sale Team</option>
-                        </select>
                     </div>
                 </div>
 

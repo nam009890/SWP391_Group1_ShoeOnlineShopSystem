@@ -49,10 +49,6 @@ public class DataSeeder implements CommandLineRunner {
                   createUser("shipper3", "shipper3@shoeweb.com", "Nguyen Van Minh", "0941111114", "Trinh Dinh Trong, Ha Noi", "123456", "SHIPPER")
         );
         
-        // =============== SHOP MANAGER ===============
-        List<User> mockShopManagers = Arrays.asList(
-            createUser("shopmanager1", "manager1@shoeweb.com", "Pham Van Manager", "0941111111", "Trinh Dinh Trong, Ha Noi", "123456", "SHOP_MANAGER")
-        );
 
         // =============== CUSTOMER ===============
         List<User> mockCustomers = Arrays.asList(

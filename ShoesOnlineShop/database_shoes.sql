@@ -9,8 +9,7 @@ CREATE TABLE users (
     full_name NVARCHAR(100) NOT NULL,
     phone NVARCHAR(20),
     address NVARCHAR(MAX),
-    user_role NVARCHAR(20) NOT NULL 
-        CHECK (user_role IN ('ADMIN', 'SALE_STAFF', 'CUSTOMER')),
+    user_role NVARCHAR(50) NOT NULL,
     is_active BIT DEFAULT 1,
     created_at DATETIME2 DEFAULT GETDATE(),
     updated_at DATETIME2 DEFAULT GETDATE()

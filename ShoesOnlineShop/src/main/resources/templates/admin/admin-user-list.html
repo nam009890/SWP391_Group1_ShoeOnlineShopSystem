@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
     <span class="nav-label">Navigation</span>
 
     <a href="/internal/admin/home" th:classappend="${requestURI == '/internal/admin/home' ? 'active' : ''}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Home
     </a>
     <a href="/internal/admin/products" th:classappend="${requestURI.startsWith('/internal/admin/products') ? 'active' : ''}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Products
@@ -152,7 +152,7 @@
 
                     <td>
                         <div class="action-btns" style="justify-content:center;">
-                            <!-- ?n nút hành d?ng cho admin khác (không ph?i mình) -->
+                            <!-- ?n nï¿½t hï¿½nh d?ng cho admin khï¿½c (khï¿½ng ph?i mï¿½nh) -->
                             <th:block th:if="${!(user.userRole == 'ADMIN' and user.userId != currentAdminId)}">
                                 <a th:href="@{/internal/admin/users/detail/{id}(id=${user.userId})}" style="padding:5px 10px; background:var(--accent-light); color:var(--accent); border:1px solid #c7d0fb; border-radius:6px; font-size:12px; font-weight:600; text-decoration:none;">Detail</a>
                                 <a th:href="@{/internal/admin/users/update/{id}(id=${user.userId})}" class="btn-upd">Edit</a>
@@ -161,7 +161,7 @@
                                 <a th:if="${!user.isActive}" href="javascript:void(0)"
                                    class="btn-upd" th:onclick="'showConfirmModal(\'/internal/admin/users/block/' + ${user.userId} + '\', \'unblock\')'">Unblock</a>
                             </th:block>
-                            <span th:if="${user.userRole == 'ADMIN' and user.userId != currentAdminId}" style="color:var(--text-mid); font-size:12px;">—</span>
+                            <span th:if="${user.userRole == 'ADMIN' and user.userId != currentAdminId}" style="color:var(--text-mid); font-size:12px;">ï¿½</span>
                         </div>
                     </td>
                 </tr>

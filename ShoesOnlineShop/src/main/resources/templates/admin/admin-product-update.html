@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
     <span class="nav-label">Navigation</span>
 
     <a href="/internal/admin/home" th:classappend="${requestURI == '/internal/admin/home' ? 'active' : ''}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Home
     </a>
     <a href="/internal/admin/products" th:classappend="${requestURI.startsWith('/internal/admin/products') ? 'active' : ''}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Products
@@ -70,7 +70,7 @@
     </div>
 
     <div class="breadcrumb-bar">
-        <a href="/internal/admin/home">Dashboard</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <a href="/internal/admin/home">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         <a href="/internal/admin/products">Products</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         <span>Update</span>
     </div>
@@ -117,7 +117,7 @@
 
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
-                            <label class="form-label">Kích C? (Size)</label>
+                            <label class="form-label">Kï¿½ch C? (Size)</label>
                             <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:14px;">
                                 <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="36" id="s36"><label class="form-check-label" for="s36">36</label></div>
                                 <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="37" id="s37"><label class="form-check-label" for="s37">37</label></div>
@@ -130,12 +130,12 @@
                                 <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="44" id="s44"><label class="form-check-label" for="s44">44</label></div>
                                 <div class="form-check"><input class="form-check-input size-cb" type="checkbox" value="45" id="s45"><label class="form-check-label" for="s45">45</label></div>
                             </div>
-                            <input type="text" id="sizeOther" class="form-control form-control-sm" placeholder="Nh?p 1 c? khác" pattern="^\d+(\.\d+)?$" title="Vui lòng ch? nh?p s? (VD: 40 ho?c 40.5)">
+                            <input type="text" id="sizeOther" class="form-control form-control-sm" placeholder="Nh?p 1 c? khï¿½c" pattern="^\d+(\.\d+)?$" title="Vui lï¿½ng ch? nh?p s? (VD: 40 ho?c 40.5)">
                             <input type="hidden" name="size" id="hiddenSize" th:value="${product.size}">
                             <div th:if="${#fields.hasErrors('size')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{size}">Error</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Màu s?c (Color)</label>
+                            <label class="form-label">Mï¿½u s?c (Color)</label>
                             <div class="d-flex flex-wrap gap-2 mb-2" style="font-size:14px;">
                                 <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Black" id="cDen"><label class="form-check-label" for="cDen">Black</label></div>
                                 <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="White" id="cTrang"><label class="form-check-label" for="cTrang">White</label></div>
@@ -147,7 +147,7 @@
                                 <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Brown" id="cNau"><label class="form-check-label" for="cNau">Brown</label></div>
                                 <div class="form-check"><input class="form-check-input color-cb" type="checkbox" value="Pink" id="cHong"><label class="form-check-label" for="cHong">Pink</label></div>
                             </div>
-                            <input type="text" id="colorOther" class="form-control form-control-sm" placeholder="Nh?p 1 màu khác" pattern="^[a-zA-Z\s]+$" title="Vui lòng ch? nh?p ch? cái (VD: Black, White)">
+                            <input type="text" id="colorOther" class="form-control form-control-sm" placeholder="Nh?p 1 mï¿½u khï¿½c" pattern="^[a-zA-Z\s]+$" title="Vui lï¿½ng ch? nh?p ch? cï¿½i (VD: Black, White)">
                             <input type="hidden" name="color" id="hiddenColor" th:value="${product.color}">
                             <div th:if="${#fields.hasErrors('color')}" style="color:var(--danger); font-size:12px; margin-top:4px;" th:errors="*{color}">Error</div>
                         </div>

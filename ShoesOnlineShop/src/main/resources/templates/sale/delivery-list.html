@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -30,7 +30,7 @@
 
         <a th:href="@{/internal/sales/dashboard}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Dashboard
+            Home
         </a>
 
         <a th:href="@{/internal/orders}">
@@ -104,7 +104,10 @@
 
         <!-- NEW BUTTON -->
         <div style="display:flex; justify-content:flex-end; margin-bottom: 20px;">
-            <a th:href="@{/internal/deliveries/create}" class="btn-primary" style="text-decoration:none; display:inline-block; border-radius:8px; padding:10px 18px; font-weight:600; color:#fff; background:var(--primary-color);">+ Create New Delivery</a>
+            <a th:href="@{/internal/deliveries/create}" class="btn-accent" style="text-decoration:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Create New Delivery
+            </a>
         </div>
 
         <!-- Alert messages -->
